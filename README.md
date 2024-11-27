@@ -55,4 +55,3 @@ Exportar inventario a Excel o a .csv
 Funciones extras-=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=-
 
 Graficos de ventas de producto más vendido y menos vendido
-![image](https://github.com/user-attachments/assets/7c38fa8d-35c6-4513-94c4-8d2325444236)
