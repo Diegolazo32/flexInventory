@@ -10,9 +10,23 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        //Si el request tiene un campo de busqueda
+        if ($request->has('search')) {
+            $users = User::where('nombre', 'like', "%{$request->search}%")
+                ->orWhere('DUI', 'like', "%{$request->search}%")
+                ->paginate(10);
+        } else {
+            $users = User::paginate(10);
+        }
+
+        $users = User::paginate(10);
+
+        return view('Users.index')->with([
+            'users' => $users
+        ]);
     }
 
     /**
@@ -20,7 +34,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+            'DUI' => 'required',
+            'telefono' => 'required',
+            'direccion' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+        ]);
     }
 
     /**
