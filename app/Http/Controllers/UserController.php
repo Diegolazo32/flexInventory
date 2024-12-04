@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
+    public function getAllUsers()
+    {
+        $users = User::all();
+        return response()->json($users);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -15,14 +23,27 @@ class UserController extends Controller
 
         //Si el request tiene un campo de busqueda
         if ($request->has('search')) {
-            $users = User::where('nombre', 'like', "%{$request->search}%")
-                ->orWhere('DUI', 'like', "%{$request->search}%")
-                ->paginate(10);
+
+            if($request->search == null){
+                return redirect()->route('users');
+            }
+
+            $users = User::where('nombre', 'like', "%{$request->search}%");
+
+            if ($users->count() == 0) {
+                //toastr()->error('No se encontraron resultados');
+                return redirect()->back()->with('error', 'No se encontraron resultados');
+            }
+
+            $users = $users->paginate(10);
+
         } else {
             $users = User::paginate(10);
         }
 
-        $users = User::paginate(10);
+        if($request->has('clear')){
+            return redirect()->route('users');
+        }
 
         return view('Users.index')->with([
             'users' => $users
@@ -34,14 +55,66 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required',
-            'DUI' => 'required',
-            'telefono' => 'required',
-            'direccion' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-        ]);
+
+        $request->validate(
+            [
+                'nombre' => 'required',
+                'apellido' => 'required',
+                'genero' => 'required',
+                'usuario' => 'required',
+                'rol' => 'required',
+            ],
+            [
+                'nombre.required' => 'El campo nombre es requerido',
+                'apellido.required' => 'El campo apellido es requerido',
+                'genero.required' => 'El campo genero es requerido',
+                'usuario.required' => 'El campo usuario es requerido',
+                'rol.required' => 'El campo rol es requerido',
+            ]
+        );
+
+        //No usuario no puede ser repetido
+        $usuario = User::where('usuario', $request->usuario)->first();
+        //dd($usuario);
+
+
+        if ($usuario) {
+            toastr()->error('El usuario ya existe');
+            return redirect()->back()->with('error', 'El usuario ya existe');
+        }
+
+        //Calcular la edad
+        $fechaNacimiento = $request->fechaNacimiento;
+        $edad = date_diff(date_create($fechaNacimiento), date_create('now'))->y;
+
+
+        //dd($fechaNacimiento);
+        //dd($edad);
+
+        //dd($fechaNacimiento);
+
+        try {
+
+            $user = new User();
+            $user->nombre = $request->nombre;
+            $user->apellido = $request->apellido;
+            $user->genero = $request->genero;
+            $user->usuario = $request->usuario;
+            $user->rol = $request->rol;
+            $user->fechaNacimiento = $fechaNacimiento;
+            $user->DUI = $request->DUI;
+            $user->edad = $edad;
+            $user->password = Hash::make("0000");
+            $user->estado = 1;
+
+            $user->save();
+
+            //toastr()->success('Usuario guardado correctamente');
+            return redirect()->back()->with('success', 'Usuario creado correctamente');
+        } catch (\Exception $e) {
+            toastr()->error('Error al guardar el usuario');
+            return redirect()->back()->with('error', 'Error al guardar el usuario');
+        }
     }
 
     /**
@@ -57,7 +130,50 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+
+        $user = User::find($request->id);
+
+        $request->validate(
+            [
+                'nombre' => 'required',
+                'apellido' => 'required',
+                'genero' => 'required',
+                'usuario' => 'required',
+                'rol' => 'required',
+            ],
+            [
+                'nombre.required' => 'El campo nombre es requerido',
+                'apellido.required' => 'El campo apellido es requerido',
+                'genero.required' => 'El campo genero es requerido',
+                'usuario.required' => 'El campo usuario es requerido',
+                'rol.required' => 'El campo rol es requerido',
+            ]
+        );
+
+        
+
+        //Actualizar los datos
+        try {
+
+            $user->nombre = $request->nombre;
+            $user->apellido = $request->apellido;
+            $user->genero = $request->genero;
+            $user->usuario = $request->usuario;
+            $user->rol = $request->rol;
+            $user->fechaNacimiento = $request->fechaNacimiento;
+            $user->DUI = $request->DUI;
+            $user->edad = $request->edad;
+            $user->estado = $request->estado;
+
+            $user->save();
+
+            toastr()->success('Usuario actualizado correctamente');
+            return redirect()->back()->with('success', 'Usuario actualizado correctamente');
+        } catch (\Exception $e) {
+            toastr()->error('Error al guardar el usuario');
+            return redirect()->back()->with('error', 'Error al guardar el usuario');
+        }
+
     }
 
     /**

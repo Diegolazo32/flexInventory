@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::controller(UserController::class)->group(function () {
+        Route::get('/allUsers', [UserController::class, 'getAllUsers'])->name('allUsers');
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
         Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
