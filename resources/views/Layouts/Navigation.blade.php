@@ -67,8 +67,8 @@
     </nav>
 
     <!--SideBar-->
-    <div class="container-fluid">
-        <div class="row">
+    <div class="container-fluid" style="height: 100%;">
+        <div class="row" style="height: 100%;">
             <div class="col-2 bg-dark" style=" width: 100%; max-width: 200px;">
                 <nav class="nav flex-column nav-pills" style="padding: 10px;">
                     <button class="btn btn-outline-light"

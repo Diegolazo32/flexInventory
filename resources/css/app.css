@@ -10,13 +10,30 @@
     align-items: center;
 }
 
-html, body {
-    height: 100%;
+html,
+body {
+    height: 100vh;
 }
 
-.full
-{
-    height: 100%;
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: #FF3D00;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .LoginPosition {
@@ -41,8 +58,8 @@ html, body {
     border-radius: 10px;
 }
 
-.customShadow{
-    box-shadow: 20px 15px 10px 0px rgb(125, 125, 125);
+.customShadow {
+    box-shadow: 0px 5px 5px 2px rgb(125, 125, 125);
 }
 
 .blue1 {
@@ -74,6 +91,7 @@ html, body {
     background-color: #fd7e14;
     color: white;
 }
+
 .orange2 {
     background-color: #ffb300;
     color: white;

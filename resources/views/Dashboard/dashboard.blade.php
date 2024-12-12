@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="full">
+    <div>
         <div class="row">
             <!-- Productos -->
             <div class="col-md-3" style="margin-bottom: 15px;">

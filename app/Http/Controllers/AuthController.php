@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+use function Laravel\Prompts\password;
 
 class AuthController extends Controller
 {
@@ -31,14 +34,42 @@ class AuthController extends Controller
             $usuario = User::where('usuario', $request->usuario)->first();
 
             if ($usuario) {
-                if (password_verify($request->password, $usuario->password)) {
-                    Auth::login($usuario);
-                    toastr()->success('Bienvenido ' . $usuario->nombre);
-                    return redirect()->route('dashboard');
+
+                try {
+
+                    if($usuario->estado == 0){
+                        flash('Usuario inactivo', 'error');
+                        return back();
+                    }
+
+                    if($usuario->estado == 2){
+                        flash('Usuario bloqueado', 'error');
+                        return back();
+                    }
+
+                    if (Hash::check('0000', $usuario->password)) {
+                        Auth::login($usuario);
+                        //dd('Bienvenido ' . $usuario->nombre);
+                        flash('Por favor cambie su contraseña', 'warning');
+                        return redirect()->route('password', ['id' => $usuario->id]);
+                    }
+
+                    if (password_verify($request->password, $usuario->password)) {
+                        Auth::login($usuario);
+                        flash('Bienvenido ' . $usuario->nombre, 'success');
+                        return redirect()->route('dashboard');
+                    } else {
+                        flash('Usuario o contraseña incorrecta', 'error');
+                        return back();
+                    }
+
+                } catch (\Exception $e) {
+                    flash('Error al iniciar sesion', 'error');
+                    return back();
                 }
             }
         } catch (\Exception $e) {
-            toastr()->error('Error al iniciar sesion');
+            flash('Error al iniciar sesion', 'error');
             return back();
         }
     }
@@ -50,16 +81,41 @@ class AuthController extends Controller
         try {
             if (Auth::check()) {
                 Auth::logout();
-                toastr()->success('Sesion cerrada correctamente');
+                flash('Sesion cerrada', 'success');
                 return redirect()->route('login');
             } else {
                 //Si no esta autenticado, se redirige a la pagina de login
-                toastr()->error('No hay ninguna sesion activa');
+                flash('No hay sesion activa', 'error');
                 return redirect()->route('login');
             }
         } catch (\Exception $e) {
-            toastr()->error('Error al cerrar sesion');
+            flash('Error al cerrar sesion', 'error');
             return back();
         }
+    }
+
+    public function password()
+    {
+        return view('Auth.restorePassword');
+    }
+
+    public function updatePassword($id, Request $request)
+    {
+        $usuario = User::find($id);
+
+        if ($request->password == 'password') {
+            flash('La contraseña no puede ser igual a password', 'error');
+            return back();
+        }
+
+        $usuario->password = Hash::make($request->password);
+
+
+        $usuario->save();
+
+        Auth::logout();
+
+        flash('Contraseña actualizada', 'success');
+        return redirect()->route('login');
     }
 }

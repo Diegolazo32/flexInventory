@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+
+use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
@@ -12,6 +15,17 @@ class UserController extends Controller
     public function getAllUsers()
     {
         $users = User::all();
+
+        foreach ($users as $user) {
+            //$user->fechaNacimiento = date('d/m/Y', strtotime($user->fechaNacimiento));
+
+            if ($user->password == Hash::check('0000', $user->password)) {
+                $user->hasPassword = false;
+            } else {
+                $user->hasPassword = true;
+            }
+        }
+
         return response()->json($users);
     }
 
@@ -24,24 +38,23 @@ class UserController extends Controller
         //Si el request tiene un campo de busqueda
         if ($request->has('search')) {
 
-            if($request->search == null){
+            if ($request->search == null) {
                 return redirect()->route('users');
             }
 
             $users = User::where('nombre', 'like', "%{$request->search}%");
 
             if ($users->count() == 0) {
-                //toastr()->error('No se encontraron resultados');
-                return redirect()->back()->with('error', 'No se encontraron resultados');
+                flash('No se encontraron resultados', 'error');
+                return redirect()->back();
             }
 
             $users = $users->paginate(10);
-
         } else {
             $users = User::paginate(10);
         }
 
-        if($request->has('clear')){
+        if ($request->has('clear')) {
             return redirect()->route('users');
         }
 
@@ -79,8 +92,8 @@ class UserController extends Controller
 
 
         if ($usuario) {
-            toastr()->error('El usuario ya existe');
-            return redirect()->back()->with('error', 'El usuario ya existe');
+            flash('El usuario ya existe', 'error');
+            return redirect()->back();
         }
 
         //Calcular la edad
@@ -109,11 +122,11 @@ class UserController extends Controller
 
             $user->save();
 
-            //toastr()->success('Usuario guardado correctamente');
-            return redirect()->back()->with('success', 'Usuario creado correctamente');
+            flash('Usuario creado correctamente', 'success');
+            return redirect()->back();
         } catch (\Exception $e) {
-            toastr()->error('Error al guardar el usuario');
-            return redirect()->back()->with('error', 'Error al guardar el usuario');
+            flash('Error al guardar el usuario', 'error');
+            return redirect()->back();
         }
     }
 
@@ -130,6 +143,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+
+        //dd($request->all());
 
         $user = User::find($request->id);
 
@@ -150,7 +165,9 @@ class UserController extends Controller
             ]
         );
 
-        
+
+        $edad = date_diff(date_create($request->fechaNacimiento), date_create('now'))->y;
+
 
         //Actualizar los datos
         try {
@@ -162,25 +179,63 @@ class UserController extends Controller
             $user->rol = $request->rol;
             $user->fechaNacimiento = $request->fechaNacimiento;
             $user->DUI = $request->DUI;
-            $user->edad = $request->edad;
+            $user->edad = $edad;
             $user->estado = $request->estado;
 
             $user->save();
 
-            toastr()->success('Usuario actualizado correctamente');
-            return redirect()->back()->with('success', 'Usuario actualizado correctamente');
+            flash('Usuario actualizado correctamente', 'success');
+            return redirect()->back();
         } catch (\Exception $e) {
-            toastr()->error('Error al guardar el usuario');
-            return redirect()->back()->with('error', 'Error al guardar el usuario');
+            flash('Error al actualizar el usuario', 'error');
+            return redirect()->back();
         }
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
+    public function delete($id)
     {
-        //
+
+        $user = User::find($id);
+
+        //Verificar que el usuario no sea el mismo que esta autenticado
+        if ($user->id == auth()->user()->id) {
+            //flash('No puedes eliminar tu propio usuario', 'error');
+            return response()->json(['error' => 'No puedes eliminar tu propio usuario']);
+        }
+
+        //Verificar que si elimina un administrador, queden al menos 2
+        if ($user->rol == 'admin') {
+            $admins = User::where('rol', 'is', 'admin')->count();
+
+            if ($admins == 2) {
+                //flash('Debe de haber al menos dos administradores', 'error');
+                return response()->json(['error' => 'Debe de haber al menos dos administradores']);
+            }
+        }
+
+        try {
+            $user->delete();
+            //flash('Usuario eliminado correctamente', 'success');
+            return response()->json(['success' => 'Usuario eliminado correctamente']);
+        } catch (\Exception $e) {
+            //flash('Error al eliminar el usuario', 'error');
+            return response()->json(['error' => 'Error al eliminar el usuario']);
+        }
+    }
+
+    public function resetPassword($id)
+    {
+
+        $user = User::find($id);
+
+        try {
+            $user->password = Hash::make("0000");
+            $user->save();
+            //flash('Contraseña restaurada correctamente', 'success');
+            return response()->json(['success' => 'Contraseña restaurada correctamente']);
+        } catch (\Exception $e) {
+            //flash('Error al restaurar la contraseña', 'error');
+            return response()->json(['error' => 'Error al restaurar la contraseña']);
+        }
     }
 }

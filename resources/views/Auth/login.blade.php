@@ -2,51 +2,58 @@
 
 @section('content')
 
-    <body id="app" class="container BgLogin">
-
-        <div class="row">
-
+    <body class="container BgLogin">
+        <div class="row" id="LoginApp">
             <div class="col-md-12 LoginPosition">
-
-                <div class="card LoginForm">
-
-                    @if (session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
+                <div class="card LoginForm" style="width: 350px;">
                     <div class="card-body" style="display: flex; justify-content: center; flex-direction: column;">
-
-                        <h1>Bienvenido</h1>
-
-                        <form action="{{ route('AuthLogin') }}" method="post">
+                        <div class="card-title">
+                            <h2 class="text-center">@{{ mensaje }}</h2>
+                        </div>
+                        <form action="{{ route('AuthLogin') }}" method="post" ref="loginForm">
                             @csrf
-                            <label for="usuario">Usuario</label>
-                            <input type="text" name="usuario" class="form-control" required>
-                            <small error="text-danger">{{ $errors->first('usuario') }}</small>
-                            <br>
-                            <label for="password">Contraseña</label>
-                            <input type="password" name="password" class="form-control" required>
-                            <small error="text-danger">{{ $errors->first('password') }}</small>
-                            <br>
-                            <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                            <div class="form-floating mb-3">
+                                <input type="text" name="usuario" class="form-control" id="floatingUsuario"
+                                    placeholder="Usuario" required autocomplete="username">
+                                <label for="floatingUsuario">Usuario</label>
+                                <small error="text-danger">{{ $errors->first('usuario') }}</small>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" name="password" class="form-control" id="floatingPassword"
+                                    placeholder="Contraseña" required autocomplete="current-password">
+                                <label for="floatingPassword">Contraseña</label>
+                                <small error="text-danger">{{ $errors->first('password') }}</small>
+                            </div>
+                            <button type="button" id="LoginButton" class="btn btn-outline-primary" @click="LogIn">Iniciar
+                                sesión</button>
                         </form>
                     </div>
-
-                </div>
-
-                <div class="errorMessage" style="margin-top:5px; width: 100%; max-width:400px;">
-                    @if (session('message'))
-                        <div class="alert alert-danger">
-                            {{ session('message') }}
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
     </body>
 
 
-    <script></script>
+    <script>
+        new Vue({
+            el: '#LoginApp',
+            data: {
+                mensaje: 'Iniciar sesión',
+            },
+            methods: {
+                LogIn() {
+
+                    //Cambiar icono de boton
+                    document.getElementById('LoginButton').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
+
+                    document.getElementById('LoginButton').disabled = true;
+
+                    this.$refs.loginForm.submit();
+                }
+            },
+            onMounted() {
+                console.log('Componente montado');
+            }
+        });
+    </script>
 @endsection

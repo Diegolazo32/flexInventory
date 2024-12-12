@@ -30,14 +30,16 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/auth/password/{id}', [AuthController::class, 'password'])->name('password');
+    Route::post('/auth/password/{id}', [AuthController::class, 'updatePassword'])->name('updatePassword');
 
     Route::controller(UserController::class)->group(function () {
         Route::get('/allUsers', [UserController::class, 'getAllUsers'])->name('allUsers');
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
-        Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
-        Route::post('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
-        Route::get('/users/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
+        Route::post('/users/edit/{id}', [UserController::class, 'update'])->name('users.edit');
+        Route::post('/users/rstpsw/{id}', [UserController::class, 'resetPassword'])->name('users.restore');
+        Route::delete('/users/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
     });
 
 });
