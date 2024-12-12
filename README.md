@@ -3,6 +3,7 @@ Un sistema que permita llevar el control de inventarios, productos, usuarios, em
 
 Funciones-=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=-=
 Inventarios-=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=--=-=-
+
 Manejo de inventarios, apertura y cierre de los mismo, con control de con cuantos productos inicio el inventario y con cuantos lo cerró, reportes de valor de inventario, y por producto.
 
 Kardex para registrar salida y entrada de productos fuera de ventas o compra a proveedor
