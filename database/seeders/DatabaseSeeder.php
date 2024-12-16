@@ -32,10 +32,7 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             ProveedoresSeeder::class,
             ProductosSeeder::class,
-        ]);
-
-        $this->call([
-            User::factory(1)->create(),
+            UsersSeeder::class,
         ]);
 
     }

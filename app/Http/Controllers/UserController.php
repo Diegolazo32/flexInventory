@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 use function Laravel\Prompts\error;
@@ -12,8 +13,19 @@ use function Laravel\Prompts\error;
 class UserController extends Controller
 {
 
+    public function checkRole()
+    {
+        if (Auth::user()->rol != 1) {
+            flash('No tienes permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+    }
+
     public function getAllUsers()
     {
+
+        $this->checkRole();
+
         $users = User::all();
 
         foreach ($users as $user) {
@@ -34,6 +46,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->checkRole();
 
         //Si el request tiene un campo de busqueda
         if ($request->has('search')) {
@@ -68,6 +81,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->checkRole();
 
         $request->validate(
             [
@@ -143,6 +157,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $this->checkRole();
 
         //dd($request->all());
 
@@ -194,6 +209,7 @@ class UserController extends Controller
 
     public function delete($id)
     {
+        $this->checkRole();
 
         $user = User::find($id);
 
@@ -225,6 +241,7 @@ class UserController extends Controller
 
     public function resetPassword($id)
     {
+        $this->checkRole();
 
         $user = User::find($id);
 

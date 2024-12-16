@@ -26,8 +26,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-
     @vite(['/resources/css/app.css'])
 </head>
 
@@ -84,6 +82,30 @@
                             onclick="window.location.href='{{ route('users') }}'">
                             <i class="fa-solid fa-user"></i>
                             <span style="margin-left: 10px;">Usuarios</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('unidades') }}'">
+                            <i class="fa-solid fa-list"></i>
+                            <span style="margin-left: 10px;">Unidades</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('estados') }}'">
+                            <i class="fa-solid fa-toggle-on"></i>
+                            <span style="margin-left: 10px;">Estados</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('categorias') }}'">
+                            <i class="fa-solid fa-list"></i>
+                            <span style="margin-left: 10px;">Categorias</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('proveedores') }}'">
+                            <i class="fa-solid fa-truck"></i>
+                            <span style="margin-left: 10px;">Proveedores</span>
                         </button>
                     @endif
 

@@ -14,7 +14,7 @@
                     <div class="col-md-2 d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearUserModal"
                             style="height: 40px;">
-                            Crear
+                            <i class="fas fa-plus"></i>
                         </button>
 
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editUserModalBtn"
@@ -46,7 +46,7 @@
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
                                 <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanForm">Limpiar</button>
+                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
                             </div>
                         </div>
 
@@ -122,10 +122,12 @@
                                         <span class="badge bg-secondary">Usuario</span>
                                     </td>
                                     <td v-if="usuario.estado == 1">
-                                        <span class="badge bg-success">Activo</span>
+                                        <span class="badge bg-success">
+                                            @{{ estados.find(estado => estado.id == usuario.estado).descripcion }}
+                                        </span>
                                     </td>
                                     <td v-else>
-                                        <span class="badge bg-danger">Inactivo</span>
+                                        <span class="badge bg-danger">@{{ estados.find(estado => estado.id == usuario.estado).descripcion }}</span>
                                     </td>
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editUser(usuario)">
@@ -163,8 +165,8 @@
         </div>
 
         <!-- Create Modal -->
-        <div class="modal fade" id="crearUserModal" tabindex="-1" aria-labelledby="crearUserModalLabel" aria-hidden="inert"
-            data-bs-backdrop="static" data-bs-keyboard="false" style=" padding:200px;">
+        <div class="modal fade" id="crearUserModal" tabindex="-1" aria-labelledby="crearUserModalLabel"
+            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
@@ -259,7 +261,7 @@
 
         <!--Edit modal-->
         <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel"
-            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false" style=" padding:200px;">
+            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
@@ -362,9 +364,12 @@
 
                                         <!-- Estado -->
                                         <select class="form-select" id="estadoEdit" name="estado"
-                                            v-model="editItem.estado" @change="validateEditForm">
-                                            <option value="1">Activo</option>
-                                            <option value="2">Inactivo</option>
+                                            v-model="editItem.estado" @blur="validateEditForm"
+                                            @change="validateEditForm">
+                                            <option v-for="estado in estados" :key="estado.id"
+                                                :value="estado.id">
+                                                @{{ estado.descripcion }}
+                                            </option>
                                         </select>
                                         <label for="floatingInput">Estado*</label>
                                         <small class="text-danger"
@@ -386,7 +391,7 @@
 
         <!--Delete modal-->
         <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
-            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false" style=" padding:200px;">
+            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
@@ -411,7 +416,7 @@
 
         <!--revert password modal-->
         <div class="modal fade" id="revertModal" tabindex="-1" aria-labelledby="revertModalLabel" aria-hidden="inert"
-            data-bs-backdrop="static" data-bs-keyboard="false" style=" padding:200px;">
+            data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
@@ -482,14 +487,12 @@
                     usuario: '',
                     rol: '',
                     estado: ''
-                }
+                },
+                estados: [],
             },
             methods: {
                 validateForm() {
                     this.errors = {};
-
-                    //console.log(this.errors)
-
                     if (!this.item.nombre) {
                         this.errors.nombre = 'Este campo es obligatorio';
                         document.getElementById('nombre').style.border = '1px solid red';
@@ -537,9 +540,6 @@
                     this.validateUsername();
                 },
                 validateEditForm() {
-
-                    console.log('Errores');
-                    console.log(this.editErrors);
 
                     editErrors = {};
 
@@ -625,16 +625,23 @@
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
 
-                            swal.fire({
-                                title: 'Usuario creado',
-                                text: 'El usuario ha sido creado correctamente',
-                                icon: 'success',
-                                confirmButtonText: 'Aceptar',
-                            });
+                            if (response.data.success) {
+                                swal.fire({
+                                    title: 'Usuario creado',
+                                    text: 'El usuario ha sido creado correctamente',
+                                    icon: 'success',
+                                    confirmButtonText: 'Aceptar',
+                                });
+                            } else {
+                                swal.fire({
+                                    title: 'Error',
+                                    text: 'Ha ocurrido un error al crear el usuario',
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            }
 
                         }).catch(error => {
-
-                            console.log(error);
 
                             swal.fire({
                                 title: 'Error',
@@ -642,6 +649,9 @@
                                 icon: 'error',
                                 confirmButtonText: 'Aceptar'
                             });
+
+                            document.getElementById('SubmitForm').disabled = false;
+                            document.getElementById('cancelButton').disabled = false;
 
                         }).finally(() => {
 
@@ -681,16 +691,23 @@
                             //Cerrar modal
                             document.getElementById('cancelButtonEdit').click();
 
-                            swal.fire({
-                                title: 'Usuario editado',
-                                text: 'El usuario ha sido editado correctamente',
-                                icon: 'success',
-                                confirmButtonText: 'Aceptar',
-                            });
+                            if (response.data.success) {
+                                swal.fire({
+                                    title: 'Usuario editado',
+                                    text: 'El usuario ha sido editado correctamente',
+                                    icon: 'success',
+                                    confirmButtonText: 'Aceptar',
+                                });
+                            } else {
+                                swal.fire({
+                                    title: 'Error',
+                                    text: 'Ha ocurrido un error al editar el usuario',
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            }
 
                         }).catch(error => {
-
-                            console.log(error);
 
                             swal.fire({
                                 title: 'Error',
@@ -698,6 +715,10 @@
                                 icon: 'error',
                                 confirmButtonText: 'Aceptar'
                             });
+
+                            //Habilitar boton
+                            document.getElementById('SubmitFormEdit').disabled = false;
+                            document.getElementById('cancelButtonEdit').disabled = false;
 
                         }).finally(() => {
 
@@ -720,7 +741,7 @@
                     this.rol = '';
                     this.errors = {};
                     this.editErrors = {};
-                    this.search = '';
+                    //this.search = '';
                     //this.usuarios = [];
                     this.editItem = {
                         id: '',
@@ -760,13 +781,19 @@
                     document.getElementById('estadoEdit').style.border = '1px solid #ced4da';
 
                     //this.getAllUsers();
+                    this.usuarios = this.searchUsuarios;
+                },
+                cleanSearch() {
+                    this.search = '';
+                    this.usuarios = this.searchUsuarios;
                 },
                 validateDate() {
                     let date = new Date(this.item.fechaNacimiento);
                     let today = new Date();
 
                     if (date > today) {
-                        this.errors.fechaNacimiento = 'La fecha de nacimiento no puede ser mayor a la fecha actual';
+                        this.errors.fechaNacimiento =
+                            'La fecha de nacimiento no puede ser mayor a la fecha actual';
                     } else {
                         if (today.getFullYear() - date.getFullYear() < 18) {
                             this.errors.fechaNacimiento = 'El usuario debe ser mayor de edad';
@@ -912,14 +939,16 @@
 
                     }).catch(error => {
 
-                        console.log(error);
-
                         swal.fire({
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar el usuario',
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+
+                        //Habilitar boton
+                        document.getElementById('deleteButton').disabled = false;
+                        document.getElementById('canceldeleteButton').disabled = false;
 
                     }).finally(() => {
 
@@ -949,10 +978,9 @@
                         method: 'POST',
                     }).then(response => {
 
-
-
                         //change icon to lock
-                        document.getElementById('revertButton').innerHTML = '<i class="fas fa-lock"></i>';
+                        document.getElementById('revertButton').innerHTML =
+                            '<i class="fas fa-lock"></i>';
 
                         //enable button
                         document.getElementById('revertButton').disabled = false;
@@ -968,6 +996,7 @@
                             confirmButtonText: 'Aceptar',
                         });
 
+
                     }).catch(error => {
 
                         swal.fire({
@@ -976,6 +1005,10 @@
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+
+                        //enable button
+                        document.getElementById('revertButton').disabled = false;
+                        document.getElementById('cancelRevertButton').disabled = false;
 
                     }).finally(() => {
                         //limpiar
@@ -1013,14 +1046,25 @@
                                 user.usuario.toLowerCase().includes(search)
                         });
                     } catch (error) {
-                        console.log(error);
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al buscar el usuario',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
                     }
 
 
                     this.usuarios = this.filtered;
+                },
+                async getAllEstados() {
+                    let response = await fetch('/allEstados');
+                    let data = await response.json();
+                    this.estados = data;
                 }
             },
             mounted() {
+                this.getAllEstados();
                 this.getAllUsers();
             }
         });

@@ -18,6 +18,7 @@ class CategoriaFactory extends Factory
     {
         return [
             'descripcion' => $this->faker->unique->randomElement(['Abarrotes', 'Bebidas', 'Carnes', 'Lacteos', 'Frutas']),
+            'estado' => 1,
         ];
     }
 }
