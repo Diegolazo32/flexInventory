@@ -52,7 +52,6 @@
                 }
             },
             onMounted() {
-                console.log('Componente montado');
             }
         });
     </script>

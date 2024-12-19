@@ -283,8 +283,7 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="direccionEdit" name="direccion"
-                                            placeholder="Direccion" @blur="validateForm"
-                                            v-model="editItem.direccion">
+                                            placeholder="Direccion" @blur="validateForm" v-model="editItem.direccion">
                                         <label for="floatingInput">Direccion*</label>
                                         <small class="text-danger"
                                             v-if="editErrors.direccion">@{{ editErrors.direccion }}</small>

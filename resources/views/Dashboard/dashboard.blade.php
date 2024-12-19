@@ -6,7 +6,7 @@
     <div>
         <div class="row">
             <!-- Productos -->
-            <div class="col-md-3" style="margin-bottom: 15px;">
+            <div class="col-md-3" style="margin-bottom: 15px;" onclick="window.location.href='{{ route('productos') }}'">
                 <div class="card customShadow blue1" style="height: auto; display: flex; justify-content: center;">
                     <div class="card-body row" style="text-align: center">
                         <div class="col-6" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
@@ -21,7 +21,7 @@
             </div>
 
             <!-- Categorias -->
-            <div class="col-md-3" style="margin-bottom: 15px;">
+            <div class="col-md-3" style="margin-bottom: 15px;" onclick="window.location.href='{{ route('categorias') }}'">
                 <div class="card customShadow green1" style="height: auto; display: flex; justify-content: center;">
                     <div class="card-body row" style="text-align: center">
                         <div class="col-6" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
@@ -36,7 +36,7 @@
             </div>
 
             <!-- Clientes -->
-            <div class="col-md-3" style="margin-bottom: 15px;">
+            <div class="col-md-3" style="margin-bottom: 15px;" onclick="window.location.href='{{ route('clientes') }}'">
                 <div class="card customShadow orange2" style="height: auto; display: flex; justify-content: center;">
                     <div class="card-body row" style="text-align: center">
                         <div class="col-6" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
@@ -51,7 +51,7 @@
             </div>
 
             <!-- Proveedores -->
-            <div class="col-md-3" style="margin-bottom: 15px;">
+            <div class="col-md-3" style="margin-bottom: 15px;" onclick="window.location.href='{{ route('proveedores') }}'">
                 <div class="card customShadow purple2" style="height: auto; display: flex; justify-content: center;">
                     <div class="card-body row" style="text-align: center">
                         <div class="col-6" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">

@@ -1027,12 +1027,9 @@
                 },
                 formatDate(date) {
 
-                    let d = new Date(date);
-                    let day = d.getDate();
-                    let month = d.getMonth() + 1;
-                    let year = d.getFullYear();
-
-                    return `${day}/${month}/${year}`;
+                    let fecha = new Date(date);
+                    let options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    return fecha.toLocaleDateString('es-ES', options);
 
                 },
                 searchFn() {

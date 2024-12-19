@@ -34,14 +34,26 @@ class UsersSeeder extends Seeder
                 'nombre' => 'Admin',
                 'apellido' => 'Admin',
                 'DUI' =>   '00000000-0',
-                'fechaNacimiento' => '1999-08-31',
+                'fechaNacimiento' => '1999-01-01',
                 'edad' => 18,
                 'genero' => 1,
                 'usuario' => 'Admin',
                 'password' => Hash::make('password'),
                 'rol' => 1,
                 'estado' => 1,
-            ]
+            ],
+            [
+                'nombre' => 'User',
+                'apellido' => 'User',
+                'DUI' =>   '00000000-0',
+                'fechaNacimiento' => '1999-01-01',
+                'edad' => 18,
+                'genero' => 1,
+                'usuario' => 'User',
+                'password' => Hash::make('password'),
+                'rol' => 2,
+                'estado' => 1,
+            ],
         ];
 
         foreach ($usuario as $user) {

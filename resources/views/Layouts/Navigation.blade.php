@@ -91,6 +91,18 @@
                         </button>
                         <button class="btn btn-outline-light"
                             style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('roles') }}'">
+                            <i class="fa-solid fa-circle-user"></i>
+                            <span style="margin-left: 10px;">Roles</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('permisos') }}'">
+                            <i class="fa-solid fa-key"></i>
+                            <span style="margin-left: 10px;">Permisos</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
                             onclick="window.location.href='{{ route('estados') }}'">
                             <i class="fa-solid fa-toggle-on"></i>
                             <span style="margin-left: 10px;">Estados</span>
@@ -106,6 +118,18 @@
                             onclick="window.location.href='{{ route('proveedores') }}'">
                             <i class="fa-solid fa-truck"></i>
                             <span style="margin-left: 10px;">Proveedores</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('clientes') }}'">
+                            <i class="fa-solid fa-users"></i>
+                            <span style="margin-left: 10px;">Clientes</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('productos') }}'">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                            <span style="margin-left: 10px;">Productos</span>
                         </button>
                     @endif
 

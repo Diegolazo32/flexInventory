@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permisos', function (Blueprint $table) {
+        Schema::create('grupos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();
-            $table->string('ruta')->unique();
             $table->string('descripcion');
-            $table->string('endpoint')->unique();
-            //$table->foreignId('grupo')->references('id')->on('grupos');
-            $table->string('metodo');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permisos');
+        Schema::dropIfExists('grupos');
     }
 };

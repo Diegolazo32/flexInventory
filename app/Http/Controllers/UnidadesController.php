@@ -63,7 +63,7 @@ class UnidadesController extends Controller
 
     public function update(Request $request)
     {
-        $this->checkRole();
+        $this->checkRole(); 
 
         $request->validate(
             [
