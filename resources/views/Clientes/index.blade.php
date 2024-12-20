@@ -56,11 +56,11 @@
             <!-- Tabla de clientes -->
 
             <!-- if clientes.length == 0  show no data
-                                                                                <div class="row" v-if="clientes.length == 0">
-                                                                                    <div class="card-body" style="display: flex; justify-content: center; align-items: center;">
-                                                                                        <h1>No hay datos</h1>
-                                                                                    </div>
-                                                                                </div>-->
+                                                                                        <div class="row" v-if="clientes.length == 0">
+                                                                                            <div class="card-body" style="display: flex; justify-content: center; align-items: center;">
+                                                                                                <h1>No hay datos</h1>
+                                                                                            </div>
+                                                                                        </div>-->
 
             <!-- if clientes.length > 0 show table -->
 
@@ -93,10 +93,12 @@
                                     <td>@{{ cliente.descuento }}%</td>
                                     <td>@{{ formatDate(cliente.created_at) }}</td>
                                     <td v-if="cliente.estado == 1">
-                                        <span class="badge bg-success">@{{ estados.find(estado => estado.id == cliente.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-success">@{{ estados.find(estado => estado.id == cliente.estado).descripcion }}</span>
                                     </td>
                                     <td v-else>
-                                        <span class="badge bg-danger">@{{ estados.find(estado => estado.id == cliente.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == cliente.estado).descripcion }}</span>
                                     </td>
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editCliente(cliente)">
@@ -271,7 +273,7 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <!-- Estado -->
-                                        <select class="form-select" id="estadoEdit" name="estado"
+                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
                                             v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
@@ -925,7 +927,11 @@
                 },
                 formatDate(date) {
                     let fecha = new Date(date);
-                    let options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    let options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
                     return fecha.toLocaleDateString('es-ES', options);
                 },
                 //Obtener recursos
@@ -936,10 +942,21 @@
                     this.searchClientes = data;
                 },
                 async getAllEstados() {
-                    let response = await fetch('/allEstados');
-                    let data = await response.json();
-                    this.estados = data;
-                }
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
+
+                        //console.log(this.estados);
+
+                    } catch (error) {
+
+                    }
+
+
+                },
 
             },
             mounted() {

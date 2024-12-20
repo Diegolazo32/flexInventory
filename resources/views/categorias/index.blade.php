@@ -71,10 +71,12 @@
                                         @{{ categoria.descripcion }}
                                     </td>
                                     <td v-if="categoria.estado == 1">
-                                       <span class="badge bg-success">@{{ estados.find(estado => estado.id == categoria.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-success">@{{ estados.find(estado => estado.id == categoria.estado).descripcion }}</span>
                                     </td>
                                     <td v-else>
-                                        <span class="badge bg-danger">@{{ estados.find(estado => estado.id == categoria.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == categoria.estado).descripcion }}</span>
                                     </td>
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editCategoria(categoria)">
@@ -166,16 +168,16 @@
                                     <div class="form-floating mb-3">
 
                                         <!-- Estado -->
-                                        <select class="form-select" id="estadoEdit" name="estado"
-                                            v-model="editItem.estado" @blur="validateEditForm" @change="validateEditForm">
+                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
+                                            v-model="editItem.estado" @blur="validateEditForm"
+                                            @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
                                                 :value="estado.id">
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
                                         <label for="floatingInput">Estado*</label>
-                                        <small class="text-danger"
-                                            v-if="editErrors.estado">@{{ editErrors.estado }}</small>
+                                        <small class="text-danger" v-if="editErrors.estado">@{{ editErrors.estado }}</small>
 
                                     </div>
                                 </div>
@@ -610,10 +612,21 @@
                     this.searchCategorias = data;
                 },
                 async getAllEstados() {
-                    let response = await fetch('/allEstados');
-                    let data = await response.json();
-                    this.estados = data;
-                }
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
+
+                        //console.log(this.estados);
+
+                    } catch (error) {
+
+                    }
+
+
+                },
 
             },
             mounted() {

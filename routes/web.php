@@ -32,6 +32,8 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+
+
 //Auth
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', [AuthController::class, 'loginView'])->name('login');
@@ -40,6 +42,11 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+
+    //Acess Denied
+    Route::get('/denied', function () {
+        return view('layouts.accessDenied');
+    })->name('denied');
 
     //Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -128,6 +135,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/roles/store', [RolesController::class, 'store'])->name('roles.store');
         Route::post('/roles/edit/{id}', [RolesController::class, 'update'])->name('roles.edit');
         Route::delete('/roles/delete/{id}', [RolesController::class, 'delete'])->name('roles.delete');
+        Route::post('/roles/permisos/{id}', [RolesController::class, 'permisos'])->name('roles.permisos');
     });
 
     //Permisos
@@ -147,6 +155,4 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/allRolPermiso', [RolPermisoController::class, 'getAllRolPermiso'])->name('allRolPermiso');
         Route::get('/permisosByRol/{id}', [RolPermisoController::class, 'getPermisosByRol'])->name('permisosByRol');
     });
-
-
 });

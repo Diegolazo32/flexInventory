@@ -780,8 +780,10 @@
                                 permiso.nombre.toLowerCase().includes(search) ||
                                 permiso.ruta.toLowerCase().includes(search) ||
                                 permiso.endpoint.toLowerCase().includes(search) ||
-                                this.grupos.find(grupo => grupo.id == permiso.grupo).descripcion.toLowerCase().includes(search) ||
-                                this.metodos.find(metodo => metodo.id == permiso.metodo).descripcion.toLowerCase().includes(search);
+                                this.grupos.find(grupo => grupo.id == permiso.grupo).descripcion
+                                .toLowerCase().includes(search) ||
+                                this.metodos.find(metodo => metodo.id == permiso.metodo).descripcion
+                                .toLowerCase().includes(search);
                         });
                     } catch (error) {
                         swal.fire({
@@ -843,9 +845,20 @@
                     console.log(this.permisos);
                 },
                 async getAllEstados() {
-                    let response = await fetch('/allEstados');
-                    let data = await response.json();
-                    this.estados = data;
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
+
+                        //console.log(this.estados);
+
+                    } catch (error) {
+
+                    }
+
+
                 },
                 async getAllGrupos() {
                     let response = await fetch('/allGrupos');

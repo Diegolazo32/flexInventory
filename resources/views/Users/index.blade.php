@@ -36,7 +36,7 @@
             </div>
             <!-- Buscador -->
             <div class="card-body">
-                <div class="row">
+                <div class="row" v-if="usuarios.length > 0">
                     <div class="col-md-10">
 
                         <div class="row">
@@ -56,9 +56,16 @@
             <!-- Tabla de usuarios -->
             <div class="row">
                 <div class="card-body">
-                    <div class="table-responsive">
 
-                        <!-- A LA GRAN MADRE CON VUE -->
+                    <div v-if="usuarios.length == 0" role="alert" style="margin-left: 50%;" id="loading">
+                    </div>
+
+                    <div v-if="usuarios.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ usuarios.error }}</h3>
+                    </div>
+
+                    <div v-if="usuarios.length > 0" class="table-responsive">
+
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
@@ -122,12 +129,14 @@
                                         <span class="badge bg-secondary">Usuario</span>
                                     </td>
                                     <td v-if="usuario.estado == 1">
-                                        <span class="badge bg-success">
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-success">
                                             @{{ estados.find(estado => estado.id == usuario.estado).descripcion }}
                                         </span>
                                     </td>
                                     <td v-else>
-                                        <span class="badge bg-danger">@{{ estados.find(estado => estado.id == usuario.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span class="badge bg-danger" v-else>@{{ estados.find(estado => estado.id == usuario.estado).descripcion }}</span>
                                     </td>
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editUser(usuario)">
@@ -160,6 +169,7 @@
                             </tfoot>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -364,7 +374,7 @@
 
                                         <!-- Estado -->
                                         <select class="form-select" id="estadoEdit" name="estado"
-                                            v-model="editItem.estado" @blur="validateEditForm"
+                                            :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
                                                 :value="estado.id">
@@ -491,6 +501,79 @@
                 estados: [],
             },
             methods: {
+
+                //Funcion para obtener recursos
+                async getAllUsers() {
+
+                    document.getElementById('loading').style.display = 'block';
+                    document.getElementById('loading').innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+                    try {
+                        let response = await fetch('/allUsers');
+                        let data = await response.json();
+                        console.log(data);
+
+                        if (data.length == 0) {
+                            document.getElementById('loading').style.display = 'block';
+                            document.getElementById('loading').innerHTML = 'No hay usuarios registrados';
+                        } else {
+                            document.getElementById('loading').innerHTML = '';
+                            this.usuarios = data;
+                            this.searchUsuarios = data;
+                        }
+                    } catch (error) {
+
+                    }
+
+                },
+                async getAllEstados() {
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
+
+                        //console.log(this.estados);
+
+                    } catch (error) {
+
+                    }
+
+
+                },
+                //Funciones de asignacion
+                editUser(user) {
+                    this.editItem.nombre = user.nombre;
+                    this.editItem.apellido = user.apellido;
+                    this.editItem.DUI = user.DUI;
+                    this.editItem.fechaNacimiento = user.fechaNacimiento;
+                    this.editItem.genero = user.genero;
+                    this.editItem.usuario = user.usuario;
+                    this.editItem.rol = user.rol;
+                    this.editItem.estado = user.estado;
+                    this.editItem.id = user.id;
+
+                    //dar click al boton de modal
+                    document.getElementById('editUserModalBtn').click();
+
+                },
+                DeleteUser(user) {
+                    this.deleteItem.nombre = user.nombre;
+                    this.deleteItem.apellido = user.apellido;
+                    this.deleteItem.usuario = user.usuario;
+                    this.deleteItem.rol = user.rol;
+                    this.deleteItem.estado = user.estado;
+                    this.deleteItem.id = user.id;
+
+                    //dar click al boton de modal
+                    document.getElementById('deleteUserModalBtn').click();
+                },
+                openRevertModal(user) {
+                    this.revertItem = user;
+                    document.getElementById('revertModalBtn').click();
+                },
+                //Funciones de validacion
                 validateForm() {
                     this.errors = {};
                     if (!this.item.nombre) {
@@ -596,197 +679,6 @@
 
 
                 },
-                sendForm() {
-                    this.validateForm();
-
-                    if (Object.keys(this.errors).length === 0) {
-
-                        //Cambiar icono de boton
-                        document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-
-                        document.getElementById('SubmitForm').disabled = true;
-                        document.getElementById('cancelButton').disabled = true;
-
-                        axios({
-                            method: 'post',
-                            url: '/users/store',
-                            data: this.item
-                        }).then(response => {
-
-                            //Habilitar boton
-                            document.getElementById('SubmitForm').disabled = false;
-                            document.getElementById('cancelButton').disabled = false;
-
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i> Guardar';
-
-                            //Cerrar modal
-                            document.getElementById('cancelButton').click();
-
-                            if (response.data.success) {
-                                swal.fire({
-                                    title: 'Usuario creado',
-                                    text: 'El usuario ha sido creado correctamente',
-                                    icon: 'success',
-                                    confirmButtonText: 'Aceptar',
-                                });
-                            } else {
-                                swal.fire({
-                                    title: 'Error',
-                                    text: 'Ha ocurrido un error al crear el usuario',
-                                    icon: 'error',
-                                    confirmButtonText: 'Aceptar'
-                                });
-                            }
-
-                        }).catch(error => {
-
-                            swal.fire({
-                                title: 'Error',
-                                text: 'Ha ocurrido un error al crear el usuario',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-
-                            document.getElementById('SubmitForm').disabled = false;
-                            document.getElementById('cancelButton').disabled = false;
-
-                        }).finally(() => {
-
-                            //limpiar
-                            this.cleanForm();
-                            //Recargar usuarios
-                            this.getAllUsers();
-                        })
-
-                    }
-                },
-                sendFormEdit() {
-                    this.validateEditForm();
-
-                    if (Object.keys(this.editErrors).length === 0) {
-
-                        //Cambiar icono de boton
-                        document.getElementById('SubmitFormEdit').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-
-                        document.getElementById('SubmitFormEdit').disabled = true;
-                        document.getElementById('cancelButtonEdit').disabled = true;
-
-                        axios({
-                            method: 'post',
-                            url: '/users/edit/' + this.editItem.id,
-                            data: this.editItem
-                        }).then(response => {
-
-                            //Habilitar boton
-                            document.getElementById('SubmitFormEdit').disabled = false;
-                            document.getElementById('cancelButtonEdit').disabled = false;
-
-                            //Quitar icono de boton
-                            document.getElementById('SubmitFormEdit').innerHTML = 'Guardar';
-
-                            //Cerrar modal
-                            document.getElementById('cancelButtonEdit').click();
-
-                            if (response.data.success) {
-                                swal.fire({
-                                    title: 'Usuario editado',
-                                    text: 'El usuario ha sido editado correctamente',
-                                    icon: 'success',
-                                    confirmButtonText: 'Aceptar',
-                                });
-                            } else {
-                                swal.fire({
-                                    title: 'Error',
-                                    text: 'Ha ocurrido un error al editar el usuario',
-                                    icon: 'error',
-                                    confirmButtonText: 'Aceptar'
-                                });
-                            }
-
-                        }).catch(error => {
-
-                            swal.fire({
-                                title: 'Error',
-                                text: 'Ha ocurrido un error al editar el usuario',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-
-                            //Habilitar boton
-                            document.getElementById('SubmitFormEdit').disabled = false;
-                            document.getElementById('cancelButtonEdit').disabled = false;
-
-                        }).finally(() => {
-
-                            //limpiar
-                            this.cleanForm();
-                            //Recargar usuarios
-                            this.getAllUsers();
-
-                        })
-
-                    }
-                },
-                cleanForm() {
-                    this.nombre = '';
-                    this.apellido = '';
-                    this.DUI = '';
-                    this.fechaNacimiento = '';
-                    this.genero = '';
-                    this.usuario = '';
-                    this.rol = '';
-                    this.errors = {};
-                    this.editErrors = {};
-                    //this.search = '';
-                    //this.usuarios = [];
-                    this.editItem = {
-                        id: '',
-                        nombre: '',
-                        apellido: '',
-                        DUI: '',
-                        fechaNacimiento: '',
-                        genero: '',
-                        usuario: '',
-                        rol: '',
-                        estado: ''
-                    };
-                    this.deleteItem = {
-                        id: '',
-                        nombre: '',
-                        apellido: '',
-                        usuario: '',
-                        rol: '',
-                        estado: ''
-                    };
-
-                    document.getElementById('nombre').style.border = '1px solid #ced4da';
-                    document.getElementById('apellido').style.border = '1px solid #ced4da';
-                    document.getElementById('DUI').style.border = '1px solid #ced4da';
-                    document.getElementById('fechaNacimiento').style.border = '1px solid #ced4da';
-                    document.getElementById('genero').style.border = '1px solid #ced4da';
-                    document.getElementById('usuario').style.border = '1px solid #ced4da';
-                    document.getElementById('rol').style.border = '1px solid #ced4da';
-
-                    document.getElementById('nombreEdit').style.border = '1px solid #ced4da';
-                    document.getElementById('apellidoEdit').style.border = '1px solid #ced4da';
-                    document.getElementById('DUIEdit').style.border = '1px solid #ced4da';
-                    document.getElementById('fechaNacimientoEdit').style.border = '1px solid #ced4da';
-                    document.getElementById('generoEdit').style.border = '1px solid #ced4da';
-                    document.getElementById('usuarioEdit').style.border = '1px solid #ced4da';
-                    document.getElementById('rolEdit').style.border = '1px solid #ced4da';
-                    document.getElementById('estadoEdit').style.border = '1px solid #ced4da';
-
-                    //this.getAllUsers();
-                    this.usuarios = this.searchUsuarios;
-                },
-                cleanSearch() {
-                    this.search = '';
-                    this.usuarios = this.searchUsuarios;
-                },
                 validateDate() {
                     let date = new Date(this.item.fechaNacimiento);
                     let today = new Date();
@@ -857,31 +749,141 @@
                     }
 
                 },
-                editUser(user) {
-                    this.editItem.nombre = user.nombre;
-                    this.editItem.apellido = user.apellido;
-                    this.editItem.DUI = user.DUI;
-                    this.editItem.fechaNacimiento = user.fechaNacimiento;
-                    this.editItem.genero = user.genero;
-                    this.editItem.usuario = user.usuario;
-                    this.editItem.rol = user.rol;
-                    this.editItem.estado = user.estado;
-                    this.editItem.id = user.id;
+                //Funciones de envio de formularios
+                sendForm() {
+                    this.validateForm();
 
-                    //dar click al boton de modal
-                    document.getElementById('editUserModalBtn').click();
+                    if (Object.keys(this.errors).length === 0) {
 
+                        //Cambiar icono de boton
+                        document.getElementById('SubmitForm').innerHTML =
+                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+                        document.getElementById('SubmitForm').disabled = true;
+                        document.getElementById('cancelButton').disabled = true;
+
+                        axios({
+                            method: 'post',
+                            url: '/users/store',
+                            data: this.item
+                        }).then(response => {
+
+                            //Habilitar boton
+                            document.getElementById('SubmitForm').disabled = false;
+                            document.getElementById('cancelButton').disabled = false;
+
+                            //Quitar icono de boton
+                            document.getElementById('SubmitForm').innerHTML =
+                                '<i class="fas fa-save"></i> Guardar';
+
+                            //Cerrar modal
+                            document.getElementById('cancelButton').click();
+
+                            if (response.data.success) {
+                                swal.fire({
+                                    title: 'Usuario creado',
+                                    text: response.data.success,
+                                    icon: 'success',
+                                    confirmButtonText: 'Aceptar',
+                                });
+                            } else {
+                                swal.fire({
+                                    title: 'Error',
+                                    text: response.data.error,
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            }
+
+                        }).catch(error => {
+
+                            swal.fire({
+                                title: 'Error',
+                                text: error,
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+
+                            document.getElementById('SubmitForm').disabled = false;
+                            document.getElementById('cancelButton').disabled = false;
+
+                        }).finally(() => {
+
+                            //limpiar
+                            this.cleanForm();
+                            //Recargar usuarios
+                            this.getAllUsers();
+                        })
+
+                    }
                 },
-                DeleteUser(user) {
-                    this.deleteItem.nombre = user.nombre;
-                    this.deleteItem.apellido = user.apellido;
-                    this.deleteItem.usuario = user.usuario;
-                    this.deleteItem.rol = user.rol;
-                    this.deleteItem.estado = user.estado;
-                    this.deleteItem.id = user.id;
+                sendFormEdit() {
+                    this.validateEditForm();
 
-                    //dar click al boton de modal
-                    document.getElementById('deleteUserModalBtn').click();
+                    if (Object.keys(this.editErrors).length === 0) {
+
+                        //Cambiar icono de boton
+                        document.getElementById('SubmitFormEdit').innerHTML =
+                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+                        document.getElementById('SubmitFormEdit').disabled = true;
+                        document.getElementById('cancelButtonEdit').disabled = true;
+
+                        axios({
+                            method: 'post',
+                            url: '/users/edit/' + this.editItem.id,
+                            data: this.editItem
+                        }).then(response => {
+
+                            //Habilitar boton
+                            document.getElementById('SubmitFormEdit').disabled = false;
+                            document.getElementById('cancelButtonEdit').disabled = false;
+
+                            //Quitar icono de boton
+                            document.getElementById('SubmitFormEdit').innerHTML = 'Guardar';
+
+                            //Cerrar modal
+                            document.getElementById('cancelButtonEdit').click();
+
+                            if (response.data.success) {
+                                swal.fire({
+                                    title: 'Usuario editado',
+                                    text: response.data.success,
+                                    icon: 'success',
+                                    confirmButtonText: 'Aceptar',
+                                });
+                            } else {
+                                swal.fire({
+                                    title: 'Error',
+                                    text: response.data.error,
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            }
+
+                        }).catch(error => {
+
+                            swal.fire({
+                                title: 'Error',
+                                text: error,
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+
+                            //Habilitar boton
+                            document.getElementById('SubmitFormEdit').disabled = false;
+                            document.getElementById('cancelButtonEdit').disabled = false;
+
+                        }).finally(() => {
+
+                            //limpiar
+                            this.cleanForm();
+                            //Recargar usuarios
+                            this.getAllUsers();
+
+                        })
+
+                    }
                 },
                 sendDeleteForm() {
                     //Inhabilitar botones
@@ -941,7 +943,7 @@
 
                         swal.fire({
                             title: 'Error',
-                            text: 'Ha ocurrido un error al eliminar el usuario',
+                            text: error,
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
@@ -959,10 +961,6 @@
                     })
 
 
-                },
-                openRevertModal(user) {
-                    this.revertItem = user;
-                    document.getElementById('revertModalBtn').click();
                 },
                 revertPassword($user) {
 
@@ -989,26 +987,37 @@
                         //close modal
                         document.getElementById('cancelRevertButton').click();
 
-                        swal.fire({
-                            title: 'Contraseña reiniciada',
-                            text: response.data.success,
-                            icon: 'success',
-                            confirmButtonText: 'Aceptar',
-                        });
-
-
+                        if (response.data.success) {
+                            swal.fire({
+                                title: 'Contraseña restablecida',
+                                text: response.data.success,
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        } else {
+                            swal.fire({
+                                title: 'Error',
+                                text: response.data.error,
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
                     }).catch(error => {
-
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al reiniciar la contraseña',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
 
                         //enable button
                         document.getElementById('revertButton').disabled = false;
                         document.getElementById('cancelRevertButton').disabled = false;
+
+                        //Cerrar modal
+                        document.getElementById('cancelRevertButton').click();
+
+                        swal.fire({
+                            title: 'Error',
+                            text: error,
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+
 
                     }).finally(() => {
                         //limpiar
@@ -1018,20 +1027,64 @@
                     });
 
                 },
-                async getAllUsers() {
-                    let response = await fetch('/allUsers');
-                    let data = await response.json();
-                    this.usuarios = data;
-                    this.searchUsuarios = data;
+                //Funciones de limpieza
+                cleanForm() {
+                    this.nombre = '';
+                    this.apellido = '';
+                    this.DUI = '';
+                    this.fechaNacimiento = '';
+                    this.genero = '';
+                    this.usuario = '';
+                    this.rol = '';
+                    this.errors = {};
+                    this.editErrors = {};
+                    //this.search = '';
+                    //this.usuarios = [];
+                    this.editItem = {
+                        id: '',
+                        nombre: '',
+                        apellido: '',
+                        DUI: '',
+                        fechaNacimiento: '',
+                        genero: '',
+                        usuario: '',
+                        rol: '',
+                        estado: ''
+                    };
+                    this.deleteItem = {
+                        id: '',
+                        nombre: '',
+                        apellido: '',
+                        usuario: '',
+                        rol: '',
+                        estado: ''
+                    };
 
+                    document.getElementById('nombre').style.border = '1px solid #ced4da';
+                    document.getElementById('apellido').style.border = '1px solid #ced4da';
+                    document.getElementById('DUI').style.border = '1px solid #ced4da';
+                    document.getElementById('fechaNacimiento').style.border = '1px solid #ced4da';
+                    document.getElementById('genero').style.border = '1px solid #ced4da';
+                    document.getElementById('usuario').style.border = '1px solid #ced4da';
+                    document.getElementById('rol').style.border = '1px solid #ced4da';
+
+                    document.getElementById('nombreEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('apellidoEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('DUIEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('fechaNacimientoEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('generoEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('usuarioEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('rolEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('estadoEdit').style.border = '1px solid #ced4da';
+
+                    //this.getAllUsers();
+                    this.usuarios = this.searchUsuarios;
                 },
-                formatDate(date) {
-
-                    let fecha = new Date(date);
-                    let options = { year: 'numeric', month: 'long', day: 'numeric' };
-                    return fecha.toLocaleDateString('es-ES', options);
-
+                cleanSearch() {
+                    this.search = '';
+                    this.usuarios = this.searchUsuarios;
                 },
+                //Funciones de busqueda
                 searchFn() {
                     let search = this.search.toLowerCase();
                     let users = this.searchUsuarios;
@@ -1045,7 +1098,7 @@
                     } catch (error) {
                         swal.fire({
                             title: 'Error',
-                            text: 'Ha ocurrido un error al buscar el usuario',
+                            text: error,
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
@@ -1054,11 +1107,19 @@
 
                     this.usuarios = this.filtered;
                 },
-                async getAllEstados() {
-                    let response = await fetch('/allEstados');
-                    let data = await response.json();
-                    this.estados = data;
-                }
+                //Funciones de formateo
+                formatDate(date) {
+
+                    let fecha = new Date(date);
+                    let options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
+                    return fecha.toLocaleDateString('es-ES', options);
+
+                },
+
             },
             mounted() {
                 this.getAllEstados();

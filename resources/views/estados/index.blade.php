@@ -569,10 +569,21 @@
                 },
                 //Obtener recursos
                 async getAllEstados() {
-                    let response = await fetch('/allEstados');
-                    let data = await response.json();
-                    this.estados = data;
-                    this.searchEstados = data;
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
+                        this.searchEstados = data;
+
+                        //console.log(this.estados);
+
+                    } catch (error) {
+
+                    }
+
+
                 },
 
             },

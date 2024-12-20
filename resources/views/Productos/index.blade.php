@@ -99,10 +99,12 @@
                                     <td>@{{ proveedores.find(proveedor => proveedor.id == producto.proveedor).nombre }}</td>
                                     <td>@{{ unidades.find(unidad => unidad.id == producto.unidad).descripcion }}</td>
                                     <td v-if="producto.estado == 1">
-                                        <span class="badge bg-success">@{{ estados.find(estado => estado.id == producto.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-success">@{{ estados.find(estado => estado.id == producto.estado).descripcion }}</span>
                                     </td>
                                     <td v-else>
-                                        <span class="badge bg-danger">@{{ estados.find(estado => estado.id == producto.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == producto.estado).descripcion }}</span>
                                     </td>
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editProducto(producto)">
@@ -568,7 +570,7 @@
                                 <!-- Estado -->
                                 <div class="form-floating col-md-4" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" id="estadoEdit" name="estado"
+                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
                                             v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
@@ -1462,9 +1464,20 @@
 
                 },
                 async getAllEstados() {
-                    let response = await fetch('/allEstados');
-                    let data = await response.json();
-                    this.estados = data;
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
+
+                        //console.log(this.estados);
+
+                    } catch (error) {
+
+                    }
+
+
                 },
                 async getAllCategorias() {
                     let response = await fetch('/allCategorias');

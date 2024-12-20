@@ -57,7 +57,15 @@
             <!-- Tabla de roles -->
             <div class="row">
                 <div class="card-body">
-                    <div class="table-responsive">
+
+                    <div v-if="roles.length == 0" role="alert" style="margin-left: 50%;" id="loading">
+                    </div>
+
+                    <div v-if="roles.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ roles.error }}</h3>
+                    </div>
+
+                    <div v-if="roles.length > 0" class="table-responsive">
 
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
@@ -77,10 +85,14 @@
                                         @{{ rol.descripcion }}
                                     </td>
                                     <td v-if="rol.estado == 1">
-                                        <span class="badge bg-success">@{{ estados.find(estado => estado.id == rol.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-success">
+                                            @{{ estados.find(estado => estado.id == rol.estado).descripcion }}
+                                        </span>
                                     </td>
                                     <td v-else>
-                                        <span class="badge bg-danger">@{{ estados.find(estado => estado.id == rol.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span class="badge bg-danger" v-else>@{{ estados.find(estado => estado.id == rol.estado).descripcion }}</span>
                                     </td>
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editRol(rol)">
@@ -175,8 +187,8 @@
                                     <div class="form-floating mb-3">
 
                                         <!-- Estado -->
-                                        <select class="form-select" id="estadoEdit" name="estado"
-                                            v-model="editItem.estado" @blur="validateEditForm"
+                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
+                                            :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
                                                 :value="estado.id">
@@ -229,45 +241,48 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 1200px;">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
-                        <h1 class="modal-title fs-5" id="permisosModalLabel">Permisos</h1>
-                        <small class="text-muted text-danger"> Permisos del rol: @{{ permisosItem.descripcion }}</small>
+                        <h3 class="modal-title fs-5" id="permisosModalLabel">Permisos del rol: @{{ permisosItem.descripcion }}
+                        </h3>
                     </div>
                     <div class="modal-body text-center" style="padding: 25px;">
                         <div class="row">
                             <div class="col-md-12">
-                                <h3>Permisos</h3>
+
                                 <div class="table-responsive">
+                                    <div class="card" v-for="grupo in grupos" :key="grupo.id"
+                                        style="margin-bottom: 10px;">
 
-                                    <!-- vue foreach agrupando los permisos por grupo -->
-
-
-                                    <div class="card" v-for="grupo in grupos" :key="grupo.id">
-
-                                        <div class="card-title">
+                                        <div class="card-title"
+                                            style="display: flex; justify-content: space-between; padding-left: 15px;
+                                        padding-right: 15px; padding-top: 10px;">
                                             <h4>@{{ grupo.descripcion }}</h4>
 
-                                            <button class="btn" type="button" data-bs-toggle="collapse"
-                                                :data-bs-target="'#collapse' + grupo.id" aria-expanded="false"
-                                                aria-controls="collapseExample">
-                                                V
+                                            <button class="btn btn-outline-secondary " type="button"
+                                                data-bs-toggle="collapse" :data-bs-target="'#collapse' + grupo.id"
+                                                aria-expanded="false" aria-controls="collapseExample">
+                                                <i class="fas fa-chevron-down"></i>
                                             </button>
 
                                         </div>
-
-
                                         <div class="collapse" :id="'collapse' + grupo.id">
+                                            <hr>
                                             <div class="card-body">
-                                                <table class="table table-striped  table-hover"
-                                                    style="text-align: center;">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Descripcion</th>
-                                                            <th scope="col">Estado</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
+                                                <div class="row">
+                                                    <div class="col-md-3" v-for='permiso in permisos'
+                                                        :key="permiso.id" v-if="permiso.grupo == grupo.id"
+                                                        style="margin-bottom:10px; display: flex; text-align: center; justify-content: flex-start; padding-left: 30px; ">
+                                                        <div>
+                                                            <input class="form-check-input" type="checkbox"
+                                                                :id="permiso.id"
+                                                                :checked="permisosItem.permisos.includes(permiso.id)"
+                                                                :value="permiso.id" @change="togglePermiso(permiso)"
+                                                                style="margin-right: 10px;">
+                                                            <label class="form-check-label" :for="permiso.id">
+                                                                @{{ permiso.descripcion }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -310,7 +325,9 @@
                     permisos: [],
                     estado: '',
                 },
+                //Permisos
                 permisos: [],
+                //Permisos del rol
                 permisosRol: [],
                 search: '',
                 errors: {},
@@ -320,6 +337,7 @@
                 filtered: [],
                 estados: [],
                 grupos: [],
+                icon: 'fas fa-chevron-down'
             },
             methods: {
                 //Crear
@@ -553,18 +571,106 @@
                 //Permisos
                 getPermisos(rol) {
 
+                    //console.log('Rol', rol);
+
                     this.getAllRolPermisos(rol);
 
                     this.permisosItem.descripcion = rol.descripcion;
                     this.permisosItem.id = rol.id;
                     this.permisosItem.estado = rol.estado;
-                    this.permisosItem.permisos = this.permisosRol;
+
+                    //console.log('Permisos del rol getPermisos', this.permisosItem.permisos);
 
                     //dar click al boton de modal
                     document.getElementById('permisosModalBtn').click();
                 },
                 sendPermisosForm() {
-                    //Logica de permisos xd
+
+                    //Inhabilitar botones
+                    document.getElementById('SubmitPermisos').disabled = true;
+                    document.getElementById('cancelPermisosButton').disabled = true;
+
+                    //Cambiar icono de boton
+                    document.getElementById('SubmitPermisos').innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+                    axios({
+                        method: 'post',
+                        url: '/roles/permisos/' + this.permisosItem.id,
+                        data: this.permisosItem
+                    }).then(response => {
+
+                        if (response.data.error) {
+                            //Habilitar boton
+                            document.getElementById('SubmitPermisos').disabled = false;
+                            document.getElementById('cancelPermisosButton').disabled = false;
+
+                            //Quitar icono de boton
+                            document.getElementById('SubmitPermisos').innerHTML = 'Guardar';
+
+                            //Cerrar modal
+                            document.getElementById('cancelPermisosButton').click();
+
+                            swal.fire({
+                                title: 'Error',
+                                text: response.data.error,
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        } else {
+
+                            //Habilitar boton
+                            document.getElementById('SubmitPermisos').disabled = false;
+                            document.getElementById('cancelPermisosButton').disabled = false;
+
+                            //Quitar icono de boton
+                            document.getElementById('SubmitPermisos').innerHTML =
+                                '<i class="fas fa-save"></i>';
+
+                            //Cerrar modal
+                            document.getElementById('cancelPermisosButton').click();
+
+                            swal.fire({
+                                title: 'Permisos actualizados',
+                                text: response.data.success,
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar',
+                            });
+                        }
+
+                    }).catch(error => {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al actualizar los permisos',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+
+                    }).finally(() => {
+
+                        //limpiar
+                        this.cleanForm();
+                        //Recargar roles
+                        this.getAllRoles();
+                    })
+
+
+                },
+                togglePermiso(permiso) {
+
+                    let permisoId = permiso.id;
+
+                    console.log('Permiso', permisoId);
+                    console.log('Permisos actuales', this.permisosItem.permisos);
+
+                    if (this.permisosItem.permisos.includes(permisoId)) {
+                        this.permisosItem.permisos = this.permisosItem.permisos.filter(permiso => permiso !=
+                            permisoId);
+                    } else {
+                        this.permisosItem.permisos.push(permisoId);
+                    }
+
+                    console.log('Permisos del rol actualizados', this.permisosItem.permisos);
                 },
                 //Validaciones
                 validateForm() {
@@ -676,6 +782,12 @@
                         descripcion: '',
                         estado: ''
                     };
+                    this.permisosItem = {
+                        id: '',
+                        descripcion: '',
+                        permisos: [],
+                        estado: '',
+                    };
 
                     document.getElementById('descripcion').style.border = '1px solid #ced4da';
 
@@ -690,15 +802,42 @@
                 },
                 //Obtener recursos
                 async getAllRoles() {
-                    let response = await fetch('/allRoles');
-                    let data = await response.json();
-                    this.roles = data;
-                    this.searchRoles = data;
+
+                    document.getElementById('loading').style.display = 'block';
+                    document.getElementById('loading').innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+                    try {
+                        let response = await fetch('/allRoles');
+                        let data = await response.json();
+                        console.log(data);
+
+                        if (data.length == 0) {
+                            document.getElementById('loading').style.display = 'block';
+                            document.getElementById('loading').innerHTML = 'No hay roles registrados';
+                        } else {
+                            document.getElementById('loading').innerHTML = '';
+                            this.roles = data;
+                            this.searchRoles = data;
+                        }
+                    } catch (error) {
+
+                    }
                 },
                 async getAllEstados() {
-                    let response = await fetch('/allEstados');
-                    let data = await response.json();
-                    this.estados = data;
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
+
+                        //console.log(this.estados);
+
+                    } catch (error) {
+
+                    }
+
+
                 },
                 async getAllPermisos() {
                     let response = await fetch('/allPermisos');
@@ -709,12 +848,16 @@
                     let response = await fetch('/permisosByRol/' + rol.id);
                     let data = await response.json();
                     this.permisosRol = data;
+
+                    this.permisosRol.forEach(permiso => {
+                        this.permisosItem.permisos.push(permiso.permiso);
+                    });
                 },
                 async getAllGrupos() {
                     let response = await fetch('/allGrupos');
                     let data = await response.json();
                     this.grupos = data;
-                }
+                },
             },
             mounted() {
                 this.getAllEstados();

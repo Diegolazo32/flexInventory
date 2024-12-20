@@ -125,10 +125,12 @@
                                         @{{ proveedor.telefonoRepresentante }}
                                     </td>
                                     <td v-if="proveedor.estado == 1">
-                                        <span class="badge bg-success">@{{ estados.find(estado => estado.id == proveedor.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-success">@{{ estados.find(estado => estado.id == proveedor.estado).descripcion }}</span>
                                     </td>
                                     <td v-else>
-                                        <span class="badge bg-danger">@{{ estados.find(estado => estado.id == proveedor.estado).descripcion }}</span>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == proveedor.estado).descripcion }}</span>
                                     </td>
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editProveedor(proveedor)">
@@ -350,7 +352,7 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <!-- Estado -->
-                                        <select class="form-select" id="estadoEdit" name="estado"
+                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
                                             v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
@@ -1035,10 +1037,21 @@
                     this.searchProveedores = data;
                 },
                 async getAllEstados() {
-                    let response = await fetch('/allEstados');
-                    let data = await response.json();
-                    this.estados = data;
-                }
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
+
+                        //console.log(this.estados);
+
+                    } catch (error) {
+
+                    }
+
+
+                },
 
             },
             mounted() {

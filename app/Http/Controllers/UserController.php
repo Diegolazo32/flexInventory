@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\rolPermiso;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
 
-    public function checkRole()
-    {
-        if (Auth::user()->rol != 1) {
-            flash('No tienes permisos para acceder a esta sección', 'error');
-            return redirect()->route('dashboard');
-        }
-    }
+    //Instancia de rolpermisoController
+    private $rolPermisoController;
 
     public function getAllUsers()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(6);
 
-        $this->checkRole();
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para ver todos los usuarios']);
+        }
 
         $users = User::all();
 
@@ -46,7 +47,15 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $this->checkRole();
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(1);
+
+        if (!$permiso) {
+            flash('No tienes permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
 
         //Si el request tiene un campo de busqueda
         if ($request->has('search')) {
@@ -81,7 +90,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->checkRole();
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(2);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para crear un usuario']);
+        }
 
         $request->validate(
             [
@@ -145,19 +160,17 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, User $user)
     {
-        $this->checkRole();
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(3);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+        }
 
         //dd($request->all());
 
@@ -209,7 +222,13 @@ class UserController extends Controller
 
     public function delete($id)
     {
-        $this->checkRole();
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(4);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+        }
 
         $user = User::find($id);
 
@@ -241,7 +260,13 @@ class UserController extends Controller
 
     public function resetPassword($id)
     {
-        $this->checkRole();
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(5);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+        }
 
         $user = User::find($id);
 

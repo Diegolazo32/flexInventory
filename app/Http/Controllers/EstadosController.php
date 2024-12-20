@@ -9,33 +9,41 @@ use Illuminate\Support\Facades\Auth;
 class EstadosController extends Controller
 {
 
-    public function checkRole()
-    {
-        try {
-            if (Auth::user()->rol != 1) {
-                flash('No tienes permisos para acceder a esta sección', 'error');
-                return redirect()->route('dashboard');
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al verificar el rol']);
-        }
-    }
+    private $rolPermisoController;
 
     public function getAllEstados()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(16);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+        }
+
         $estados = estados::all();
         return response()->json($estados);
     }
 
     public function index()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(12);
+
+        if (!$permiso) {
+            flash('No tienes permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
         return view('estados.index');
     }
 
     public function store(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(13);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+        }
 
         try {
             $estado = new estados();
@@ -49,7 +57,12 @@ class EstadosController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(14);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+        }
 
         try {
             $estado = estados::find($id);
@@ -63,7 +76,12 @@ class EstadosController extends Controller
 
     public function delete($id)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(15);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+        }
 
         try {
             $estado = estados::find($id);
