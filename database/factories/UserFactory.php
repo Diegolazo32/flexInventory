@@ -24,16 +24,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'nombre' => 'Admin',
-            'apellido' => 'Admin',
-            'DUI' =>   '00000000-0',
-            'fechaNacimiento' => $this->faker->date(),
-            'edad' => $this->faker->numberBetween(18, 65),
-            'genero' => 1,
-            'usuario' => 'Admin',
-            'password' => Hash::make('password'),
-            'rol' => 1,
-            'estado' => 1,
+            //
         ];
     }
 

@@ -53,7 +53,6 @@
                     document.getElementById('updateBoton').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando contraseña...';
 
                     this.validarPassword();
-                    console.log(this.errors);
 
                     if(this.errors.password){
                         return;
@@ -89,7 +88,6 @@
                 }
             },
             onMounted() {
-                console.log('Componente montado');
             }
         });
     </script>

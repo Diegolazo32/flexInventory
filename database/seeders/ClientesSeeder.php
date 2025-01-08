@@ -14,13 +14,12 @@ class ClientesSeeder extends Seeder
     public function run(): void
     {
         ClientesFactory::new()->create([
-            'nombre' => 'Cliente',
-            'apellido' => 'General',
-            'direccion' => '-',
+            'nombre' => 'Cliente General',
+            'apellido' => 'Cliente General',
             'telefono' => '-',
             'email' => '-',
-            'fecha_nacimiento' => '2024-01-01',
-            'sexo' => 1,
+            'DUI' => '-',
+            'descuento' => 0,
             'estado' => 1,
         ]);
     }

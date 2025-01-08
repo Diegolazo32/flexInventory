@@ -23,7 +23,6 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-
             EstadosSeeder::class,
             RolesSeeder::class,
             TipoVentaSeeder::class,
@@ -32,10 +31,10 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             ProveedoresSeeder::class,
             ProductosSeeder::class,
-        ]);
-
-        $this->call([
-            User::factory(1)->create(),
+            ClientesSeeder::class,
+            UsersSeeder::class,
+            GruposSeeder::class,
+            PermisosSeeder::class,
         ]);
 
     }

@@ -13,58 +13,98 @@ class UnidadesSeeder extends Seeder
      */
     public function run(): void
     {
-        $unidades =
-        [
+        $unidades = [
 
             [
                 'descripcion' => 'Unidad',
+                'abreviatura' => 'Und',
+                'estado' => 1,
             ],
             [
                 'descripcion' => 'Kilogramo',
+                'abreviatura' => 'Kg',
+                'estado' => 1,
             ],
             [
                 'descripcion' => 'Litro',
+                'abreviatura' => 'Lt',
+                'estado' => 1,
             ],
             [
                 'descripcion' => 'Metro',
-            ],
-            [
-                'descripcion' => 'Pieza',
-            ],
-            [
-                'descripcion' => 'Caja',
-            ],
-            [
-                'descripcion' => 'Bolsa',
-            ],
-            [
-                'descripcion' => 'Paquete',
-            ],
-            [
-                'descripcion' => 'Docena',
-            ],
-            [
-                'descripcion' => 'Botella',
-            ],
-            [
-                'descripcion' => 'Galón',
+                'abreviatura' => 'M',
+                'estado' => 1,
             ],
             [
                 'descripcion' => 'Metro cuadrado',
+                'abreviatura' => 'M2',
+                'estado' => 1,
             ],
             [
                 'descripcion' => 'Metro cúbico',
+                'abreviatura' => 'M3',
+                'estado' => 1,
             ],
             [
-                'descripcion' => 'Tonelada',
+                'descripcion' => 'Pieza',
+                'abreviatura' => 'Pz',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Caja',
+                'abreviatura' => 'Cj',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Bulto',
+                'abreviatura' => 'Blt',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Paquete',
+                'abreviatura' => 'Pqt',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Saco',
+                'abreviatura' => 'Sc',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Lata',
+                'abreviatura' => 'Lt',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Frasco',
+                'abreviatura' => 'Fco',
+                'estado' => 1,
             ],
             [
                 'descripcion' => 'Barril',
+                'abreviatura' => 'Brrl',
+                'estado' => 1,
             ],
             [
-                'descripcion' => 'Blister',
-            ]
-
+                'descripcion' => 'Cilindro',
+                'abreviatura' => 'Cil',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Cubo',
+                'abreviatura' => 'Cb',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Rollo',
+                'abreviatura' => 'Rl',
+                'estado' => 1,
+            ],
+            [
+                'descripcion' => 'Bandeja',
+                'abreviatura' => 'Bd',
+                'estado' => 1,
+            ],
         ];
 
         foreach ($unidades as $unidad) {

@@ -20,7 +20,17 @@ class CajaSeeder extends Seeder
                 'nombre' => 'Caja Principal',
                 'ubicacion' => 'Ubicacion Principal',
                 'estado' => 1,
-            ]
+            ],
+            [
+                'nombre' => 'Caja Secundaria',
+                'ubicacion' => 'Ubicacion Secundaria',
+                'estado' => 1,
+            ],
+            [
+                'nombre' => 'Caja Terciaria',
+                'ubicacion' => 'Ubicacion Terciaria',
+                'estado' => 1,
+            ],
         ];
 
     }

@@ -2,18 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\rolPermiso;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
 
 use function Laravel\Prompts\error;
 
 class UserController extends Controller
 {
 
+    //Instancia de rolpermisoController
+    private $rolPermisoController;
+
     public function getAllUsers()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(6);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $users = User::all();
 
         foreach ($users as $user) {
@@ -34,6 +47,15 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(1);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
 
         //Si el request tiene un campo de busqueda
         if ($request->has('search')) {
@@ -68,6 +90,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(2);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para crear un usuario']);
+        }
 
         $request->validate(
             [
@@ -131,18 +160,17 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, User $user)
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(3);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
+        }
 
         //dd($request->all());
 
@@ -195,6 +223,13 @@ class UserController extends Controller
     public function delete($id)
     {
 
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(4);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
+        }
+
         $user = User::find($id);
 
         //Verificar que el usuario no sea el mismo que esta autenticado
@@ -225,6 +260,13 @@ class UserController extends Controller
 
     public function resetPassword($id)
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(5);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
+        }
 
         $user = User::find($id);
 

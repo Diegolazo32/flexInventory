@@ -68,6 +68,11 @@ class AuthController extends Controller
                     return back();
                 }
             }
+            else
+            {
+                flash('Usuario o contraseña incorrecta', 'error');
+                return back();
+            }
         } catch (\Exception $e) {
             flash('Error al iniciar sesion', 'error');
             return back();

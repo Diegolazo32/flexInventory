@@ -15,10 +15,10 @@ class EstadosSeeder extends Seeder
 
         $estados = [
             [
-                'descripcion' => 'Inactivo',
+                'descripcion' => 'Activo',
             ],
             [
-                'descripcion' => 'Activo',
+                'descripcion' => 'Inactivo',
             ],
 
         ];

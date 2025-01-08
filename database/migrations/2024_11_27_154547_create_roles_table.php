@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
-            $table->json('permisos')->nullable();
+            //$table->json('permisos')->nullable();
             //$table->foreignId('estado')->references('id')->on('estados');
             $table->timestamps();
         });
