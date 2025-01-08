@@ -24,7 +24,7 @@ class UserController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(6);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para ver todos los usuarios']);
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         $users = User::all();
@@ -52,7 +52,7 @@ class UserController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(1);
 
         if (!$permiso) {
-            flash('No tienes permisos para acceder a esta sección', 'error');
+            flash('No tiene permisos para acceder a esta sección', 'error');
             return redirect()->route('dashboard');
         }
 
@@ -169,7 +169,7 @@ class UserController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(3);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
         //dd($request->all());
@@ -227,7 +227,7 @@ class UserController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(4);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
         $user = User::find($id);
@@ -265,7 +265,7 @@ class UserController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(5);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
         $user = User::find($id);

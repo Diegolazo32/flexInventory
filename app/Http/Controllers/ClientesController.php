@@ -8,34 +8,43 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientesController extends Controller
 {
-    public function checkRole()
-    {
-        try {
-            if (Auth::user()->rol != 1) {
-                flash('No tienes permisos para acceder a esta sección', 'error');
-                return redirect()->route('dashboard');
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al verificar el rol']);
-        }
-    }
+    private $rolPermisoController;
 
     public function index()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(22);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('clientes.index');
     }
 
     public function getAllClientes()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(26);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $clientes = clientes::all();
         return response()->json($clientes);
     }
 
     public function store(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(23);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         try {
 
             $cliente = new clientes();
@@ -57,7 +66,13 @@ class ClientesController extends Controller
 
     public function update(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(24);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         try {
 
             $cliente = clientes::find($request->id);
@@ -79,7 +94,13 @@ class ClientesController extends Controller
 
     public function delete($id)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(25);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         try {
             $cliente = clientes::find($id);
             $cliente->delete();

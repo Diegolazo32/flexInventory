@@ -41,12 +41,15 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar"
-                                    v-model="search">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por nombre, NIT, representante o email" v-model="search">
+                                <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
 
@@ -56,7 +59,16 @@
             <!-- Tabla de proveedores -->
             <div class="row">
                 <div class="card-body">
-                    <div class="table-responsive">
+
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+
+                    <div v-if="proveedores.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ proveedores.error }}</h3>
+                    </div>
+
+                    <div v-if="proveedores.length > 0" class="table-responsive">
 
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
@@ -140,7 +152,8 @@
                                             <i class="fas fa-eye"></i>
                                         </button>
 
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteProveedor(proveedor)">
+                                        <button class="btn btn-danger" id="dltBTN"
+                                            @click="DeleteProveedor(proveedor)">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -276,7 +289,7 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
-                                            placeholder="Nombre" @blur="validateForm" v-model="editItem.nombre">
+                                            placeholder="Nombre" @blur="validateEditForm" v-model="editItem.nombre">
                                         <label for="floatingInput">Nombre*</label>
                                         <small class="text-danger"
                                             v-if="editErrors.nombre">@{{ editErrors.nombre }}</small>
@@ -285,7 +298,8 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="direccionEdit" name="direccion"
-                                            placeholder="Direccion" @blur="validateForm" v-model="editItem.direccion">
+                                            placeholder="Direccion" @blur="validateEditForm"
+                                            v-model="editItem.direccion">
                                         <label for="floatingInput">Direccion*</label>
                                         <small class="text-danger"
                                             v-if="editErrors.direccion">@{{ editErrors.direccion }}</small>
@@ -294,7 +308,7 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="NITEDIT" name="NIT"
-                                            placeholder="Direccion" @blur="validateForm" v-model="editItem.NIT">
+                                            placeholder="Direccion" @blur="validateEditForm" v-model="editItem.NIT">
                                         <label for="floatingInput">NIT*</label>
                                         <small class="text-danger" v-if="editErrors.NIT">@{{ editErrors.NIT }}</small>
                                     </div>
@@ -302,7 +316,7 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="emailPrincipalEdit"
-                                            name="emailPrincipal" placeholder="EmailPrincipal" @blur="validateForm"
+                                            name="emailPrincipal" placeholder="EmailPrincipal" @blur="validateEditForm"
                                             v-model="editItem.emailPrincipal">
                                         <label for="floatingInput">Email Principal*</label>
                                         <small class="text-danger"
@@ -312,8 +326,8 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="telefonoPrincipalEdit"
-                                            name="telefonoPrincipal" placeholder="TelefonoPrincipal" @blur="validateForm"
-                                            v-model="editItem.telefonoPrincipal">
+                                            name="telefonoPrincipal" placeholder="TelefonoPrincipal"
+                                            @blur="validateEditForm" v-model="editItem.telefonoPrincipal">
                                         <label for="floatingInput">Telefono Principal*</label>
                                         <small class="text-danger"
                                             v-if="editErrors.telefonoPrincipal">@{{ editErrors.telefonoPrincipal }}</small>
@@ -322,7 +336,7 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="representanteEdit"
-                                            name="representante" placeholder="Representante" @blur="validateForm"
+                                            name="representante" placeholder="Representante" @blur="validateEditForm"
                                             v-model="editItem.representante">
                                         <label for="floatingInput">Representante*</label>
                                         <small class="text-danger"
@@ -333,7 +347,7 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="emailRepresentanteEdit"
                                             name="emailRepresentante" placeholder="Email Representante"
-                                            @blur="validateForm" v-model="editItem.emailRepresentante">
+                                            @blur="validateEditForm" v-model="editItem.emailRepresentante">
                                         <label for="floatingInput">Email Representante*</label>
                                         <small class="text-danger"
                                             v-if="editErrors.emailRepresentante">@{{ editErrors.emailRepresentante }}</small>
@@ -343,7 +357,7 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="telefonoRepresentanteEdit"
                                             name="telefonoRepresentante" placeholder="Telefono Representante"
-                                            @blur="validateForm" v-model="editItem.telefonoRepresentante">
+                                            @blur="validateEditForm" v-model="editItem.telefonoRepresentante">
                                         <label for="floatingInput">Telefono Representante*</label>
                                         <small class="text-danger"
                                             v-if="editErrors.telefonoRepresentante">@{{ editErrors.telefonoRepresentante }}</small>
@@ -352,8 +366,8 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <!-- Estado -->
-                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
-                                            v-model="editItem.estado" @blur="validateEditForm"
+                                        <select class="form-select" id="estadoEdit" name="estado"
+                                            :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
                                                 :value="estado.id">
@@ -497,6 +511,8 @@
                 searchProveedores: [],
                 filtered: [],
                 estados: [],
+                loading: true,
+                searchError: '',
             },
             methods: {
                 //Crear
@@ -532,14 +548,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Proveedor creado',
-                                    text: 'El proveedor ha sido creado correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al crear el proveedor',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -603,15 +619,15 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                    title: 'Proveedor editado',
-                                    text: 'El proveedor ha sido editado correctamente',
+                                    title: 'Proveedor creado',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al editar el proveedor',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -917,6 +933,8 @@
                     //recorrer this.proveedores
                     for (let i = 0; i < this.proveedores.length; i++) {
                         if (this.proveedores[i].nombre == this.editItem.nombre) {
+                            document.getElementById('nombreEdit').style.border = '1px solid #ced4da';
+                            document.getElementById('nombreEdit').style.border = '1px solid red';
                             this.editErrors.nombre = 'El proveedor ya existe';
                         }
                     }
@@ -924,6 +942,21 @@
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
+
+                    this.searchError = '';
+
+                    if (this.search == null) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
+                    if (!this.search) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
                     let search = this.search.toLowerCase();
                     let proveedores = this.searchProveedores;
 
@@ -945,6 +978,11 @@
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }
+
+
+                    if (this.filtered.length == 0) {
+                        this.searchError = 'No se encontraron resultados';
                     }
 
                     this.proveedores = this.filtered;
@@ -1027,12 +1065,14 @@
                 },
                 cleanSearch() {
                     this.search = '';
+                    this.searchError = '';
                     this.proveedores = this.searchProveedores;
                 },
                 //Obtener recursos
                 async getAllProveedores() {
                     let response = await fetch('/allProveedores');
                     let data = await response.json();
+                    this.loading = false;
                     this.proveedores = data;
                     this.searchProveedores = data;
                 },

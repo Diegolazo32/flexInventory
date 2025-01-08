@@ -363,6 +363,14 @@ class PermisosSeeder extends Seeder
                 'grupo' => 3,
                 'metodo' => 1,
             ],
+            [
+                'nombre' => 'asignar-permisos-rol	',
+                'ruta' => 'roles.permisos',
+                'descripcion' => 'Asignar los permisos a un rol',
+                'endpoint' => '/roles/permisos/{id}',
+                'grupo' => 3,
+                'metodo' => 2,
+            ],
 
             //Permisos
             [
@@ -432,6 +440,48 @@ class PermisosSeeder extends Seeder
                 'endpoint' => '/auth/password/{id}',
                 'grupo' => 15,
                 'metodo' => 2,
+            ],
+
+            //Proveedores
+            [
+                'nombre' => 'ver-proveedores',
+                'ruta' => 'proveedores',
+                'descripcion' => 'Ver proveedores',
+                'endpoint' => '/proveedores',
+                'grupo' => 8,
+                'metodo' => 1,
+            ],
+            [
+                'nombre' => 'crear-proveedores',
+                'ruta' => 'proveedores.store',
+                'descripcion' => 'Crear proveedores',
+                'endpoint' => '/proveedores/store',
+                'grupo' => 8,
+                'metodo' => 2,
+            ],
+            [
+                'nombre' => 'editar-proveedores',
+                'ruta' => 'proveedores.edit',
+                'descripcion' => 'Editar proveedores',
+                'endpoint' => '/proveedores/edit/{id}',
+                'grupo' => 8,
+                'metodo' => 2,
+            ],
+            [
+                'nombre' => 'eliminar-proveedores',
+                'ruta' => 'proveedores.delete',
+                'descripcion' => 'Eliminar proveedores',
+                'endpoint' => '/proveedores/delete/{id}',
+                'grupo' => 8,
+                'metodo' => 2,
+            ],
+            [
+                'nombre' => 'obtener-all-proveedores',
+                'ruta' => 'allProveedores',
+                'descripcion' => 'Obtener todos los proveedores',
+                'endpoint' => '/allProveedores',
+                'grupo' => 8,
+                'metodo' => 1,
             ],
 
 

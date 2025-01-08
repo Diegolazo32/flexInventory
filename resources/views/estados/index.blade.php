@@ -36,12 +36,15 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar"
-                                    v-model="search">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por descripción" v-model="search">
+                                <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
 
@@ -51,7 +54,16 @@
             <!-- Tabla de estados -->
             <div class="row">
                 <div class="card-body">
-                    <div class="table-responsive">
+
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+
+                    <div v-if="estados.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ estados.error }}</h3>
+                    </div>
+
+                    <div v-if="estados.length > 0" class="table-responsive">
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
@@ -111,7 +123,8 @@
                                             placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
                                             value="{{ old('descripcion') }}">
                                         <label for="floatingInput">Descripcion*</label>
-                                        <small class="text-danger" v-if="errors.descripcion">@{{ errors.descripcion }}</small>
+                                        <small class="text-danger"
+                                            v-if="errors.descripcion">@{{ errors.descripcion }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -212,6 +225,8 @@
                 searchEstados: [],
                 filtered: [],
                 estados: [],
+                loading: true,
+                searchError: '',
             },
             methods: {
                 //Crear
@@ -514,6 +529,21 @@
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
+
+                    this.searchError = '';
+
+                    if (this.search == null) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
+                    if (!this.search) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
                     let search = this.search.toLowerCase();
                     let estados = this.searchEstados;
 
@@ -529,6 +559,10 @@
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }
+
+                    if (this.filtered.length == 0) {
+                        this.searchError = 'No se encontraron resultados';
                     }
 
                     this.estados = this.filtered;
@@ -565,6 +599,7 @@
                 },
                 cleanSearch() {
                     this.search = '';
+                    this.searchError = '';
                     this.estados = this.searchEstados;
                 },
                 //Obtener recursos
@@ -573,7 +608,7 @@
                     try {
                         let response = await fetch('/allEstados');
                         let data = await response.json();
-
+                        this.loading = false;
                         this.estados = data;
                         this.searchEstados = data;
 

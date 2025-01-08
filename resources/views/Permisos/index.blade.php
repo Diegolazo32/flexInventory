@@ -33,54 +33,63 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-10">
-
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar"
-                                    v-model="search">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por nombre, descripcion o grupo" v-model="search">
+                                <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
             <!-- Tabla de permisos -->
             <div class="row">
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+
+                    <div v-if="permisos.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ permisos.error }}</h3>
+                    </div>
+
+                    <div v-if="permisos.length > 0" class="table-responsive">
 
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
+                                    <!--<th scope="col">ID</th>-->
                                     <th scope="col">Nombre</th>
-                                    <th scope="col">Ruta</th>
+                                    <!--<th scope="col">Ruta</th>-->
                                     <th scope="col">Descripcion</th>
                                     <th scope="col">Grupo</th>
-                                    <th scope="col">Endpoint</th>
-                                    <th scope="col">Metodo</th>
+                                    <!--<th scope="col">Endpoint</th>-->
+                                    <!--<th scope="col">Metodo</th>-->
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- vue foreach -->
                                 <tr v-for='permiso in permisos' :key="permiso.id">
-                                    <td>@{{ permiso.id }}</td>
+                                    <!--<td>@{{ permiso.id }}</td>-->
                                     <td>
                                         @{{ permiso.nombre }}
                                     </td>
-                                    <td v-if="permiso.ruta.length > 25">
+                                    <!--<td v-if="permiso.ruta.length > 25">
                                         @{{ permiso.ruta.substring(0, 25) }}...
                                     </td>
                                     <td v-else>
                                         @{{ permiso.ruta }}
-                                    </td>
-                                    <td v-if="permiso.descripcion.length > 25">
-                                        @{{ permiso.descripcion.substring(0, 25) }}...
+                                    </td>-->
+                                    <td v-if="permiso.descripcion.length > 100">
+                                        @{{ permiso.descripcion.substring(0, 100) }}...
                                     </td>
                                     <td v-else>
                                         @{{ permiso.descripcion }}
@@ -88,20 +97,20 @@
                                     <td>
                                         @{{ grupos.find(grupo => grupo.id == permiso.grupo).descripcion }}
                                     </td>
-                                    <td>
+                                    <!--<td>
                                         @{{ permiso.endpoint }}
                                     </td>
                                     <td>
                                         @{{ metodos.find(metodo => metodo.id == permiso.metodo).descripcion }}
-                                    </td>
+                                    </td>-->
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editPermiso(permiso)">
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeletePermiso(permiso)">
+                                        <!--<button class="btn btn-danger" id="dltBTN" @click="DeletePermiso(permiso)">
                                             <i class="fas fa-trash"></i>
-                                        </button>
+                                        </button>-->
                                     </td>
                                 </tr>
 
@@ -395,7 +404,9 @@
                         descripcion: 'DELETE'
                     },
                 ],
-                grupos: []
+                grupos: [],
+                loading: true,
+                searchError: '',
             },
             methods: {
                 //Crear
@@ -431,14 +442,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Permiso creado',
-                                    text: 'El permiso ha sido creado correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al crear la permiso',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -503,14 +514,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Permiso editado',
-                                    text: 'El permiso ha sido editado correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al editar la permiso',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -771,6 +782,21 @@
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
+
+                    this.searchError = '';
+
+                    if (this.search == null) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
+                    if (!this.search) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
                     let search = this.search.toLowerCase();
                     let permisos = this.searchPermisos;
 
@@ -792,6 +818,10 @@
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }
+
+                    if (this.filtered.length == 0) {
+                        this.searchError = 'No se encontraron resultados';
                     }
 
                     this.permisos = this.filtered;
@@ -833,16 +863,22 @@
                 },
                 cleanSearch() {
                     this.search = '';
+                    this.searchError = '';
                     this.permisos = this.searchPermisos;
                 },
                 //Obtener recursos
                 async getAllPermisos() {
-                    let response = await fetch('/allPermisos');
-                    let data = await response.json();
-                    this.permisos = data;
-                    this.searchPermisos = data;
+                    try {
+                        let response = await fetch('/allPermisos');
+                        let data = await response.json();
 
-                    console.log(this.permisos);
+                        this.loading = false;
+                        this.permisos = data;
+                        this.searchPermisos = data;
+
+                    } catch (error) {
+
+                    }
                 },
                 async getAllEstados() {
 

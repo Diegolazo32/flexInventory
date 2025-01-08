@@ -8,33 +8,44 @@ use Illuminate\Support\Facades\Auth;
 
 class CategoriaController extends Controller
 {
-    public function checkRole()
-    {
-        try {
-            if (Auth::user()->rol != 1) {
-                flash('No tienes permisos para acceder a esta sección', 'error');
-                return redirect()->route('dashboard');
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al verificar el rol']);
-        }
-    }
+    private $rolPermisoController;
+
 
     public function getAllCategorias()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(21);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $categorias = categoria::all();
         return response()->json($categorias);
     }
 
     public function index()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(17);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('categorias.index');
     }
 
     public function store(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(18);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
 
         try {
             $categoria = new categoria();
@@ -49,7 +60,13 @@ class CategoriaController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(19);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
 
         try {
             $categoria = categoria::find($id);
@@ -64,7 +81,13 @@ class CategoriaController extends Controller
 
     public function delete($id)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(20);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
 
         try {
             $categoria = categoria::find($id);

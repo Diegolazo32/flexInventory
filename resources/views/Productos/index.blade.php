@@ -41,12 +41,15 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar"
-                                    v-model="search">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por descripcion" v-model="search">
+                                <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
 
@@ -56,7 +59,20 @@
             <!-- Tabla de productos -->
             <div class="row">
                 <div class="card-body">
-                    <div class="table-responsive">
+
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+
+                    <div v-if="productos.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ productos.error }}</h3>
+                    </div>
+
+                    <div v-if="productos.length == 0 && !loading" class="alert alert-warning" role="alert">
+                        <h3>No hay productos registrados</h3>
+                    </div>
+
+                    <div v-if="productos.length > 0" class="table-responsive">
 
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
@@ -85,10 +101,10 @@
                                 <tr v-for='producto in productos' :key="producto.id">
                                     <td>@{{ producto.codigo }}</td>
                                     <td>@{{ producto.nombre }}</td>
-                                    <td>$@{{ producto.precioCompra }}</td>
-                                    <td>$@{{ producto.precioVenta }}</td>
-                                    <td>$@{{ producto.precioDescuento ?? '-' }}</td>
-                                    <td>$@{{ producto.precioEspecial ?? '-' }}</td>
+                                    <td>$@{{ parseDouble(producto.precioCompra) ?? '-' }}</td>
+                                    <td>$@{{ parseDouble(producto.precioVenta) ?? '-' }}</td>
+                                    <td>$@{{ parseDouble(producto.precioDescuento) ?? '-' }}</td>
+                                    <td>$@{{ parseDouble(producto.precioEspecial) ?? '-' }}</td>
                                     <td>@{{ formatDate(producto.fechaVencimiento) ?? '-' }}</td>
                                     <td>@{{ producto.stock ?? '-' }}</td>
                                     <td>@{{ producto.stockInicial ?? '-' }}</td>
@@ -111,6 +127,10 @@
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
+                                        <button id="showBTN" class="btn btn-warning" @click="viewProducto(producto)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+
                                         <button class="btn btn-danger" id="dltBTN" @click="DeleteProducto(producto)">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -120,22 +140,12 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="17">
-                                        Pendiente:
-                                        Validar campos opcionales en los formularios
-                                        <br>
-                                        Validar campos numericos en los formularios
-                                        <br>
-                                        Validar campos de fecha en los formularios
-                                        <br>
-                                        Show modal
-                                        <br>
-                                        Delete
-                                        <br>
+                                    <td>
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -155,7 +165,7 @@
                             @csrf
                             <div class="row">
                                 <!-- Codigo -->
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="codigo" name="codigo"
                                             placeholder="Codigo" @blur="validateForm" v-model="item.codigo">
@@ -164,7 +174,7 @@
                                     </div>
                                 </div>
                                 <!-- Nombre -->
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" v-model="item.nombre">
@@ -173,10 +183,10 @@
                                     </div>
                                 </div>
                                 <!-- Descripcion -->
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-md-12" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
-                                        <input type="text-area" class="form-control" id="descripcion" name="descripcion"
-                                            placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion">
+                                        <textarea type="text-area" class="form-control" id="descripcion" name="descripcion" style="height: 100px;"
+                                            placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"></textarea>
                                         <label for="floatingInput">Descripcion</label>
                                         <small class="text-danger"
                                             v-if="errors.descripcion">@{{ errors.descripcion }}</small>
@@ -570,8 +580,8 @@
                                 <!-- Estado -->
                                 <div class="form-floating col-md-4" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
-                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
-                                            v-model="editItem.estado" @blur="validateEditForm"
+                                        <select class="form-select" id="estadoEdit" name="estado"
+                                            :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
                                                 :value="estado.id">
@@ -607,7 +617,7 @@
                         <small class="text-muted text-danger"> ¿Estas seguro de eliminar este producto?</small>
                     </div>
                     <div class="modal-body text-center" style="padding: 25px;">
-                        <h3>Descripcion: @{{ deleteItem.descripcion }}</h3>
+                        <h3>Nombre: @{{ deleteItem.nombre }}</h3>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="canceldeleteButton"
@@ -628,6 +638,178 @@
                         <h1 class="modal-title fs-5" id="showProductoModalLabel">Producto</h1>
                     </div>
                     <div class="modal-body text-center" style="padding: 25px;">
+                        <form ref="formEdit">
+                            @csrf
+                            <div class="row">
+                                <!-- Codigo -->
+                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="text" class="form-control" id="codigoEdit"
+                                            name="codigo" placeholder="Codigo" v-model="showItem.codigo">
+                                        <label for="floatingInput">Codigo*</label>
+                                    </div>
+                                </div>
+                                <!-- Nombre -->
+                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="text" class="form-control" id="nombreEdit"
+                                            name="nombre" placeholder="Nombre" v-model="showItem.nombre">
+                                        <label for="floatingInput">Nombre*</label>
+
+                                    </div>
+                                </div>
+
+                                <!-- Descripcion -->
+                                <div class="form-floating col-md-12" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <textarea disabled type="text-area" class="form-control" id="descripcionEdit" style="height: 100px;"
+                                            name="descripcion" placeholder="Descripcion" v-model="showItem.descripcion"></textarea>
+                                        <label for="floatingInput">Descripcion</label>
+                                    </div>
+                                </div>
+                                <!-- Precio Compra -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="precioCompraEdit"
+                                            name="precioCompra" placeholder="Precio Compra"
+                                            v-model="showItem.precioCompra" step="0.01" min="0" max="999999"
+                                            maxlength="6">
+                                        <label for="floatingInput">Precio Compra*</label>
+                                    </div>
+                                </div>
+                                <!-- Precio Venta -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="precioVentaEdit"
+                                            name="precioVenta" placeholder="Precio Venta" v-model="showItem.precioVenta"
+                                            step="0.01" min="0" max="999999" maxlength="6">
+                                        <label for="floatingInput">Precio Venta*</label>
+                                    </div>
+                                </div>
+                                <!-- Precio Descuento -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="precioDescuentoEdit"
+                                            name="precioDescuento" placeholder="Precio Descuento"
+                                            v-model="showItem.precioDescuento" step="0.01" min="0"
+                                            max="999999" maxlength="6">
+                                        <label for="floatingInput">Precio Descuento</label>
+                                    </div>
+                                </div>
+                                <!-- Precio Especial -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="precioEspecialEdit"
+                                            name="precioEspecial" placeholder="Precio Especial"
+                                            v-model="showItem.precioEspecial" step="0.01" min="0"
+                                            max="999999" maxlength="6">
+                                        <label for="floatingInput">Precio Especial</label>
+                                    </div>
+                                </div>
+                                <!-- Fecha Vencimiento -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="date" class="form-control" id="fechaVencimientoEdit"
+                                            name="fechaVencimiento" placeholder="Fecha Vencimiento"
+                                            v-model="showItem.fechaVencimiento">
+                                        <label for="floatingInput">Fecha Vencimiento</label>
+                                    </div>
+                                </div>
+                                <!-- Stock -->
+                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="stockEdit"
+                                            name="stock" placeholder="Stock" v-model="showItem.stock" step="1"
+                                            min="0" max="999999" maxlength="6">
+                                        <label for="floatingInput">Stock*</label>
+                                    </div>
+                                </div>
+                                <!-- Stock Inicial -->
+                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="stockInicialEdit"
+                                            name="stockInicial" placeholder="Stock Inicial"
+                                            v-model="showItem.stockInicial" step="1" min="0" max="999999"
+                                            maxlength="6" disabled>
+                                        <label for="floatingInput">Stock Inicial*</label>
+                                    </div>
+                                </div>
+                                <!-- Stock Minimo -->
+                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="stockMinimoEdit"
+                                            name="stockMinimo" placeholder="Stock Minimo" v-model="showItem.stockMinimo"
+                                            step="1" min="0" max="999999" maxlength="6">
+                                        <label for="floatingInput">Stock Minimo</label>
+                                    </div>
+                                </div>
+                                <!-- Stock Maximo -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="stockMaximoEdit"
+                                            name="stockMaximo" placeholder="Stock Maximo" v-model="showItem.stockMaximo"
+                                            step="1" min="0" max="999999" maxlength="6">
+                                        <label for="floatingInput">Stock Maximo</label>
+                                    </div>
+                                </div>
+                                <!-- Categoria -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <select disabled class="form-select" id="categoriaEdit" name="categoria"
+                                            v-model="showItem.categoria">
+                                            <option v-for="categoria in categorias" :key="categoria.id"
+                                                :value="categoria.id">
+                                                @{{ categoria.descripcion }}
+                                            </option>
+                                        </select>
+                                        <label for="floatingInput">Categoria*</label>
+                                    </div>
+                                </div>
+                                <!-- Tipo Venta -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <select disabled class="form-select" id="tipoVentaEdit" name="tipoVenta"
+                                            v-model="showItem.tipoVenta">
+                                            <option v-for="tipoVenta in tipoVentas" :key="tipoVenta.id"
+                                                :value="tipoVenta.id">
+                                                @{{ tipoVenta.descripcion }}
+                                            </option>
+                                        </select>
+                                        <label for="floatingInput">Tipo Venta*</label>
+
+                                    </div>
+                                </div>
+                                <!-- Proveedor -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <select disabled class="form-select" id="proveedorEdit" name="proveedor"
+                                            v-model="showItem.proveedor">
+                                            <option v-for="proveedor in proveedores" :key="proveedor.id"
+                                                :value="proveedor.id">
+                                                @{{ proveedor.nombre }}
+                                            </option>
+                                        </select>
+                                        <label for="floatingInput">Proveedor*</label>
+
+                                    </div>
+                                </div>
+                                <!-- Unidad -->
+                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <select disabled class="form-select" id="unidadEdit" name="unidad"
+                                            v-model="showItem.unidad">
+                                            <option v-for="unidad in unidades" :key="unidad.id"
+                                                :value="unidad.id">
+                                                @{{ unidad.descripcion }}
+                                            </option>
+                                        </select>
+                                        <label for="floatingInput">Unidad*</label>
+                                        <small class="text-danger"
+                                            v-if="editErrors.unidad">@{{ editErrors.unidad }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelShowButton"
@@ -731,6 +913,8 @@
                 tipoVentas: [],
                 proveedores: [],
                 unidades: [],
+                searchError: '',
+                loading: true,
             },
             methods: {
                 //Crear
@@ -837,7 +1021,7 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                    title: 'Producto editada',
+                                    title: 'Producto editado',
                                     text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
@@ -1055,15 +1239,13 @@
                         document.getElementById('codigo').style.border = '1px solid green';
                     }
 
-                    if (!this.item.descripcion) {
-                        this.errors.descripcion = 'Este campo es obligatorio';
-                        document.getElementById('descripcion').style.border = '1px solid red';
-                    } else {
-                        document.getElementById('descripcion').style.border = '1px solid green';
-                    }
+                    document.getElementById('descripcion').style.border = '1px solid green';
 
                     if (!this.item.precioCompra) {
                         this.errors.precioCompra = 'Este campo es obligatorio';
+                        document.getElementById('precioCompra').style.border = '1px solid red';
+                    } else if (this.item.precioCompra < 0) {
+                        this.errors.precioCompra = 'El precio no puede ser negativo';
                         document.getElementById('precioCompra').style.border = '1px solid red';
                     } else {
                         document.getElementById('precioCompra').style.border = '1px solid green';
@@ -1072,33 +1254,32 @@
                     if (!this.item.precioVenta) {
                         this.errors.precioVenta = 'Este campo es obligatorio';
                         document.getElementById('precioVenta').style.border = '1px solid red';
+                    } else if (this.item.precioVenta < 0) {
+                        this.errors.precioVenta = 'El precio no puede ser negativo';
+                        document.getElementById('precioVenta').style.border = '1px solid red';
                     } else {
                         document.getElementById('precioVenta').style.border = '1px solid green';
                     }
 
-                    if (!this.item.precioDescuento) {
-                        this.errors.precioDescuento = 'Este campo es obligatorio';
+                    if (this.item.precioDescuento < 0) {
+                        this.errors.precioDescuento = 'El precio no puede ser negativo';
                         document.getElementById('precioDescuento').style.border = '1px solid red';
                     } else {
                         document.getElementById('precioDescuento').style.border = '1px solid green';
                     }
 
-                    if (!this.item.precioEspecial) {
-                        this.errors.precioEspecial = 'Este campo es obligatorio';
+                    if (this.item.precioEspecial < 0) {
+                        this.errors.precioEspecial = 'El precio no puede ser negativo';
                         document.getElementById('precioEspecial').style.border = '1px solid red';
                     } else {
                         document.getElementById('precioEspecial').style.border = '1px solid green';
                     }
 
-                    if (!this.item.fechaVencimiento) {
-                        this.errors.fechaVencimiento = 'Este campo es obligatorio';
-                        document.getElementById('fechaVencimiento').style.border = '1px solid red';
-                    } else {
-                        document.getElementById('fechaVencimiento').style.border = '1px solid green';
-                    }
-
                     if (!this.item.stock) {
                         this.errors.stock = 'Este campo es obligatorio';
+                        document.getElementById('stock').style.border = '1px solid red';
+                    } else if (this.item.stock < 0) {
+                        this.errors.stock = 'El stock no puede ser negativo';
                         document.getElementById('stock').style.border = '1px solid red';
                     } else {
                         document.getElementById('stock').style.border = '1px solid green';
@@ -1107,52 +1288,57 @@
                     if (!this.item.stockInicial) {
                         this.errors.stockInicial = 'Este campo es obligatorio';
                         document.getElementById('stockInicial').style.border = '1px solid red';
+                    } else if (this.item.stockInicial < 0) {
+                        this.errors.stockInicial = 'El stock no puede ser negativo';
+                        document.getElementById('stockInicial').style.border = '1px solid red';
                     } else {
                         document.getElementById('stockInicial').style.border = '1px solid green';
                     }
 
-                    if (!this.item.stockMinimo) {
-                        this.errors.stockMinimo = 'Este campo es obligatorio';
+                    if (this.item.stockMinimo < 0) {
+                        this.errors.stockMinimo = 'El stock no puede ser negativo';
                         document.getElementById('stockMinimo').style.border = '1px solid red';
                     } else {
                         document.getElementById('stockMinimo').style.border = '1px solid green';
                     }
 
-                    if (!this.item.stockMaximo) {
-                        this.errors.stockMaximo = 'Este campo es obligatorio';
+                    if (this.item.stockMaximo < 0) {
+                        this.errors.stockMaximo = 'El stock no puede ser negativo';
                         document.getElementById('stockMaximo').style.border = '1px solid red';
                     } else {
                         document.getElementById('stockMaximo').style.border = '1px solid green';
                     }
+
                     if (!this.item.categoria) {
-                        this.errors.stockMaximo = 'Este campo es obligatorio';
+                        this.errors.categoria = 'Este campo es obligatorio';
                         document.getElementById('categoria').style.border = '1px solid red';
                     } else {
                         document.getElementById('categoria').style.border = '1px solid green';
                     }
 
                     if (!this.item.tipoVenta) {
-                        this.errors.stockMaximo = 'Este campo es obligatorio';
+                        this.errors.tipoVenta = 'Este campo es obligatorio';
                         document.getElementById('tipoVenta').style.border = '1px solid red';
                     } else {
                         document.getElementById('tipoVenta').style.border = '1px solid green';
                     }
 
                     if (!this.item.proveedor) {
-                        this.errors.stockMaximo = 'Este campo es obligatorio';
+                        this.errors.proveedor = 'Este campo es obligatorio';
                         document.getElementById('proveedor').style.border = '1px solid red';
                     } else {
                         document.getElementById('proveedor').style.border = '1px solid green';
                     }
 
                     if (!this.item.unidad) {
-                        this.errors.stockMaximo = 'Este campo es obligatorio';
+                        this.errors.unidad = 'Este campo es obligatorio';
                         document.getElementById('unidad').style.border = '1px solid red';
                     } else {
                         document.getElementById('unidad').style.border = '1px solid green';
                     }
 
                     this.validateProductoname();
+                    this.validateDate(this.item.fechaVencimiento);
                 },
                 validateEditForm() {
 
@@ -1172,15 +1358,14 @@
                         document.getElementById('codigoEdit').style.border = '1px solid green';
                     }
 
-                    if (!this.editItem.descripcion) {
-                        this.editErrors.descripcion = 'Este campo es obligatorio';
-                        document.getElementById('descripcionEdit').style.border = '1px solid red';
-                    } else {
-                        document.getElementById('descripcionEdit').style.border = '1px solid green';
-                    }
+                    document.getElementById('descripcionEdit').style.border = '1px solid green';
+
 
                     if (!this.editItem.precioCompra) {
                         this.editErrors.precioCompra = 'Este campo es obligatorio';
+                        document.getElementById('precioCompraEdit').style.border = '1px solid red';
+                    } else if (this.editItem.precioCompra < 0) {
+                        this.editErrors.precioCompra = 'El precio no puede ser negativo';
                         document.getElementById('precioCompraEdit').style.border = '1px solid red';
                     } else {
                         document.getElementById('precioCompraEdit').style.border = '1px solid green';
@@ -1189,33 +1374,32 @@
                     if (!this.editItem.precioVenta) {
                         this.editErrors.precioVenta = 'Este campo es obligatorio';
                         document.getElementById('precioVentaEdit').style.border = '1px solid red';
+                    } else if (this.editItem.precioVenta < 0) {
+                        this.editErrors.precioVenta = 'El precio no puede ser negativo';
+                        document.getElementById('precioVentaEdit').style.border = '1px solid red';
                     } else {
                         document.getElementById('precioVentaEdit').style.border = '1px solid green';
                     }
 
-                    if (!this.editItem.precioDescuento) {
-                        this.editErrors.precioDescuento = 'Este campo es obligatorio';
+                    if (this.editItem.precioDescuento < 0) {
+                        this.editErrors.precioDescuento = 'El precio no puede ser negativo';
                         document.getElementById('precioDescuentoEdit').style.border = '1px solid red';
                     } else {
                         document.getElementById('precioDescuentoEdit').style.border = '1px solid green';
                     }
 
-                    if (!this.editItem.precioEspecial) {
-                        this.editErrors.precioEspecial = 'Este campo es obligatorio';
+                    if (this.editItem.precioEspecial < 0) {
+                        this.editErrors.precioEspecial = 'El precio no puede ser negativo';
                         document.getElementById('precioEspecialEdit').style.border = '1px solid red';
                     } else {
                         document.getElementById('precioEspecialEdit').style.border = '1px solid green';
                     }
 
-                    if (!this.editItem.fechaVencimiento) {
-                        this.editErrors.fechaVencimiento = 'Este campo es obligatorio';
-                        document.getElementById('fechaVencimientoEdit').style.border = '1px solid red';
-                    } else {
-                        document.getElementById('fechaVencimientoEdit').style.border = '1px solid green';
-                    }
-
                     if (!this.editItem.stock) {
                         this.editErrors.stock = 'Este campo es obligatorio';
+                        document.getElementById('stockEdit').style.border = '1px solid red';
+                    } else if (this.editItem.stock < 0) {
+                        this.editErrors.stock = 'El stock no puede ser negativo';
                         document.getElementById('stockEdit').style.border = '1px solid red';
                     } else {
                         document.getElementById('stockEdit').style.border = '1px solid green';
@@ -1224,19 +1408,22 @@
                     if (!this.editItem.stockInicial) {
                         this.editErrors.stockInicial = 'Este campo es obligatorio';
                         document.getElementById('stockInicialEdit').style.border = '1px solid red';
+                    } else if (this.editItem.stockInicial < 0) {
+                        this.editErrors.stockInicial = 'El stock no puede ser negativo';
+                        document.getElementById('stockInicialEdit').style.border = '1px solid red';
                     } else {
                         document.getElementById('stockInicialEdit').style.border = '1px solid green';
                     }
 
-                    if (!this.editItem.stockMinimo) {
-                        this.editErrors.stockMinimo = 'Este campo es obligatorio';
+                    if (this.editItem.stockMinimo < 0) {
+                        this.editErrors.stockMinimo = 'El stock no puede ser negativo';
                         document.getElementById('stockMinimoEdit').style.border = '1px solid red';
                     } else {
                         document.getElementById('stockMinimoEdit').style.border = '1px solid green';
                     }
 
-                    if (!this.editItem.stockMaximo) {
-                        this.editErrors.stockMaximo = 'Este campo es obligatorio';
+                    if (this.editItem.stockMaximo < 0) {
+                        this.editErrors.stockMaximo = 'El stock no puede ser negativo';
                         document.getElementById('stockMaximoEdit').style.border = '1px solid red';
                     } else {
                         document.getElementById('stockMaximoEdit').style.border = '1px solid green';
@@ -1249,19 +1436,24 @@
                     document.getElementById('estadoEdit').style.border = '1px solid green';
 
                     this.validateEditProductoname();
+                    this.validateEditDate(this.editItem.fechaVencimiento);
                 },
                 validateProductoname() {
+
+                    this.errors = {};
+
                     //Al menos 5 caracteres y sin espacios o caracteres especiales, !@#$%^&*()_+
                     let regex = /^[ a-zA-Z0-9.]{3,}$/;
 
-                    if (!regex.test(this.item.nombre)) {
-                        this.errors.nombre =
+                    if (!regex.test(this.item.codigo)) {
+                        this.errors.codigo =
                             'El producto debe tener al menos 3 caracteres y no contener caracteres especiales';
                     }
 
                     for (let i = 0; i < this.productos.length; i++) {
-                        if (this.productos[i].nombre == this.item.nombre) {
-                            this.errors.nombre = 'El producto ya existe';
+                        if (this.productos[i].codigo == this.item.codigo) {
+                            this.errors.codigo = 'El producto ya existe';
+                            document.getElementById('codigo').style.border = '1px solid red';
                         }
                     }
                 },
@@ -1269,10 +1461,10 @@
 
                     this.editErrors = {};
 
-                    let regex = /^[ a-zA-Z0-9.]{5,}$/;
+                    let regex = /^[ a-zA-Z0-9.]{3,}$/;
 
-                    if (!regex.test(this.editItem.nombre)) {
-                        this.editErrors.nombre =
+                    if (!regex.test(this.editItem.codigo)) {
+                        this.editErrors.codigo =
                             'El producto debe tener al menos 3 caracteres y no contener espacios especiales';
                     }
 
@@ -1281,11 +1473,56 @@
 
                     //recorrer this.productos
                     for (let i = 0; i < this.productos.length; i++) {
-                        if (this.productos[i].nombre == this.editItem.nombre) {
-                            this.editErrors.nombre = 'El producto ya existe';
+                        if (this.productos[i].codigo == this.editItem.codigo) {
+                            this.editErrors.codigo = 'El producto ya existe';
+                            document.getElementById('codigoEdit').style.border = '1px solid red';
                         }
                     }
 
+                },
+                validateEditDate(date) {
+
+                    if (!date) {
+                        document.getElementById('fechaVencimientoEdit').style.border = '1px solid green';
+                        return;
+                    }
+
+                    let fecha = new Date(date);
+                    let hoy = new Date();
+
+                    if (fecha < hoy) {
+                        this.editErrors.fechaVencimiento =
+                            'La fecha de vencimiento no puede ser menor o igual a la fecha actual';
+                        document.getElementById('fechaVencimientoEdit').style.border = '1px solid red';
+                    } else {
+                        document.getElementById('fechaVencimientoEdit').style.border = '1px solid green';
+                    }
+
+                },
+                validateDate(date) {
+
+                    if (!date) {
+                        document.getElementById('fechaVencimiento').style.border = '1px solid green';
+                        return;
+                    }
+
+                    let fecha = new Date(date);
+                    let hoy = new Date();
+
+                    if (fecha < hoy) {
+                        this.errors.fechaVencimiento =
+                            'La fecha de vencimiento no puede ser menor o igual a la fecha actual';
+                        document.getElementById('fechaVencimiento').style.border = '1px solid red';
+                    } else {
+                        document.getElementById('fechaVencimiento').style.border = '1px solid green';
+                    }
+
+                },
+                //Parse
+                parseDouble(value) {
+                    if (value) {
+                        return parseFloat(value).toFixed(2);
+                    }
                 },
                 formatDate(date) {
                     let fecha = new Date(date);
@@ -1299,22 +1536,39 @@
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
+
+                    this.searchError = '';
+
+                    if (this.search == null) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
+                    if (!this.search) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
                     let search = this.search.toLowerCase();
                     let productos = this.searchProductos;
 
                     try {
                         this.filtered = productos.filter(producto => {
-                            return producto.nombre.toLowerCase().includes(search) ||
-                                producto.descripcion.toLowerCase().includes(search) ||
-                                producto.codigo.toLowerCase().includes(search);
+                            return producto.nombre.toLowerCase().includes(search)
                         });
                     } catch (error) {
                         swal.fire({
                             title: 'Error',
-                            text: 'Ha ocurrido un error al buscar el producto',
+                            text: error,
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }
+
+                    if (this.filtered.length == 0) {
+                        this.searchError = 'No se encontraron resultados';
                     }
 
                     this.productos = this.filtered;
@@ -1341,6 +1595,7 @@
                     };
                     this.errors = {};
                     this.editErrors = {};
+                    this.searchError = '';
                     this.search = null;
                     //this.productos = [];
                     this.editItem = {
@@ -1439,29 +1694,28 @@
                     document.getElementById('unidadEdit').style.border = '1px solid #ced4da';
                     document.getElementById('estadoEdit').style.border = '1px solid #ced4da';
 
-                    this.productos = this.searchProductos;
+                    //console.log(this.searchProductos);
+
+                    if (this.searchProductos.length == 0) {
+                        this.productos = [];
+                        this.searchProductos = [];
+                        this.getAllProductos();
+                    } else {
+                        this.productos = this.searchProductos;
+                    }
                 },
                 cleanSearch() {
                     this.search = null;
                     this.productos = this.searchProductos;
+                    this.searchError = '';
                 },
                 //Obtener recursos
                 async getAllProductos() {
                     let response = await fetch('/allProductos');
                     let data = await response.json();
+                    this.loading = false;
                     this.productos = data;
                     this.searchProductos = data;
-
-                    //doubleParse
-                    for (let i = 0; i < this.productos.length; i++) {
-                        this.productos[i].precioCompra = parseFloat(this.productos[i].precioCompra).toFixed(2);
-                        this.productos[i].precioVenta = parseFloat(this.productos[i].precioVenta).toFixed(2);
-                        this.productos[i].precioDescuento = parseFloat(this.productos[i].precioDescuento)
-                            .toFixed(2);
-                        this.productos[i].precioEspecial = parseFloat(this.productos[i].precioEspecial).toFixed(
-                            2);
-                    }
-
                 },
                 async getAllEstados() {
 
@@ -1498,7 +1752,7 @@
                     let response = await fetch('/allUnidades');
                     let data = await response.json();
                     this.unidades = data;
-                }
+                },
 
             },
             mounted() {

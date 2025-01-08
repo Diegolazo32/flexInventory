@@ -36,7 +36,13 @@
     <nav class="navbar navbar-dark bg-dark" style="padding: 10px;">
 
         <div class="row d-flex align-items-center" style="width: 100%; padding: 5px;">
-            <div class="col-10 d-flex justify-content-start">
+            <div class="col-1 d-flex justify-content-center">
+                <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+            <div class="col-9 d-flex justify-content-start">
                 <!-- Logo circular -->
                 <a href="{{ route('dashboard') }}" style="font-weight: normal">
                     <img src="{{ asset('storage/Bg.jpg') }}" alt="Logo" class="rounded-circle"
@@ -65,10 +71,20 @@
     </nav>
 
     <!--SideBar-->
-    <div class="container-fluid" style="height: 100%;">
+    <div class=" container-fluid" style="height: 100%;">
         <div class="row" style="height: 100%;">
-            <div class="col-2 bg-dark" style=" width: 100%; max-width: 200px;">
+            <div class=" offcanvas offcanvas-start col-2 bg-dark" style=" width: 100%; max-width: 200px;" tabindex="-1"
+                id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
                 <nav class="nav flex-column nav-pills" style="padding: 10px;">
+
+                    <!-- Logo circular -->
+                    <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 20px; margin-top: 20px;">
+                        <a href="{{ route('dashboard') }}" style="font-weight: normal">
+                            <img src="{{ asset('storage/Bg.jpg') }}" alt="Logo" class="rounded-circle"
+                                style="width: 50px; height: 50px;">
+                        </a>
+                    </div>
+
                     <button class="btn btn-outline-light"
                         style="margin: 5px; display:flex; align-items: center; justify-content:center;"
                         onclick="window.location.href='{{ route('dashboard') }}'">

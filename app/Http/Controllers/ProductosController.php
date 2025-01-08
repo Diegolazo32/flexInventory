@@ -8,34 +8,42 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductosController extends Controller
 {
-    public function checkRole()
-    {
-        try {
-            if (Auth::user()->rol != 1) {
-                flash('No tienes permisos para acceder a esta sección', 'error');
-                return redirect()->route('dashboard');
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al verificar el rol']);
-        }
-    }
+    private $rolPermisoController;
 
     public function index()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(32);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('productos.index');
     }
 
     public function getAllProductos()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(36);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $productos = productos::all();
         return response()->json($productos);
     }
 
     public function store(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(33);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         $request->validate(
             [
@@ -93,7 +101,12 @@ class ProductosController extends Controller
 
     public function update(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(34);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         $request->validate(
             [
@@ -151,12 +164,17 @@ class ProductosController extends Controller
 
     public function delete(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(35);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         try {
             $producto = productos::find($request->id);
-            $producto->estado = 0;
-            $producto->save();
+            $producto->delete();
+
             return response()->json(['success' => 'Producto eliminado correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al eliminar el producto']);

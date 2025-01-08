@@ -10,34 +10,42 @@ use Illuminate\Support\Facades\Auth;
 class RolesController extends Controller
 {
 
-    public function checkRole()
-    {
-        try {
-            if (Auth::user()->rol != 1) {
-                flash('No tienes permisos para acceder a esta sección', 'error');
-                return redirect()->route('dashboard');
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al verificar el rol']);
-        }
-    }
+    private $rolPermisoController;
 
     public function getAllRoles()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(41);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $roles = roles::all();
         return response()->json($roles);
     }
 
     public function index()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(37);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('roles.index');
     }
 
     public function store(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(38);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         $request->validate([
             'descripcion' => 'required|string|max:255',
@@ -56,7 +64,12 @@ class RolesController extends Controller
 
     public function update(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(39);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         $request->validate([
             'descripcion' => 'required|string|max:255',
@@ -75,7 +88,12 @@ class RolesController extends Controller
 
     public function delete(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(40);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         try {
             $rol = roles::find($request->id);
@@ -88,9 +106,12 @@ class RolesController extends Controller
 
     public function permisos(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(50);
 
-        //dd($request->all());
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         try {
             //Encuentra el rol
@@ -124,7 +145,7 @@ class RolesController extends Controller
             //Retorna un mensaje de éxito
             return response()->json(['success' => 'Permisos asignados correctamente'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al asignar permisos'],400);
+            return response()->json(['error' => 'Error al asignar permisos'], 400);
         }
     }
 }

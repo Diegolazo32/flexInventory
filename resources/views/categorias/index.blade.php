@@ -36,12 +36,15 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar"
-                                    v-model="search">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por descripcion" v-model="search">
+                                <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
 
@@ -51,7 +54,16 @@
             <!-- Tabla de categorias -->
             <div class="row">
                 <div class="card-body">
-                    <div class="table-responsive">
+
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+
+                    <div v-if="categorias.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ categorias.error }}</h3>
+                    </div>
+
+                    <div v-if="categorias.length > 0" class="table-responsive">
 
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
@@ -64,8 +76,8 @@
                             <tbody>
                                 <!-- vue foreach -->
                                 <tr v-for='categoria in categorias' :key="categoria.id">
-                                    <td v-if="categoria.descripcion.length > 15">
-                                        @{{ categoria.descripcion.substring(0, 15) }}...
+                                    <td v-if="categoria.descripcion.length > 25">
+                                        @{{ categoria.descripcion.substring(0, 25) }}...
                                     </td>
                                     <td v-else>
                                         @{{ categoria.descripcion }}
@@ -122,7 +134,8 @@
                                             placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
                                             value="{{ old('descripcion') }}">
                                         <label for="floatingInput">Descripcion*</label>
-                                        <small class="text-danger" v-if="errors.descripcion">@{{ errors.descripcion }}</small>
+                                        <small class="text-danger"
+                                            v-if="errors.descripcion">@{{ errors.descripcion }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -168,8 +181,8 @@
                                     <div class="form-floating mb-3">
 
                                         <!-- Estado -->
-                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
-                                            v-model="editItem.estado" @blur="validateEditForm"
+                                        <select class="form-select" id="estadoEdit" name="estado"
+                                            :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
                                                 :value="estado.id">
@@ -177,7 +190,8 @@
                                             </option>
                                         </select>
                                         <label for="floatingInput">Estado*</label>
-                                        <small class="text-danger" v-if="editErrors.estado">@{{ editErrors.estado }}</small>
+                                        <small class="text-danger"
+                                            v-if="editErrors.estado">@{{ editErrors.estado }}</small>
 
                                     </div>
                                 </div>
@@ -244,6 +258,8 @@
                 searchCategorias: [],
                 filtered: [],
                 estados: [],
+                loading: true,
+                searchError: '',
             },
             methods: {
                 //Crear
@@ -279,14 +295,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Categoria creada',
-                                    text: 'La categoria ha sido creada correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al crear la categoria',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -351,14 +367,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Categoria editada',
-                                    text: 'La categoria ha sido editada correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al editar la categoria',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -549,6 +565,21 @@
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
+
+                    this.searchError = '';
+
+                    if (this.search == null) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
+                    if (!this.search) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
                     let search = this.search.toLowerCase();
                     let categorias = this.searchCategorias;
 
@@ -563,6 +594,10 @@
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }
+
+                    if (this.filtered.length == 0) {
+                        this.searchError = 'No se encontraron resultados';
                     }
 
                     this.categorias = this.filtered;
@@ -602,12 +637,14 @@
                 },
                 cleanSearch() {
                     this.search = '';
+                    this.searchError = '';
                     this.categorias = this.searchCategorias;
                 },
                 //Obtener recursos
                 async getAllCategorias() {
                     let response = await fetch('/allCategorias');
                     let data = await response.json();
+                    this.loading = false;
                     this.categorias = data;
                     this.searchCategorias = data;
                 },

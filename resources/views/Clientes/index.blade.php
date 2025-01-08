@@ -41,12 +41,15 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar"
-                                    v-model="search">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por nombre, apellido o DUI" v-model="search">
+                                <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
 
@@ -55,18 +58,18 @@
             </div>
             <!-- Tabla de clientes -->
 
-            <!-- if clientes.length == 0  show no data
-                                                                                        <div class="row" v-if="clientes.length == 0">
-                                                                                            <div class="card-body" style="display: flex; justify-content: center; align-items: center;">
-                                                                                                <h1>No hay datos</h1>
-                                                                                            </div>
-                                                                                        </div>-->
-
-            <!-- if clientes.length > 0 show table -->
-
-            <div class="row" v-if="clientes.length > 0">
+            <div class="row">
                 <div class="card-body">
-                    <div class="table-responsive">
+
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+
+                    <div v-if="clientes.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ clientes.error }}</h3>
+                    </div>
+
+                    <div v-if="clientes.length > 0" class="table-responsive">
 
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
@@ -273,8 +276,8 @@
                                 <div class="form-floating col-md-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <!-- Estado -->
-                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
-                                            v-model="editItem.estado" @blur="validateEditForm"
+                                        <select class="form-select" id="estadoEdit" name="estado"
+                                            :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
                                             @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
                                                 :value="estado.id">
@@ -407,6 +410,8 @@
                 searchClientes: [],
                 filtered: [],
                 estados: [],
+                loading: true,
+                searchError: '',
             },
             methods: {
                 //Crear
@@ -442,14 +447,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Cliente creado',
-                                    text: 'El cliente ha sido creado correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al crear el cliente',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -514,14 +519,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Cliente editado',
-                                    text: 'El cliente ha sido editado correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al editar el cliente',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -831,6 +836,21 @@
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
+
+                    this.searchError = '';
+
+                    if (this.search == null) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
+                    if (!this.search) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
                     let search = this.search.toLowerCase();
                     let clientes = this.searchClientes;
 
@@ -849,6 +869,10 @@
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }
+
+                    if (this.filtered.length == 0) {
+                        this.searchError = 'No se encontraron resultados';
                     }
 
                     this.clientes = this.filtered;
@@ -923,6 +947,7 @@
                 },
                 cleanSearch() {
                     this.search = null;
+                    this.searchError = '';
                     this.clientes = this.searchClientes;
                 },
                 formatDate(date) {
@@ -938,6 +963,7 @@
                 async getAllClientes() {
                     let response = await fetch('/allClientes');
                     let data = await response.json();
+                    this.loading = false;
                     this.clientes = data;
                     this.searchClientes = data;
                 },

@@ -17,7 +17,7 @@ class EstadosController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(16);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
         $estados = estados::all();
@@ -30,7 +30,7 @@ class EstadosController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(12);
 
         if (!$permiso) {
-            flash('No tienes permisos para acceder a esta sección', 'error');
+            flash('No tiene permisos para acceder a esta sección', 'error');
             return redirect()->route('dashboard');
         }
         return view('estados.index');
@@ -42,7 +42,7 @@ class EstadosController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(13);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
         try {
@@ -61,7 +61,7 @@ class EstadosController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(14);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
         try {
@@ -80,7 +80,7 @@ class EstadosController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(15);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para acceder a esta sección']);
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
         try {

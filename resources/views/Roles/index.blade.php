@@ -42,12 +42,15 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar"
-                                    v-model="search">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por descripción" v-model="search">
+                                <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
 
@@ -58,7 +61,8 @@
             <div class="row">
                 <div class="card-body">
 
-                    <div v-if="roles.length == 0" role="alert" style="margin-left: 50%;" id="loading">
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
                     </div>
 
                     <div v-if="roles.error" class="alert alert-danger" role="alert">
@@ -70,7 +74,7 @@
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">Descripción</th>
                                     <th scope="col">Estado</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
@@ -187,16 +191,17 @@
                                     <div class="form-floating mb-3">
 
                                         <!-- Estado -->
-                                        <select class="form-select" id="estadoEdit" name="estado" :disabled="estados.error"
-                                            :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
-                                            @change="validateEditForm">
+                                        <select class="form-select" id="estadoEdit" name="estado"
+                                            :disabled="estados.error" :disabled="estados.error" v-model="editItem.estado"
+                                            @blur="validateEditForm" @change="validateEditForm">
                                             <option v-for="estado in estados" :key="estado.id"
                                                 :value="estado.id">
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
                                         <label for="floatingInput">Estado*</label>
-                                        <small class="text-danger" v-if="editErrors.estado">@{{ editErrors.estado }}</small>
+                                        <small class="text-danger"
+                                            v-if="editErrors.estado">@{{ editErrors.estado }}</small>
 
                                     </div>
                                 </div>
@@ -241,7 +246,7 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 1200px;">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
-                        <h3 class="modal-title fs-5" id="permisosModalLabel">Permisos del rol: @{{ permisosItem.descripcion }}
+                        <h3 class="modal-title fs-5" id="permisosModalLabel">Permisos de: @{{ permisosItem.descripcion }}
                         </h3>
                     </div>
                     <div class="modal-body text-center" style="padding: 25px;">
@@ -293,7 +298,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                             id="cancelPermisosButton" @click="cleanForm">Cerrar</button>
-                        <button type="button" class="btn btn-primary" id="SubmitPermisos"
+                        <button type="button" class="btn btn-warning" id="SubmitPermisos"
                             @click="sendPermisosForm">Guardar</button>
                     </div>
                 </div>
@@ -312,12 +317,12 @@
                 editItem: {
                     id: '',
                     descripcion: '',
-                    estado: ''
+                    estado: '',
                 },
                 deleteItem: {
                     id: '',
                     descripcion: '',
-                    estado: ''
+                    estado: '',
                 },
                 permisosItem: {
                     id: '',
@@ -337,7 +342,9 @@
                 filtered: [],
                 estados: [],
                 grupos: [],
-                icon: 'fas fa-chevron-down'
+                icon: 'fas fa-chevron-down',
+                loading: true,
+                searchError: '',
             },
             methods: {
                 //Crear
@@ -373,14 +380,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Rol creado',
-                                    text: 'El rol ha sido creado correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al crear la rol',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -445,14 +452,14 @@
                             if (response.data.success) {
                                 swal.fire({
                                     title: 'Rol editado',
-                                    text: 'El rol ha sido editado correctamente',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al editar la rol',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -660,9 +667,6 @@
 
                     let permisoId = permiso.id;
 
-                    console.log('Permiso', permisoId);
-                    console.log('Permisos actuales', this.permisosItem.permisos);
-
                     if (this.permisosItem.permisos.includes(permisoId)) {
                         this.permisosItem.permisos = this.permisosItem.permisos.filter(permiso => permiso !=
                             permisoId);
@@ -670,7 +674,6 @@
                         this.permisosItem.permisos.push(permisoId);
                     }
 
-                    console.log('Permisos del rol actualizados', this.permisosItem.permisos);
                 },
                 //Validaciones
                 validateForm() {
@@ -744,6 +747,21 @@
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
+
+                    this.searchError = '';
+
+                    if (this.search == null) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
+                    if (!this.search) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
                     let search = this.search.toLowerCase();
                     let roles = this.searchRoles;
 
@@ -758,6 +776,10 @@
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }
+
+                    if (this.filtered.length == 0) {
+                        this.searchError = 'No se encontraron resultados';
                     }
 
                     this.roles = this.filtered;
@@ -802,23 +824,13 @@
                 },
                 //Obtener recursos
                 async getAllRoles() {
-
-                    document.getElementById('loading').style.display = 'block';
-                    document.getElementById('loading').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Cargando...';
                     try {
                         let response = await fetch('/allRoles');
                         let data = await response.json();
-                        console.log(data);
+                        this.loading = false;
+                        this.roles = data;
+                        this.searchRoles = data;
 
-                        if (data.length == 0) {
-                            document.getElementById('loading').style.display = 'block';
-                            document.getElementById('loading').innerHTML = 'No hay roles registrados';
-                        } else {
-                            document.getElementById('loading').innerHTML = '';
-                            this.roles = data;
-                            this.searchRoles = data;
-                        }
                     } catch (error) {
 
                     }

@@ -36,17 +36,20 @@
             </div>
             <!-- Buscador -->
             <div class="card-body">
-                <div class="row" v-if="usuarios.length > 0">
+                <div class="row">
                     <div class="col-md-10">
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar por nombre"
-                                    v-model="search">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por nombre, apellido, usuario o DUI" v-model="search">
+                                <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" @click="searchFn">Buscar</button>
-                                <button class="btn btn-primary" @click="cleanSearch">Limpiar</button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
 
@@ -56,8 +59,8 @@
             <!-- Tabla de usuarios -->
             <div class="row">
                 <div class="card-body">
-
-                    <div v-if="usuarios.length == 0" role="alert" style="margin-left: 50%;" id="loading">
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
                     </div>
 
                     <div v-if="usuarios.error" class="alert alert-danger" role="alert">
@@ -499,28 +502,21 @@
                     estado: ''
                 },
                 estados: [],
+                searchError: '',
+                loading: true
             },
             methods: {
 
                 //Funcion para obtener recursos
                 async getAllUsers() {
 
-                    document.getElementById('loading').style.display = 'block';
-                    document.getElementById('loading').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Cargando...';
                     try {
                         let response = await fetch('/allUsers');
                         let data = await response.json();
-                        console.log(data);
+                        this.loading = false;
+                        this.usuarios = data;
+                        this.searchUsuarios = data;
 
-                        if (data.length == 0) {
-                            document.getElementById('loading').style.display = 'block';
-                            document.getElementById('loading').innerHTML = 'No hay usuarios registrados';
-                        } else {
-                            document.getElementById('loading').innerHTML = '';
-                            this.usuarios = data;
-                            this.searchUsuarios = data;
-                        }
                     } catch (error) {
 
                     }
@@ -529,12 +525,10 @@
                 async getAllEstados() {
 
                     try {
+
                         let response = await fetch('/allEstados');
                         let data = await response.json();
-
                         this.estados = data;
-
-                        //console.log(this.estados);
 
                     } catch (error) {
 
@@ -1082,10 +1076,26 @@
                 },
                 cleanSearch() {
                     this.search = '';
+                    this.searchError = '';
                     this.usuarios = this.searchUsuarios;
                 },
                 //Funciones de busqueda
                 searchFn() {
+
+                    this.searchError = '';
+
+                    if (this.search == null) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
+                    if (!this.search) {
+                        this.productos = this.searchProductos;
+                        this.searchError = 'El campo está vacío';
+                        return;
+                    }
+
                     let search = this.search.toLowerCase();
                     let users = this.searchUsuarios;
 
@@ -1104,6 +1114,9 @@
                         });
                     }
 
+                    if (this.filtered.length == 0) {
+                        this.searchError = 'No se encontraron resultados';
+                    }
 
                     this.usuarios = this.filtered;
                 },

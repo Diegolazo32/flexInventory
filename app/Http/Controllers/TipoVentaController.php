@@ -12,7 +12,7 @@ class TipoVentaController extends Controller
     {
         try {
             if (Auth::user()->rol != 1) {
-                flash('No tienes permisos para acceder a esta sección', 'error');
+                flash('No tiene permisos para acceder a esta sección', 'error');
                 return redirect()->route('dashboard');
             }
         } catch (\Exception $e) {

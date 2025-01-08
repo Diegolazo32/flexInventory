@@ -9,21 +9,30 @@ use Illuminate\Support\Facades\Auth;
 class UnidadesController extends Controller
 {
 
-    public function checkRole()
-    {
-        if (Auth::user()->rol != 1) {
-            flash('No tienes permisos para acceder a esta sección', 'error');
-            return redirect()->route('dashboard');
-        }
-    }
+    private $rolPermisoController;
 
     public function index()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(7);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('unidades.index');
     }
 
     public function getAllUnidades()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(11);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $unidades = unidades::all();
 
         return response()->json($unidades);
@@ -31,7 +40,13 @@ class UnidadesController extends Controller
 
     public function store(Request $request)
     {
-        $this->checkRole();
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(8);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         //dd($request->all());
 
@@ -63,7 +78,13 @@ class UnidadesController extends Controller
 
     public function update(Request $request)
     {
-        $this->checkRole(); 
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(9);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         $request->validate(
             [
@@ -91,7 +112,13 @@ class UnidadesController extends Controller
 
     public function delete(Request $request)
     {
-        $this->checkRole();
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(10);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         try {
             $unidades = unidades::find($request->id);

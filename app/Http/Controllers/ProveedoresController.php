@@ -6,36 +6,47 @@ use App\Models\proveedores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/*Pendiente cambiar los id de los permisos de proveedores*/
+
 class ProveedoresController extends Controller
 {
-    public function checkRole()
-    {
-        try {
-            if (Auth::user()->rol != 1) {
-                flash('No tienes permisos para acceder a esta sección', 'error');
-                return redirect()->route('dashboard');
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al verificar el rol']);
-        }
-    }
+    private $rolPermisoController;
 
     public function index()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(51);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('proveedores.index');
     }
 
     public function getAllProveedores()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(52);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $proveedores = proveedores::all();
         return response()->json($proveedores);
     }
 
     public function store(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(41);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         try {
             $proveedor = new proveedores();
             $proveedor->nombre = $request->nombre;
@@ -56,7 +67,13 @@ class ProveedoresController extends Controller
 
     public function update(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(41);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         try {
             $proveedor = proveedores::find($request->id);
             $proveedor->nombre = $request->nombre;
@@ -77,7 +94,13 @@ class ProveedoresController extends Controller
 
     public function delete(Request $request)
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(41);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         try {
             $proveedor = proveedores::find($request->id);
             $proveedor->delete();
