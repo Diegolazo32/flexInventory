@@ -24,6 +24,19 @@ class PermisosController extends Controller
         return response()->json($permissions);
     }
 
+    public function getAllPaginatedPermisos(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(46);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $permissions = permisos::paginate($request->per_page);
+        return response()->json($permissions);
+    }
+
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
@@ -53,11 +66,11 @@ class PermisosController extends Controller
         try {
             $permiso = new permisos();
             $permiso->nombre = $request->nombre;
-            $permiso->ruta = $request->ruta;
+            //$permiso->ruta = $request->ruta;
             $permiso->descripcion = $request->descripcion;
             $permiso->grupo = $request->grupo;
-            $permiso->endpoint = $request->endpoint;
-            $permiso->metodo = $request->metodo;
+            //$permiso->endpoint = $request->endpoint;
+            //$permiso->metodo = $request->metodo;
 
             $permiso->save();
             return response()->json(['success' => 'Permiso creado correctamente']);
@@ -82,11 +95,11 @@ class PermisosController extends Controller
         try {
             $permiso = permisos::find($request->id);
             $permiso->nombre = $request->nombre;
-            $permiso->ruta = $request->ruta;
+            //$permiso->ruta = $request->ruta;
             $permiso->descripcion = $request->descripcion;
             $permiso->grupo = $request->grupo;
-            $permiso->endpoint = $request->endpoint;
-            $permiso->metodo = $request->metodo;
+            //$permiso->endpoint = $request->endpoint;
+            //$permiso->metodo = $request->metodo;
             $permiso->save();
             return response()->json(['success' => 'Permiso actualizado correctamente']);
         } catch (\Exception $e) {

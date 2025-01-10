@@ -7,11 +7,12 @@
         <div class="card">
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
                         <h1>Productos</h1>
+                        <small class="text-muted">@{{ mensaje }}</small>
                     </div>
                     <!-- Botones de accion -->
-                    <div class="col-md-2 d-flex justify-content-end">
+                    <div class="col-lg-2 d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#crearProductoModal" style="height: 40px;">
                             <i class="fas fa-plus"></i>
@@ -37,7 +38,7 @@
             <!-- Buscador -->
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
 
                         <div class="row">
                             <div class="col-6">
@@ -74,7 +75,7 @@
 
                     <div v-if="productos.length > 0" class="table-responsive">
 
-                        <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
+                        <table ref="table" class="table table-striped table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
                                     <th scope="col">Codigo</th>
@@ -85,7 +86,6 @@
                                     <th scope="col">Precio Especial</th>
                                     <th scope="col">Fecha Vencimiento</th>
                                     <th scope="col">Stock</th>
-                                    <th scope="col">Stock Inicial</th>
                                     <th scope="col">Stock Minimo</th>
                                     <th scope="col">Stock Maximo</th>
                                     <th scope="col">Categoria</th>
@@ -107,7 +107,6 @@
                                     <td>$@{{ parseDouble(producto.precioEspecial) ?? '-' }}</td>
                                     <td>@{{ formatDate(producto.fechaVencimiento) ?? '-' }}</td>
                                     <td>@{{ producto.stock ?? '-' }}</td>
-                                    <td>@{{ producto.stockInicial ?? '-' }}</td>
                                     <td>@{{ producto.stockMinimo ?? '-' }}</td>
                                     <td>@{{ producto.stockMaximo ?? '-' }}</td>
                                     <td>@{{ categorias.find(categoria => categoria.id == producto.categoria).descripcion }} </td>
@@ -140,7 +139,44 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td>
+                                    <td colspan="16">
+                                        <div class="d-flex justify-content-center" style="gap: 10px;">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item" :disabled="page === 1">
+                                                    <a class="page-link" href="#" aria-label="Previous"
+                                                        @click="pageMinus">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" v-for="pageNumber in totalPages"
+                                                    :key="pageNumber" :class="{ active: pageNumber === page }">
+                                                    <a class="page-link" href="#"
+                                                        @click="specificPage(pageNumber)">
+                                                        @{{ pageNumber }}
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" :disabled="page === totalPages">
+                                                    <a class="page-link" href="#" aria-label="Next"
+                                                        @click="pagePlus">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="pagination justify-content-center">
+
+                                                <li class="page-item">
+                                                    <select class="form-select" v-model="per_page"
+                                                        @change="changePerPage">
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -154,7 +190,7 @@
         <!-- Create Modal -->
         <div class="modal fade" id="crearProductoModal" tabindex="-1" aria-labelledby="crearProductoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProductoModalLabel">Crear producto </h1>
@@ -165,7 +201,7 @@
                             @csrf
                             <div class="row">
                                 <!-- Codigo -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="codigo" name="codigo"
                                             placeholder="Codigo" @blur="validateForm" v-model="item.codigo">
@@ -174,7 +210,7 @@
                                     </div>
                                 </div>
                                 <!-- Nombre -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" v-model="item.nombre">
@@ -183,7 +219,7 @@
                                     </div>
                                 </div>
                                 <!-- Descripcion -->
-                                <div class="form-floating col-md-12" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <textarea type="text-area" class="form-control" id="descripcion" name="descripcion" style="height: 100px;"
                                             placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"></textarea>
@@ -193,7 +229,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Compra -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="precioCompra" name="precioCompra"
                                             placeholder="Precio Compra" @blur="validateForm" v-model="item.precioCompra"
@@ -204,7 +240,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Venta -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="precioVenta" name="precioVenta"
                                             placeholder="Precio Venta" @blur="validateForm" v-model="item.precioVenta"
@@ -215,7 +251,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Descuento -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="precioDescuento"
                                             name="precioDescuento" placeholder="Precio Descuento" @blur="validateForm"
@@ -227,7 +263,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Especial -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="precioEspecial"
                                             name="precioEspecial" placeholder="Precio Especial" @blur="validateForm"
@@ -239,7 +275,7 @@
                                     </div>
                                 </div>
                                 <!-- Fecha Vencimiento -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="fechaVencimiento"
                                             name="fechaVencimiento" placeholder="Fecha Vencimiento" @blur="validateForm"
@@ -250,7 +286,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stock" name="stock"
                                             placeholder="Stock" @blur="validateForm" v-model="item.stock" step="1"
@@ -260,7 +296,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Inicial -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockInicial" name="stockInicial"
                                             placeholder="Stock Inicial" @blur="validateForm" v-model="item.stockInicial"
@@ -271,7 +307,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Minimo -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockMinimo" name="stockMinimo"
                                             placeholder="Stock Minimo" @blur="validateForm" v-model="item.stockMinimo"
@@ -282,7 +318,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Maximo -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockMaximo" name="stockMaximo"
                                             placeholder="Stock Maximo" @blur="validateForm" v-model="item.stockMaximo"
@@ -293,7 +329,7 @@
                                     </div>
                                 </div>
                                 <!-- Categoria -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="categoria" name="categoria"
                                             v-model="item.categoria" @blur="validateForm" @change="validateForm">
@@ -307,7 +343,7 @@
                                     </div>
                                 </div>
                                 <!-- Tipo Venta -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="tipoVenta" name="tipoVenta"
                                             v-model="item.tipoVenta" @blur="validateForm" @change="validateForm">
@@ -321,7 +357,7 @@
                                     </div>
                                 </div>
                                 <!-- Proveedor -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="proveedor" name="proveedor"
                                             v-model="item.proveedor" @blur="validateForm" @change="validateForm">
@@ -335,7 +371,7 @@
                                     </div>
                                 </div>
                                 <!-- Unidad searchable select -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="unidad" name="unidad" v-model="item.unidad"
                                             @blur="validateForm" @change="validateForm">
@@ -365,7 +401,7 @@
         <!--Edit modal-->
         <div class="modal fade" id="editProductoModal" tabindex="-1" aria-labelledby="editProductoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editProductoModalLabel">Editar producto</h1>
@@ -376,7 +412,7 @@
                             @csrf
                             <div class="row">
                                 <!-- Codigo -->
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <input type="text" class="form-control" id="codigoEdit" name="codigo"
@@ -387,7 +423,7 @@
                                     </div>
                                 </div>
                                 <!-- Nombre -->
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             placeholder="Nombre" @blur="validateEditForm" v-model="editItem.nombre">
@@ -398,7 +434,7 @@
                                 </div>
 
                                 <!-- Descripcion -->
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text-area" class="form-control" id="descripcionEdit"
                                             name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
@@ -409,7 +445,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Compra -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="precioCompraEdit"
                                             name="precioCompra" placeholder="Precio Compra" @blur="validateEditForm"
@@ -421,7 +457,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Venta -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="precioVentaEdit"
                                             name="precioVenta" placeholder="Precio Venta" @blur="validateEditForm"
@@ -433,7 +469,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Descuento -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="precioDescuentoEdit"
                                             name="precioDescuento" placeholder="Precio Descuento"
@@ -445,7 +481,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Especial -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="precioEspecialEdit"
                                             name="precioEspecial" placeholder="Precio Especial" @blur="validateEditForm"
@@ -457,7 +493,7 @@
                                     </div>
                                 </div>
                                 <!-- Fecha Vencimiento -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="fechaVencimientoEdit"
                                             name="fechaVencimiento" placeholder="Fecha Vencimiento"
@@ -468,7 +504,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockEdit" name="stock"
                                             placeholder="Stock" @blur="validateEditForm" v-model="editItem.stock"
@@ -478,7 +514,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Inicial -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockInicialEdit"
                                             name="stockInicial" placeholder="Stock Inicial" @blur="validateEditForm"
@@ -490,7 +526,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Minimo -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockMinimoEdit"
                                             name="stockMinimo" placeholder="Stock Minimo" @blur="validateEditForm"
@@ -502,7 +538,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Maximo -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockMaximoEdit"
                                             name="stockMaximo" placeholder="Stock Maximo" @blur="validateEditForm"
@@ -514,7 +550,7 @@
                                     </div>
                                 </div>
                                 <!-- Categoria -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="categoriaEdit" name="categoria"
                                             v-model="editItem.categoria" @blur="validateEditForm"
@@ -530,7 +566,7 @@
                                     </div>
                                 </div>
                                 <!-- Tipo Venta -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="tipoVentaEdit" name="tipoVenta"
                                             v-model="editItem.tipoVenta" @blur="validateEditForm"
@@ -546,7 +582,7 @@
                                     </div>
                                 </div>
                                 <!-- Proveedor -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="proveedorEdit" name="proveedor"
                                             v-model="editItem.proveedor" @blur="validateEditForm"
@@ -562,7 +598,7 @@
                                     </div>
                                 </div>
                                 <!-- Unidad -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="unidadEdit" name="unidad"
                                             v-model="editItem.unidad" @blur="validateEditForm"
@@ -578,7 +614,7 @@
                                     </div>
                                 </div>
                                 <!-- Estado -->
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="estadoEdit" name="estado"
                                             :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
@@ -610,7 +646,7 @@
         <!--Delete modal-->
         <div class="modal fade" id="deleteProductoModal" tabindex="-1" aria-labelledby="deleteProductoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="deleteProductoModalLabel">Eliminar producto</h1>
@@ -632,7 +668,7 @@
         <!--Show modal-->
         <div class="modal fade" id="showProductoModal" tabindex="-1" aria-labelledby="showProductoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="showProductoModalLabel">Producto</h1>
@@ -642,7 +678,7 @@
                             @csrf
                             <div class="row">
                                 <!-- Codigo -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="text" class="form-control" id="codigoEdit"
                                             name="codigo" placeholder="Codigo" v-model="showItem.codigo">
@@ -650,7 +686,7 @@
                                     </div>
                                 </div>
                                 <!-- Nombre -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="text" class="form-control" id="nombreEdit"
                                             name="nombre" placeholder="Nombre" v-model="showItem.nombre">
@@ -660,7 +696,7 @@
                                 </div>
 
                                 <!-- Descripcion -->
-                                <div class="form-floating col-md-12" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <textarea disabled type="text-area" class="form-control" id="descripcionEdit" style="height: 100px;"
                                             name="descripcion" placeholder="Descripcion" v-model="showItem.descripcion"></textarea>
@@ -668,7 +704,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Compra -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="number" class="form-control" id="precioCompraEdit"
                                             name="precioCompra" placeholder="Precio Compra"
@@ -678,7 +714,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Venta -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="number" class="form-control" id="precioVentaEdit"
                                             name="precioVenta" placeholder="Precio Venta" v-model="showItem.precioVenta"
@@ -687,7 +723,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Descuento -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="number" class="form-control" id="precioDescuentoEdit"
                                             name="precioDescuento" placeholder="Precio Descuento"
@@ -697,7 +733,7 @@
                                     </div>
                                 </div>
                                 <!-- Precio Especial -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="number" class="form-control" id="precioEspecialEdit"
                                             name="precioEspecial" placeholder="Precio Especial"
@@ -707,7 +743,7 @@
                                     </div>
                                 </div>
                                 <!-- Fecha Vencimiento -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="date" class="form-control" id="fechaVencimientoEdit"
                                             name="fechaVencimiento" placeholder="Fecha Vencimiento"
@@ -716,7 +752,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="number" class="form-control" id="stockEdit"
                                             name="stock" placeholder="Stock" v-model="showItem.stock" step="1"
@@ -725,7 +761,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Inicial -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="number" class="form-control" id="stockInicialEdit"
                                             name="stockInicial" placeholder="Stock Inicial"
@@ -735,7 +771,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Minimo -->
-                                <div class="form-floating col-md-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="number" class="form-control" id="stockMinimoEdit"
                                             name="stockMinimo" placeholder="Stock Minimo" v-model="showItem.stockMinimo"
@@ -744,7 +780,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Maximo -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input disabled type="number" class="form-control" id="stockMaximoEdit"
                                             name="stockMaximo" placeholder="Stock Maximo" v-model="showItem.stockMaximo"
@@ -753,7 +789,7 @@
                                     </div>
                                 </div>
                                 <!-- Categoria -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select disabled class="form-select" id="categoriaEdit" name="categoria"
                                             v-model="showItem.categoria">
@@ -766,7 +802,7 @@
                                     </div>
                                 </div>
                                 <!-- Tipo Venta -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select disabled class="form-select" id="tipoVentaEdit" name="tipoVenta"
                                             v-model="showItem.tipoVenta">
@@ -780,7 +816,7 @@
                                     </div>
                                 </div>
                                 <!-- Proveedor -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select disabled class="form-select" id="proveedorEdit" name="proveedor"
                                             v-model="showItem.proveedor">
@@ -794,7 +830,7 @@
                                     </div>
                                 </div>
                                 <!-- Unidad -->
-                                <div class="form-floating col-md-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select disabled class="form-select" id="unidadEdit" name="unidad"
                                             v-model="showItem.unidad">
@@ -915,6 +951,12 @@
                 unidades: [],
                 searchError: '',
                 loading: true,
+                page: 1,
+                per_page: 5,
+                total: 0,
+                totalPages: 0,
+                nextPageUrl: '',
+                prevPageUrl: '',
             },
             methods: {
                 //Crear
@@ -1525,6 +1567,11 @@
                     }
                 },
                 formatDate(date) {
+
+                    if (!date) {
+                        return;
+                    }
+
                     let fecha = new Date(date);
                     let options = {
                         year: 'numeric',
@@ -1532,7 +1579,27 @@
                         day: 'numeric'
                     };
                     return fecha.toLocaleDateString('es-ES', options);
-
+                },
+                //Paginacion
+                pageMinus() {
+                    if (this.page > 1) {
+                        this.page--;
+                        this.getAllProductos();
+                    }
+                },
+                pagePlus() {
+                    if (this.page < this.totalPages) {
+                        this.page++;
+                        this.getAllProductos();
+                    }
+                },
+                specificPage(page) {
+                    this.page = page;
+                    this.getAllProductos();
+                },
+                changePerPage() {
+                    this.page = 1;
+                    this.getAllProductos();
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
@@ -1711,11 +1778,35 @@
                 },
                 //Obtener recursos
                 async getAllProductos() {
-                    let response = await fetch('/allProductos');
-                    let data = await response.json();
-                    this.loading = false;
-                    this.productos = data;
-                    this.searchProductos = data;
+                    axios({
+                            method: 'get',
+                            url: '/allProductosP',
+                            params: {
+                                page: this.page,
+                                per_page: this.per_page
+                            }
+                        }).then(response => {
+                            this.loading = false;
+                            this.productos = response.data.data;
+                            this.searchProductos = response.data.data;
+
+                            this.total = response.data.total;
+                            this.totalPages = response.data.last_page;
+                            this.page = response.data.current_page;
+                            this.per_page = response.data.per_page;
+                            this.nextPageUrl = response.data.next_page_url;
+                            this.prevPageUrl = response.data.prev_page_url;
+
+                            console.log(response.data);
+                        }).catch(error => {
+                            this.loading = false;
+                            swal.fire({
+                                title: 'Error',
+                                text: 'Ha ocurrido un error al obtener los productos',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        })
                 },
                 async getAllEstados() {
 
@@ -1753,7 +1844,6 @@
                     let data = await response.json();
                     this.unidades = data;
                 },
-
             },
             mounted() {
                 this.getAllCategorias();

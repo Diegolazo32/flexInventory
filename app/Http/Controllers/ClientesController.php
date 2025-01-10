@@ -23,7 +23,7 @@ class ClientesController extends Controller
         return view('clientes.index');
     }
 
-    public function getAllClientes()
+    public function getAllClientes(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(26);
@@ -33,6 +33,18 @@ class ClientesController extends Controller
         }
 
         $clientes = clientes::all();
+        return response()->json($clientes);
+    }
+    public function getAllPaginatedClientes(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(26);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $clientes = clientes::paginate($request->per_page);
         return response()->json($clientes);
     }
 

@@ -11,7 +11,7 @@ class CategoriaController extends Controller
     private $rolPermisoController;
 
 
-    public function getAllCategorias()
+    public function getAllCategorias(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(21);
@@ -21,6 +21,18 @@ class CategoriaController extends Controller
         }
 
         $categorias = categoria::all();
+        return response()->json($categorias);
+    }
+    public function getAllPaginatedCategorias(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(21);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $categorias = categoria::paginate($request->per_page);
         return response()->json($categorias);
     }
 

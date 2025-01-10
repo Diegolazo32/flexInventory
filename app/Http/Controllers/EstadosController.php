@@ -11,7 +11,7 @@ class EstadosController extends Controller
 
     private $rolPermisoController;
 
-    public function getAllEstados()
+    public function getAllEstados(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(16);
@@ -21,6 +21,18 @@ class EstadosController extends Controller
         }
 
         $estados = estados::all();
+        return response()->json($estados);
+    }
+    public function getAllPaginatedEstados(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(16);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
+        }
+
+        $estados = estados::paginate($request->per_page);
         return response()->json($estados);
     }
 

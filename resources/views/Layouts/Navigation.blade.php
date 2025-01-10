@@ -35,31 +35,31 @@
     <!-- NavBar -->
     <nav class="navbar navbar-dark bg-dark" style="padding: 10px;">
 
-        <div class="row d-flex align-items-center" style="width: 100%; padding: 5px;">
-            <div class="col-1 d-flex justify-content-center">
+        <div class="row d-flex align-items-center titleBar" style="width: 100%;">
+            <div class="col-2 d-flex justify-content-center">
                 <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
-            <div class="col-9 d-flex justify-content-start">
+            <div class="col-8 d-flex justify-content-center">
                 <!-- Logo circular -->
-                <a href="{{ route('dashboard') }}" style="font-weight: normal">
+                <a href="{{ route('dashboard') }}" style="font-weight: normal" class="nombreMarca">
                     <img src="{{ asset('storage/Bg.jpg') }}" alt="Logo" class="rounded-circle"
                         style="width: 50px; height: 50px;">
                 </a>
 
-                <a class="navbar-brand" href="{{ route('dashboard') }}"
+                <a class="navbar-brand nombreMarca" href="{{ route('dashboard') }}"
                     style="margin-left:15px; font-weight: normal">Inventario Flexible</a>
             </div>
             <div class="col-2 d-flex justify-content-center">
 
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle btn-outline-light" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                <div class="dropdown-center">
+                    <button class="btn dropdown-toggle btn-outline-light" data-bs-display="static" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         {{ Auth::user()->nombre }}
                     </button>
-                    <ul class="dropdown-menu ">
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-md-start ">
                         <li><a class="dropdown-item" href="#">Perfil</a></li>
                         <li><a class="dropdown-item" href="#">Configuracion</a></li>
                         <li><a class="dropdown-item" href="{{ route('logout') }}">Cerrar sesion</a></li>
@@ -73,12 +73,13 @@
     <!--SideBar-->
     <div class=" container-fluid" style="height: 100%;">
         <div class="row" style="height: 100%;">
-            <div class=" offcanvas offcanvas-start col-2 bg-dark" style=" width: 100%; max-width: 200px;" tabindex="-1"
+            <div class=" offcanvas offcanvas-start col-12 bg-dark" style=" width: 100%; max-width: 200px;" tabindex="-1"
                 id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
                 <nav class="nav flex-column nav-pills" style="padding: 10px;">
 
                     <!-- Logo circular -->
-                    <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 20px; margin-top: 20px;">
+                    <div class="d-flex justify-content-center align-items-center"
+                        style="margin-bottom: 20px; margin-top: 20px;">
                         <a href="{{ route('dashboard') }}" style="font-weight: normal">
                             <img src="{{ asset('storage/Bg.jpg') }}" alt="Logo" class="rounded-circle"
                                 style="width: 50px; height: 50px;">
@@ -147,6 +148,18 @@
                             <i class="fa-solid fa-boxes-stacked"></i>
                             <span style="margin-left: 10px;">Productos</span>
                         </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('cajas') }}'">
+                            <i class="fa-solid fa-cash-register"></i>
+                            <span style="margin-left: 10px;">Cajas</span>
+                        </button>
+                        <button class="btn btn-outline-light"
+                            style="margin: 5px; display:flex; align-items: center; justify-content:center;"
+                            onclick="window.location.href='{{ route('kardex') }}'">
+                            <i class="fa-solid fa-warehouse"></i>
+                            <span style="margin-left: 10px;">Kardex</span>
+                        </button>
                     @endif
 
 
@@ -155,7 +168,7 @@
 
             <!-- Content -->
 
-            <div class="container col-10" style="padding-top: 15px; padding-right: 30px;">
+            <div class="container col-lg-10" style="padding-top: 15px;">
                 @yield('content')
             </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kardex;
 use App\Models\productos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,18 @@ class ProductosController extends Controller
         }
 
         $productos = productos::all();
+        return response()->json($productos);
+    }
+    public function getAllPaginatedProductos(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(36);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $productos = productos::paginate($request->per_page);
         return response()->json($productos);
     }
 
@@ -74,6 +87,8 @@ class ProductosController extends Controller
         );
 
         try {
+
+            //Crear producto
             $producto = new productos();
             $producto->codigo = $request->codigo;
             $producto->nombre = $request->nombre;
@@ -93,6 +108,12 @@ class ProductosController extends Controller
             $producto->unidad = $request->unidad;
             $producto->estado = 1;
             $producto->save();
+
+            //Crear kardex
+            $kardex = new Kardex();
+            $kardex->producto = $producto->id;
+
+
             return response()->json(['success' => 'Producto guardado correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al guardar el producto']);

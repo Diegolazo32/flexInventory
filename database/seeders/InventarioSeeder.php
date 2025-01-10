@@ -12,6 +12,16 @@ class InventarioSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $inventarios = [[
+            'fechaApertura' => '2022-01-01',
+            'fechaCierre' => null,
+            'ProductosApertura' => 0,
+            'ProductosCierre' => 0,
+            'estado' => 1,
+        ]];
+
+        foreach ($inventarios as $inventario) {
+            \App\Models\Inventario::create($inventario);
+        }
     }
 }

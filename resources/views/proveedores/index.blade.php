@@ -7,11 +7,12 @@
         <div class="card">
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
                         <h1>Proveedores</h1>
+                        <small class="text-muted">@{{ mensaje }}</small>
                     </div>
                     <!-- Botones de accion -->
-                    <div class="col-md-2 d-flex justify-content-end">
+                    <div class="col-lg-2 d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#crearProveedorModal" style="height: 40px;">
                             <i class="fas fa-plus"></i>
@@ -37,7 +38,7 @@
             <!-- Buscador -->
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
 
                         <div class="row">
                             <div class="col-6">
@@ -163,7 +164,43 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="12">
+                                        <div class="d-flex justify-content-center" style="gap: 10px;">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item" :disabled="page === 1">
+                                                    <a class="page-link" href="#" aria-label="Previous"
+                                                        @click="pageMinus">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" v-for="pageNumber in totalPages"
+                                                    :key="pageNumber" :class="{ active: pageNumber === page }">
+                                                    <a class="page-link" href="#"
+                                                        @click="specificPage(pageNumber)">
+                                                        @{{ pageNumber }}
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" :disabled="page === totalPages">
+                                                    <a class="page-link" href="#" aria-label="Next"
+                                                        @click="pagePlus">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="pagination justify-content-center">
 
+                                                <li class="page-item">
+                                                    <select class="form-select" v-model="per_page"
+                                                        @change="changePerPage">
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -176,7 +213,7 @@
         <!-- Create Modal -->
         <div class="modal fade" id="crearProveedorModal" tabindex="-1" aria-labelledby="crearProveedorModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProveedorModalLabel">Crear proveedor </h1>
@@ -186,7 +223,7 @@
                         <form ref="form" action="{{ route('proveedores.store') }}" method="POST">
                             @csrf
                             <div class="row">
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" v-model="item.nombre">
@@ -194,7 +231,7 @@
                                         <small class="text-danger" v-if="errors.nombre">@{{ errors.nombre }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="direccion" name="direccion"
                                             placeholder="Direccion" @blur="validateForm" v-model="item.direccion">
@@ -202,7 +239,7 @@
                                         <small class="text-danger" v-if="errors.direccion">@{{ errors.direccion }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="NIT" name="NIT"
                                             placeholder="NIT" @blur="validateForm" v-model="item.NIT">
@@ -210,7 +247,7 @@
                                         <small class="text-danger" v-if="errors.NIT">@{{ errors.NIT }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="emailPrincipal"
                                             name="emailPrincipal" placeholder="EmailPrincipal" @blur="validateForm"
@@ -220,7 +257,7 @@
                                             v-if="errors.emailPrincipal">@{{ errors.emailPrincipal }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="telefonoPrincipal"
                                             name="telefonoPrincipal" placeholder="TelefonoPrincipal" @blur="validateForm"
@@ -230,7 +267,7 @@
                                             v-if="errors.telefonoPrincipal">@{{ errors.telefonoPrincipal }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="representante"
                                             name="representante" placeholder="Representante" @blur="validateForm"
@@ -240,7 +277,7 @@
                                             v-if="errors.representante">@{{ errors.representante }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="emailRepresentante"
                                             name="emailRepresentante" placeholder="Email Representante"
@@ -250,7 +287,7 @@
                                             v-if="errors.emailRepresentante">@{{ errors.emailRepresentante }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="telefonoRepresentante"
                                             name="telefonoRepresentante" placeholder="Telefono Representante"
@@ -276,7 +313,7 @@
         <!--Edit modal-->
         <div class="modal fade" id="editProveedorModal" tabindex="-1" aria-labelledby="editProveedorModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editProveedorModalLabel">Editar proveedor</h1>
@@ -286,7 +323,7 @@
                         <form ref="formEdit">
                             @csrf
                             <div class="row">
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             placeholder="Nombre" @blur="validateEditForm" v-model="editItem.nombre">
@@ -295,7 +332,7 @@
                                             v-if="editErrors.nombre">@{{ editErrors.nombre }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="direccionEdit" name="direccion"
                                             placeholder="Direccion" @blur="validateEditForm"
@@ -305,7 +342,7 @@
                                             v-if="editErrors.direccion">@{{ editErrors.direccion }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="NITEDIT" name="NIT"
                                             placeholder="Direccion" @blur="validateEditForm" v-model="editItem.NIT">
@@ -313,7 +350,7 @@
                                         <small class="text-danger" v-if="editErrors.NIT">@{{ editErrors.NIT }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="emailPrincipalEdit"
                                             name="emailPrincipal" placeholder="EmailPrincipal" @blur="validateEditForm"
@@ -323,7 +360,7 @@
                                             v-if="editErrors.emailPrincipal">@{{ editErrors.emailPrincipal }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="telefonoPrincipalEdit"
                                             name="telefonoPrincipal" placeholder="TelefonoPrincipal"
@@ -333,7 +370,7 @@
                                             v-if="editErrors.telefonoPrincipal">@{{ editErrors.telefonoPrincipal }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="representanteEdit"
                                             name="representante" placeholder="Representante" @blur="validateEditForm"
@@ -343,7 +380,7 @@
                                             v-if="editErrors.representante">@{{ editErrors.representante }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="emailRepresentanteEdit"
                                             name="emailRepresentante" placeholder="Email Representante"
@@ -353,7 +390,7 @@
                                             v-if="editErrors.emailRepresentante">@{{ editErrors.emailRepresentante }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="telefonoRepresentanteEdit"
                                             name="telefonoRepresentante" placeholder="Telefono Representante"
@@ -363,7 +400,7 @@
                                             v-if="editErrors.telefonoRepresentante">@{{ editErrors.telefonoRepresentante }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <!-- Estado -->
                                         <select class="form-select" id="estadoEdit" name="estado"
@@ -396,7 +433,7 @@
         <!--Delete modal-->
         <div class="modal fade" id="deleteProveedorModal" tabindex="-1" aria-labelledby="deleteProveedorModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="deleteProveedorModalLabel">Eliminar proveedor</h1>
@@ -418,7 +455,7 @@
         <!--Show modal-->
         <div class="modal fade" id="showProveedorModal" tabindex="-1" aria-labelledby="showProveedorModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="showProveedorModalLabel">Proveedor</h1>
@@ -513,6 +550,12 @@
                 estados: [],
                 loading: true,
                 searchError: '',
+                page: 1,
+                per_page: 5,
+                total: 0,
+                totalPages: 0,
+                nextPageUrl: '',
+                prevPageUrl: '',
             },
             methods: {
                 //Crear
@@ -940,6 +983,27 @@
                     }
 
                 },
+                //Paginacion
+                pageMinus() {
+                    if (this.page > 1) {
+                        this.page--;
+                        this.getAllProveedores();
+                    }
+                },
+                pagePlus() {
+                    if (this.page < this.totalPages) {
+                        this.page++;
+                        this.getAllProveedores();
+                    }
+                },
+                specificPage(page) {
+                    this.page = page;
+                    this.getAllProveedores();
+                },
+                changePerPage() {
+                    this.page = 1;
+                    this.getAllProveedores();
+                },
                 //Limpiar formulario y busqueda
                 searchFn() {
 
@@ -1070,11 +1134,35 @@
                 },
                 //Obtener recursos
                 async getAllProveedores() {
-                    let response = await fetch('/allProveedores');
-                    let data = await response.json();
-                    this.loading = false;
-                    this.proveedores = data;
-                    this.searchProveedores = data;
+                    axios({
+                            method: 'get',
+                            url: '/allProveedoresP',
+                            params: {
+                                page: this.page,
+                                per_page: this.per_page
+                            }
+                        }).then(response => {
+                            this.loading = false;
+                            this.proveedores = response.data.data;
+                            this.searchProveedores = response.data.data;
+
+                            this.total = response.data.total;
+                            this.totalPages = response.data.last_page;
+                            this.page = response.data.current_page;
+                            this.per_page = response.data.per_page;
+                            this.nextPageUrl = response.data.next_page_url;
+                            this.prevPageUrl = response.data.prev_page_url;
+
+                            console.log(response.data);
+                        }).catch(error => {
+                            this.loading = false;
+                            swal.fire({
+                                title: 'Error',
+                                text: 'Ha ocurrido un error al obtener los proveedores',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        })
                 },
                 async getAllEstados() {
 
@@ -1083,8 +1171,6 @@
                         let data = await response.json();
 
                         this.estados = data;
-
-                        //console.log(this.estados);
 
                     } catch (error) {
 

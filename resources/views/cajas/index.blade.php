@@ -1,6 +1,6 @@
 @extends('layouts.Navigation')
 
-@section('title', 'Estados')
+@section('title', 'Cajas')
 
 @section('content')
     <div id="app">
@@ -8,24 +8,24 @@
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
-                        <h1>Estados</h1>
+                        <h1>Cajas</h1>
                         <small class="text-muted">@{{ mensaje }}</small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#crearEstadoModal" style="height: 40px;">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearCajaModal"
+                            style="height: 40px;">
                             <i class="fas fa-plus"></i>
                         </button>
 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editEstadoModalBtn"
-                            data-bs-target="#editEstadoModal" style="height: 40px;" hidden>
-                            Editar estado
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editCajaModalBtn"
+                            data-bs-target="#editCajaModal" style="height: 40px;" hidden>
+                            Editar caja
                         </button>
 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteEstadoModalBtn"
-                            data-bs-target="#deleteEstadoModal" style="height: 40px;" hidden>
-                            Eliminar estado
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteCajaModalBtn"
+                            data-bs-target="#deleteCajaModal" style="height: 40px;" hidden>
+                            Eliminar caja
                         </button>
                     </div>
                 </div>
@@ -37,8 +37,8 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
-                                    placeholder="Buscar por descripción" v-model="search">
+                                <input type="text" class="form-control" name="search" placeholder="Buscar por nombre"
+                                    v-model="search">
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Tabla de estados -->
+            <!-- Tabla de cajas -->
             <div class="row">
                 <div class="card-body">
 
@@ -60,37 +60,52 @@
                         <i class="fas fa-spinner fa-spin"></i> Cargando...
                     </div>
 
-                    <div v-if="estados.error" class="alert alert-danger" role="alert">
-                        <h3>@{{ estados.error }}</h3>
+                    <div v-if="cajas.error" class="alert alert-danger" role="alert">
+                        <h3>@{{ cajas.error }}</h3>
                     </div>
 
-                    <div v-if="estados.length > 0" class="table-responsive">
+                    <div v-if="cajas.length > 0" class="table-responsive">
+
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
-                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Ubicacion</th>
+                                    <th scope="col">Estado</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- vue foreach -->
-                                <tr v-for='estado in estados' :key="estado.id">
-                                    <td v-if="estado.descripcion.length > 15">
-                                        @{{ estado.descripcion.substring(0, 15) }}...
+                                <tr v-for='caja in cajas' :key="caja.id">
+                                    <td v-if="caja.nombre.length > 15">
+                                        @{{ caja.nombre.substring(0, 15) }}...
                                     </td>
                                     <td v-else>
-                                        @{{ estado.descripcion }}
+                                        @{{ caja.nombre }}
                                     </td>
                                     <td>
-                                        <button id="editBTN" class="btn btn-primary" @click="editEstado(estado)">
+                                        @{{ caja.ubicacion }}
+                                    </td>
+                                    <td v-if="caja.estado == 1">
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-success">@{{ estados.find(estado => estado.id == caja.estado).descripcion }}</span>
+                                    </td>
+                                    <td v-else>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == caja.estado).descripcion }}</span>
+                                    </td>
+                                    <td>
+                                        <button id="editBTN" class="btn btn-primary" @click="editCaja(caja)">
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteEstado(estado)">
+                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteCaja(caja)">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
+
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -110,7 +125,8 @@
                                                     </a>
                                                 </li>
                                                 <li class="page-item" :disabled="page === totalPages">
-                                                    <a class="page-link" href="#" aria-label="Next" @click="pagePlus">
+                                                    <a class="page-link" href="#" aria-label="Next"
+                                                        @click="pagePlus">
                                                         <span aria-hidden="true">&raquo;</span>
                                                     </a>
                                                 </li>
@@ -118,7 +134,8 @@
                                             <ul class="pagination justify-content-center">
 
                                                 <li class="page-item">
-                                                    <select class="form-select" v-model="per_page" @change="changePerPage">
+                                                    <select class="form-select" v-model="per_page"
+                                                        @change="changePerPage">
                                                         <option value="5">5</option>
                                                         <option value="10">10</option>
                                                         <option value="15">15</option>
@@ -134,31 +151,40 @@
                             </tfoot>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
 
         <!-- Create Modal -->
-        <div class="modal fade" id="crearEstadoModal" tabindex="-1" aria-labelledby="crearEstadoModalLabel"
+        <div class="modal fade" id="crearCajaModal" tabindex="-1" aria-labelledby="crearCajaModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
-                        <h1 class="modal-title fs-5" id="crearEstadoModalLabel">Crear estado </h1>
+                        <h1 class="modal-title fs-5" id="crearCajaModalLabel">Crear caja </h1>
                         <small class="text-muted"> Los campos marcados con * son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('estados.store') }}" method="POST">
+                        <form ref="form" action="{{ route('cajas.store') }}" method="POST">
                             @csrf
                             <div class="row">
-                                <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="descripcion" name="descripcion"
-                                            placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
-                                            value="{{ old('descripcion') }}">
-                                        <label for="floatingInput">Descripcion*</label>
-                                        <small class="text-danger"
-                                            v-if="errors.descripcion">@{{ errors.descripcion }}</small>
+                                        <input type="text" class="form-control" id="nombre" name="nombre"
+                                            placeholder="Nombre" @blur="validateForm" v-model="item.nombre"
+                                            value="{{ old('nombre') }}">
+                                        <label for="floatingInput">Nombre*</label>
+                                        <small class="text-danger" v-if="errors.nombre">@{{ errors.nombre }}</small>
+                                    </div>
+                                </div>
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="ubicacion" name="ubicacion"
+                                            value="{{ old('ubicacion') }}" placeholder="Ubicacion"
+                                            v-model="item.ubicacion" @blur="validateForm">
+                                        <label for="floatingInput">Ubicacion*</label>
+                                        <small class="text-danger" v-if="errors.ubicacion">@{{ errors.ubicacion }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -175,27 +201,58 @@
         </div>
 
         <!--Edit modal-->
-        <div class="modal fade" id="editEstadoModal" tabindex="-1" aria-labelledby="editEstadoModalLabel"
+        <div class="modal fade" id="editCajaModal" tabindex="-1" aria-labelledby="editCajaModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
-                        <h1 class="modal-title fs-5" id="editEstadoModalLabel">Editar estado</h1>
+                        <h1 class="modal-title fs-5" id="editCajaModalLabel">Editar caja</h1>
                         <small class="text-muted"> Los campos marcados con * son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
                             @csrf
                             <div class="row">
-                                <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
+
                                     <div class="form-floating mb-3">
-                                        <!-- Descripcion -->
-                                        <input type="text" class="form-control" id="descripcionEdit"
-                                            name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
-                                            v-model="editItem.descripcion">
-                                        <label for="floatingInput">Descripcion*</label>
+                                        <!-- Nombre -->
+                                        <input type="text" class="form-control" id="nombreEdit" name="nombre"
+                                            placeholder="Nombre" @blur="validateEditForm" v-model="editItem.nombre">
+                                        <label for="floatingInput">Nombre*</label>
                                         <small class="text-danger"
-                                            v-if="editErrors.descripcion">@{{ editErrors.descripcion }}</small>
+                                            v-if="editErrors.nombre">@{{ editErrors.nombre }}</small>
+                                    </div>
+
+                                </div>
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+
+                                        <!-- Ubicacion -->
+                                        <input type="text" class="form-control" id="ubicacionEdit" name="ubicacion"
+                                            placeholder="Ubicacion" v-model="editItem.ubicacion"
+                                            @blur="validateEditForm">
+                                        <label for="floatingInput">Ubicacion*</label>
+                                        <small class="text-danger"
+                                            v-if="editErrors.ubicacion">@{{ editErrors.ubicacion }}</small>
+                                    </div>
+                                </div>
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+
+                                        <!-- Estado -->
+                                        <select class="form-select" id="estadoEdit" name="estado"
+                                            :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
+                                            @change="validateEditForm">
+                                            <option v-for="estado in estados" :key="estado.id"
+                                                :value="estado.id">
+                                                @{{ estado.descripcion }}
+                                            </option>
+                                        </select>
+                                        <label for="floatingInput">Estado*</label>
+                                        <small class="text-danger"
+                                            v-if="editErrors.estado">@{{ editErrors.estado }}</small>
+
                                     </div>
                                 </div>
                             </div>
@@ -212,18 +269,17 @@
         </div>
 
         <!--Delete modal-->
-        <div class="modal fade" id="deleteEstadoModal" tabindex="-1" aria-labelledby="deleteEstadoModalLabel"
+        <div class="modal fade" id="deleteCajaModal" tabindex="-1" aria-labelledby="deleteCajaModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
-                        <h1 class="modal-title fs-5" id="deleteEstadoModalLabel">Eliminar estado</h1>
-                        <small class="text-muted text-danger"> ¿Estas seguro de eliminar este estado?</small><br>
-                        <small class="text-muted"> Esta accion no se puede deshacer</small><br>
-                        <small class="text-muted"> Nota: No se pueden eliminar estados que esten en uso</small>
+                        <h1 class="modal-title fs-5" id="deleteCajaModalLabel">Eliminar caja</h1>
+                        <small class="text-muted text-danger"> ¿Estas seguro de eliminar este caja?</small>
                     </div>
                     <div class="modal-body text-center" style="padding: 25px;">
-                        <h3>Descripcion: @{{ deleteItem.descripcion }}</h3>
+                        <h3>Nombre: @{{ deleteItem.nombre }}</h3>
+                        <h3>Ubicacion: @{{ deleteItem.ubicacion }}</h3>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="canceldeleteButton"
@@ -234,7 +290,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -242,21 +297,26 @@
             el: '#app',
             data: {
                 item: {
-                    descripcion: '',
+                    nombre: '',
+                    ubicacion: '',
                 },
                 editItem: {
                     id: '',
-                    descripcion: '',
+                    nombre: '',
+                    ubicacion: '',
+                    estado: ''
                 },
                 deleteItem: {
                     id: '',
-                    descripcion: '',
+                    nombre: '',
+                    ubicacion: '',
+                    estado: ''
                 },
                 search: '',
                 errors: {},
                 editErrors: {},
-                estados: [],
-                searchEstados: [],
+                cajas: [],
+                searchCajas: [],
                 filtered: [],
                 estados: [],
                 loading: true,
@@ -284,7 +344,7 @@
 
                         axios({
                             method: 'post',
-                            url: '/estados/store',
+                            url: '/cajas/store',
                             data: this.item
                         }).then(response => {
 
@@ -301,15 +361,15 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                    title: 'Estado creada',
-                                    text: 'El estado ha sido creada correctamente',
+                                    title: 'Caja creada',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al crear la estado',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -327,7 +387,7 @@
 
                             swal.fire({
                                 title: 'Error',
-                                text: 'Ha ocurrido un error al crear la estado',
+                                text: 'Ha ocurrido un error al crear la caja',
                                 icon: 'error',
                                 confirmButtonText: 'Aceptar'
                             });
@@ -336,8 +396,8 @@
 
                             //limpiar
                             this.cleanForm();
-                            //Recargar estados
-                            this.getAllEstados();
+                            //Recargar cajas
+                            this.getAllCajas();
                         })
 
                     }
@@ -357,7 +417,7 @@
 
                         axios({
                             method: 'post',
-                            url: '/estados/edit/' + this.editItem.id,
+                            url: '/cajas/edit/' + this.editItem.id,
                             data: this.editItem
                         }).then(response => {
 
@@ -373,15 +433,15 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                    title: 'Estado editada',
-                                    text: 'El estado ha sido editada correctamente',
+                                    title: 'Caja editada',
+                                    text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
                                     title: 'Error',
-                                    text: 'Ha ocurrido un error al editar la estado',
+                                    text: response.data.error,
                                     icon: 'error',
                                     confirmButtonText: 'Aceptar'
                                 });
@@ -392,7 +452,7 @@
 
                             swal.fire({
                                 title: 'Error',
-                                text: 'Ha ocurrido un error al editar la estado',
+                                text: 'Ha ocurrido un error al editar la caja',
                                 icon: 'error',
                                 confirmButtonText: 'Aceptar'
                             });
@@ -401,20 +461,21 @@
 
                             //limpiar
                             this.cleanForm();
-                            //Recargar estados
-                            this.getAllEstados();
+                            //Recargar cajas
+                            this.getAllCajas();
 
                         })
 
                     }
                 },
-                editEstado(estado) {
-                    this.editItem.descripcion = estado.descripcion;
-                    this.editItem.estado = estado.estado;
-                    this.editItem.id = estado.id;
+                editCaja(caja) {
+                    this.editItem.nombre = caja.nombre;
+                    this.editItem.ubicacion = caja.ubicacion;
+                    this.editItem.estado = caja.estado;
+                    this.editItem.id = caja.id;
 
                     //dar click al boton de modal
-                    document.getElementById('editEstadoModalBtn').click();
+                    document.getElementById('editCajaModalBtn').click();
 
                 },
                 //Eliminar
@@ -429,7 +490,7 @@
 
                     axios({
                         method: 'delete',
-                        url: '/estados/delete/' + this.deleteItem.id,
+                        url: '/cajas/delete/' + this.deleteItem.id,
                     }).then(response => {
 
                         if (response.data.error) {
@@ -464,7 +525,7 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
-                                title: 'Estado eliminado',
+                                title: 'Caja eliminado',
                                 text: response.data.success,
                                 icon: 'success',
                                 confirmButtonText: 'Aceptar',
@@ -474,7 +535,7 @@
                     }).catch(error => {
                         swal.fire({
                             title: 'Error',
-                            text: 'Ha ocurrido un error al eliminar la estado',
+                            text: 'Ha ocurrido un error al eliminar la caja',
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
@@ -483,86 +544,94 @@
 
                         //limpiar
                         this.cleanForm();
-                        //Recargar estados
-                        this.getAllEstados();
+                        //Recargar cajas
+                        this.getAllCajas();
                     })
 
 
                 },
-                DeleteEstado(estado) {
-                    this.deleteItem.descripcion = estado.descripcion;
-                    this.deleteItem.id = estado.id;
+                DeleteCaja(caja) {
+                    this.deleteItem.nombre = caja.nombre;
+                    this.deleteItem.ubicacion = caja.ubicacion;
+                    this.deleteItem.id = caja.id;
 
                     //dar click al boton de modal
-                    document.getElementById('deleteEstadoModalBtn').click();
+                    document.getElementById('deleteCajaModalBtn').click();
                 },
                 //Validaciones
                 validateForm() {
                     this.errors = {};
 
-                    if (!this.item.descripcion) {
-                        this.errors.descripcion = 'Este campo es obligatorio';
-                        document.getElementById('descripcion').style.border = '1px solid red';
+                    if (!this.item.nombre) {
+                        this.errors.nombre = 'Este campo es obligatorio';
+                        document.getElementById('nombre').style.border = '1px solid red';
                     } else {
-                        document.getElementById('descripcion').style.border = '1px solid green';
+                        document.getElementById('nombre').style.border = '1px solid green';
+                    }
+                    if (!this.item.ubicacion) {
+                        this.errors.ubicacion = 'Este campo es obligatorio';
+                        document.getElementById('ubicacion').style.border = '1px solid red';
+                    } else {
+                        document.getElementById('ubicacion').style.border = '1px solid green';
                     }
 
-                    this.validateEstadoname();
-
+                    this.validateCajaname();
                 },
                 validateEditForm() {
 
                     editErrors = {};
 
-                    if (!this.editItem.descripcion) {
-                        this.editErrors.descripcion = 'Este campo es obligatorio';
-                        document.getElementById('descripcionEdit').style.border = '1px solid red';
+                    if (!this.editItem.nombre) {
+                        this.editErrors.nombre = 'Este campo es obligatorio';
+                        document.getElementById('nombreEdit').style.border = '1px solid red';
                     } else {
-                        document.getElementById('descripcionEdit').style.border = '1px solid green';
+                        document.getElementById('nombreEdit').style.border = '1px solid green';
                     }
 
-                    this.validateEditEstadoname();
+                    if (!this.editItem.ubicacion) {
+                        this.editErrors.ubicacion = 'Este campo es obligatorio';
+                        document.getElementById('ubicacionEdit').style.border = '1px solid red';
+                    } else {
+                        document.getElementById('ubicacionEdit').style.border = '1px solid green';
+                    }
 
+                    document.getElementById('estadoEdit').style.border = '1px solid green';
+
+                    this.validateEditCajaname();
                 },
-                validateEstadoname() {
+                validateCajaname() {
                     //Al menos 5 caracteres y sin espacios o caracteres especiales, !@#$%^&*()_+
-                    let regex = /^[ a-zA-Z0-9]{3,}$/;
+                    let regex = /^[a-zA-Z0-9]{3,}$/;
 
-                    if (!regex.test(this.item.descripcion)) {
-                        document.getElementById('descripcion').style.border = '1px solid #ced4da';
-                        document.getElementById('descripcion').style.border = '1px solid red';
-                        this.errors.descripcion =
-                            'El estado debe tener al menos 3 caracteres y no contener caracteres especiales';
+                    if (!regex.test(this.item.nombre)) {
+                        this.errors.nombre =
+                            'La caja debe tener al menos 3 caracteres y no contener espacios o caracteres especiales';
                     }
 
-                    for (let i = 0; i < this.estados.length; i++) {
-                        if (this.estados[i].descripcion == this.item.descripcion) {
-                            this.errors.descripcion = 'El estado ya existe';
+                    for (let i = 0; i < this.cajas.length; i++) {
+                        if (this.cajas[i].nombre == this.item.nombre) {
+                            this.errors.nombre = 'La caja ya existe';
                         }
                     }
                 },
-                validateEditEstadoname() {
+                validateEditCajaname() {
 
                     this.editErrors = {};
 
-                    //Permitir espacios y letras, numeros no y minimo 3 caracteres
-                    let regex = /^[ a-zA-Z0-9]{3,}$/;
+                    let regex = /^[a-zA-Z0-9]{3,}$/;
 
-                    if (!regex.test(this.editItem.descripcion)) {
-                        document.getElementById('descripcionEdit').style.border = '1px solid #ced4da';
-                        document.getElementById('descripcionEdit').style.border = '1px solid red';
-                        this.editErrors.descripcion =
-                            'El estado debe tener al menos 3 caracteres y no contener caracteres especiales';
-
+                    if (!regex.test(this.editItem.nombre)) {
+                        this.editErrors.nombre =
+                            'La caja debe tener al menos 3 caracteres y no contener espacios o caracteres especiales';
                     }
 
-                    //Eliminar del array la estado que se esta editando
-                    this.estados = this.estados.filter(estado => estado.id != this.editItem.id);
+                    //Eliminar del array la caja que se esta editando
+                    this.cajas = this.cajas.filter(caja => caja.id != this.editItem.id);
 
-                    //recorrer this.estados
-                    for (let i = 0; i < this.estados.length; i++) {
-                        if (this.estados[i].descripcion == this.editItem.descripcion) {
-                            this.editErrors.descripcion = 'El estado ya existe';
+                    //recorrer this.cajas
+                    for (let i = 0; i < this.cajas.length; i++) {
+                        if (this.cajas[i].nombre == this.editItem.nombre) {
+                            this.editErrors.nombre = 'La caja ya existe';
                         }
                     }
 
@@ -571,26 +640,25 @@
                 pageMinus() {
                     if (this.page > 1) {
                         this.page--;
-                        this.getAllEstados();
+                        this.getAllCajas();
                     }
                 },
                 pagePlus() {
                     if (this.page < this.totalPages) {
                         this.page++;
-                        this.getAllEstados();
+                        this.getAllCajas();
                     }
                 },
                 specificPage(page) {
                     this.page = page;
-                    this.getAllEstados();
+                    this.getAllCajas();
                 },
                 changePerPage() {
                     this.page = 1;
-                    this.getAllEstados();
+                    this.getAllCajas();
                 },
                 //Limpiar formulario y busqueda
                 searchFn() {
-
                     this.searchError = '';
 
                     if (this.search == null) {
@@ -606,17 +674,17 @@
                     }
 
                     let search = this.search.toLowerCase();
-                    let estados = this.searchEstados;
+                    let cajas = this.searchCajas;
 
                     try {
-                        this.filtered = estados.filter(estado => {
-                            return estado.descripcion.toLowerCase().includes(search)
-
+                        this.filtered = cajas.filter(caja => {
+                            return caja.nombre.toLowerCase().includes(search) ||
+                                caja.ubicacion.toLowerCase().includes(search)
                         });
                     } catch (error) {
                         swal.fire({
                             title: 'Error',
-                            text: 'Ha ocurrido un error al buscar la estado',
+                            text: 'Ha ocurrido un error al buscar la caja',
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
@@ -626,58 +694,61 @@
                         this.searchError = 'No se encontraron resultados';
                     }
 
-                    this.estados = this.filtered;
+                    this.cajas = this.filtered;
                 },
                 cleanForm() {
 
                     this.item = {
-                        descripcion: '',
+                        nombre: '',
+                        ubicacion: '',
                     };
 
                     this.errors = {};
                     this.editErrors = {};
                     this.search = '';
-                    //this.estados = [];
+                    //this.cajas = [];
                     this.editItem = {
                         id: '',
-                        descripcion: '',
-
+                        nombre: '',
+                        ubicacion: '',
                         estado: ''
                     };
                     this.deleteItem = {
                         id: '',
-                        descripcion: '',
-
+                        nombre: '',
+                        ubicacion: '',
                         estado: ''
                     };
 
-                    document.getElementById('descripcion').style.border = '1px solid #ced4da';
+                    document.getElementById('nombre').style.border = '1px solid #ced4da';
+                    document.getElementById('ubicacion').style.border = '1px solid #ced4da';
 
+                    document.getElementById('nombreEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('ubicacionEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('estadoEdit').style.border = '1px solid #ced4da';
 
-                    document.getElementById('descripcionEdit').style.border = '1px solid #ced4da';
-
-                    this.estados = this.searchEstados;
+                    this.cajas = this.searchCajas;
                 },
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.estados = this.searchEstados;
+                    this.cajas = this.searchCajas;
                 },
                 //Obtener recursos
-                async getAllEstados() {
+                async getAllCajas() {
 
                     try {
                         axios({
                             method: 'get',
-                            url: '/allEstadosP',
+                            url: '/allCajasP',
                             params: {
                                 page: this.page,
                                 per_page: this.per_page
                             }
                         }).then(response => {
                             this.loading = false;
-                            this.estados = response.data.data;
-                            this.searchEstados = response.data.data;
+                            this.cajas = response.data.data;
+                            this.searchCajas = response.data.data;
 
                             this.total = response.data.total;
                             this.totalPages = response.data.last_page;
@@ -691,11 +762,23 @@
                             this.loading = false;
                             swal.fire({
                                 title: 'Error',
-                                text: 'Ha ocurrido un error al obtener los estados',
+                                text: 'Ha ocurrido un error al obtener las cajas',
                                 icon: 'error',
                                 confirmButtonText: 'Aceptar'
                             });
                         })
+
+                    } catch (error) {
+
+                    }
+                },
+                async getAllEstados() {
+
+                    try {
+                        let response = await fetch('/allEstados');
+                        let data = await response.json();
+
+                        this.estados = data;
 
                     } catch (error) {
 
@@ -707,6 +790,8 @@
             },
             mounted() {
                 this.getAllEstados();
+                this.getAllCajas();
+
             }
         });
     </script>

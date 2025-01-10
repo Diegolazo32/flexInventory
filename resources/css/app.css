@@ -50,6 +50,10 @@ body {
     border-radius: 15px;
 }
 
+.titleBar {
+    padding: 5px;
+}
+
 .form-control {
     border-radius: 10px;
 }
@@ -112,6 +116,10 @@ body {
     box-shadow: 20px 20px 20px 0px rgb(150, 150, 150);
 }
 
+.mdl {
+    max-width: 900px;
+}
+
 .hoverCardCenter {
     transition: 0.5s;
 }
@@ -167,5 +175,21 @@ body {
         padding: 15px;
         margin-right: 0;
     }
+    
+}
 
+@media(max-width: 600px) {
+    .titleBar {
+        padding: 10px;
+    }
+}
+
+@media(max-width: 425px) {
+    .titleBar {
+        padding: 10px;
+    }
+
+    .nombreMarca {
+        display: none;
+    }
 }

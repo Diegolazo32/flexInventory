@@ -41,6 +41,29 @@ class UserController extends Controller
 
         return response()->json($users);
     }
+    public function getAllPaginatedUsers(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(6);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $users = User::paginate($request->per_page);
+
+        foreach ($users as $user) {
+            //$user->fechaNacimiento = date('d/m/Y', strtotime($user->fechaNacimiento));
+
+            if ($user->password == Hash::check('0000', $user->password)) {
+                $user->hasPassword = false;
+            } else {
+                $user->hasPassword = true;
+            }
+        }
+
+        return response()->json($users);
+    }
 
     /**
      * Display a listing of the resource.

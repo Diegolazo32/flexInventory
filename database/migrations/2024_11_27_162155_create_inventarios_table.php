@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('inventarios', function (Blueprint $table) {
             $table->id();
             $table->date('fechaApertura');
-            $table->date('fechaCierre');
+            $table->date('fechaCierre')->nullable();
             $table->integer('ProductosApertura');
             $table->integer('ProductosCierre');
             $table->foreignId('estado')->references('id')->on('estados');

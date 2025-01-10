@@ -25,6 +25,19 @@ class RolesController extends Controller
         return response()->json($roles);
     }
 
+    public function getAllPaginatedRoles(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(41);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $roles = roles::paginate($request->per_page);
+        return response()->json($roles);
+    }
+
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();

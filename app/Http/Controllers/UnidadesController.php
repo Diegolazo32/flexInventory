@@ -34,7 +34,18 @@ class UnidadesController extends Controller
         }
 
         $unidades = unidades::all();
+        return response()->json($unidades);
+    }
+    public function getAllPaginatedUnidades(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(11);
 
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $unidades = unidades::paginate($request->per_page);
         return response()->json($unidades);
     }
 

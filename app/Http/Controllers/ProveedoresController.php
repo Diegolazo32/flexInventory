@@ -37,6 +37,18 @@ class ProveedoresController extends Controller
         $proveedores = proveedores::all();
         return response()->json($proveedores);
     }
+    public function getAllPaginatedProveedores(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(52);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $proveedores = proveedores::paginate($request->numItems);
+        return response()->json($proveedores);
+    }
 
     public function store(Request $request)
     {

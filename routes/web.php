@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EstadosController;
 use App\Http\Controllers\GruposController;
+use App\Http\Controllers\KardexController;
 use App\Http\Controllers\PermisosController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
@@ -58,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
     //Usuarios
     Route::controller(UserController::class)->group(function () {
         Route::get('/allUsers', [UserController::class, 'getAllUsers'])->name('allUsers');
+        Route::get('/allUsersP', [UserController::class, 'getAllPaginatedUsers'])->name('allUsersP');
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
         Route::post('/users/edit/{id}', [UserController::class, 'update'])->name('users.edit');
@@ -68,6 +71,7 @@ Route::middleware(['auth'])->group(function () {
     //Unidades
     Route::controller(UnidadesController::class)->group(function () {
         Route::get('/allUnidades', [UnidadesController::class, 'getAllUnidades'])->name('allUnidades');
+        Route::get('/allUnidadesP', [UnidadesController::class, 'getAllPaginatedUnidades'])->name('allUnidadesP');
         Route::get('/unidades', [UnidadesController::class, 'index'])->name('unidades');
         Route::post('/unidades/store', [UnidadesController::class, 'store'])->name('unidades.store');
         Route::post('/unidades/edit/{id}', [UnidadesController::class, 'update'])->name('unidades.edit');
@@ -77,6 +81,7 @@ Route::middleware(['auth'])->group(function () {
     //Estados
     Route::controller(EstadosController::class)->group(function () {
         Route::get('/allEstados', [EstadosController::class, 'getAllEstados'])->name('allEstados');
+        Route::get('/allEstadosP', [EstadosController::class, 'getAllPaginatedEstados'])->name('allEstadosP');
         Route::get('/estados', [EstadosController::class, 'index'])->name('estados');
         Route::post('/estados/store', [EstadosController::class, 'store'])->name('estados.store');
         Route::post('/estados/edit/{id}', [EstadosController::class, 'update'])->name('estados.edit');
@@ -86,6 +91,7 @@ Route::middleware(['auth'])->group(function () {
     //Categorias
     Route::controller(CategoriaController::class)->group(function () {
         Route::get('/allCategorias', [CategoriaController::class, 'getAllCategorias'])->name('allCategorias');
+        Route::get('/allCategoriasP', [CategoriaController::class, 'getAllPaginatedCategorias'])->name('allCategoriasP');
         Route::get('/categorias', [CategoriaController::class, 'index'])->name('categorias');
         Route::post('/categorias/store', [CategoriaController::class, 'store'])->name('categorias.store');
         Route::post('/categorias/edit/{id}', [CategoriaController::class, 'update'])->name('categorias.edit');
@@ -95,6 +101,7 @@ Route::middleware(['auth'])->group(function () {
     //Proveedores
     Route::controller(ProveedoresController::class)->group(function () {
         Route::get('/allProveedores', [ProveedoresController::class, 'getAllProveedores'])->name('allProveedores');
+        Route::get('/allProveedoresP', [ProveedoresController::class, 'getAllPaginatedProveedores'])->name('allProveedoresP');
         Route::get('/proveedores', [ProveedoresController::class, 'index'])->name('proveedores');
         Route::post('/proveedores/store', [ProveedoresController::class, 'store'])->name('proveedores.store');
         Route::post('/proveedores/edit/{id}', [ProveedoresController::class, 'update'])->name('proveedores.edit');
@@ -104,6 +111,7 @@ Route::middleware(['auth'])->group(function () {
     //Clientes
     Route::controller(ClientesController::class)->group(function () {
         Route::get('/allClientes', [ClientesController::class, 'getAllClientes'])->name('allClientes');
+        Route::get('/allClientesP', [ClientesController::class, 'getAllPaginatedClientes'])->name('allClientesP');
         Route::get('/clientes', [ClientesController::class, 'index'])->name('clientes');
         Route::post('/clientes/store', [ClientesController::class, 'store'])->name('clientes.store');
         Route::post('/clientes/edit/{id}', [ClientesController::class, 'update'])->name('clientes.edit');
@@ -113,6 +121,7 @@ Route::middleware(['auth'])->group(function () {
     //TipoVenta
     Route::controller(TipoVentaController::class)->group(function () {
         Route::get('/allTipoVenta', [TipoVentaController::class, 'getAllTipoVenta'])->name('allTipoVenta');
+        Route::get('/allTipoVentaP', [TipoVentaController::class, 'getAllPaginatedTipoVenta'])->name('allTipoVentaP');
         Route::get('/tipoVenta', [TipoVentaController::class, 'index'])->name('tipoVenta');
         Route::post('/tipoVenta/store', [TipoVentaController::class, 'store'])->name('tipoVenta.store');
         Route::post('/tipoVenta/edit/{id}', [TipoVentaController::class, 'update'])->name('tipoVenta.edit');
@@ -122,6 +131,7 @@ Route::middleware(['auth'])->group(function () {
     //Productos
     Route::controller(ProductosController::class)->group(function () {
         Route::get('/allProductos', [ProductosController::class, 'getAllProductos'])->name('allProductos');
+        Route::get('/allProductosP', [ProductosController::class, 'getAllPaginatedProductos'])->name('allProductosP');
         Route::get('/productos', [ProductosController::class, 'index'])->name('productos');
         Route::post('/productos/store', [ProductosController::class, 'store'])->name('productos.store');
         Route::post('/productos/edit/{id}', [ProductosController::class, 'update'])->name('productos.edit');
@@ -131,6 +141,7 @@ Route::middleware(['auth'])->group(function () {
     //Roles
     Route::controller(RolesController::class)->group(function () {
         Route::get('/allRoles', [RolesController::class, 'getAllRoles'])->name('allRoles');
+        Route::get('/allRolesP', [RolesController::class, 'getAllPaginatedRoles'])->name('allRolesP');
         Route::get('/roles', [RolesController::class, 'index'])->name('roles');
         Route::post('/roles/store', [RolesController::class, 'store'])->name('roles.store');
         Route::post('/roles/edit/{id}', [RolesController::class, 'update'])->name('roles.edit');
@@ -141,6 +152,7 @@ Route::middleware(['auth'])->group(function () {
     //Permisos
     Route::controller(PermisosController::class)->group(function () {
         Route::get('/allPermisos', [PermisosController::class, 'getAllPermisos'])->name('allPermisos');
+        Route::get('/allPermisosP', [PermisosController::class, 'getAllPaginatedPermisos'])->name('allPermisosP');
         Route::get('/permisos', [PermisosController::class, 'index'])->name('permisos');
         Route::post('/permisos/store', [PermisosController::class, 'store'])->name('permisos.store');
         Route::post('/permisos/edit/{id}', [PermisosController::class, 'update'])->name('permisos.edit');
@@ -154,5 +166,24 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(RolPermisoController::class)->group(function () {
         Route::get('/allRolPermiso', [RolPermisoController::class, 'getAllRolPermiso'])->name('allRolPermiso');
         Route::get('/permisosByRol/{id}', [RolPermisoController::class, 'getPermisosByRol'])->name('permisosByRol');
+    });
+
+    //Cajas
+    Route::controller(CajaController::class)->group(function () {
+        Route::get('/allCajas', [CajaController::class, 'getAllCajas'])->name('allCajas');
+        Route::get('/allCajasP', [CajaController::class, 'getAllPaginatedCajas'])->name('allCajasP');
+        Route::get('/cajas', [CajaController::class, 'index'])->name('cajas');
+        Route::post('/cajas/store', [CajaController::class, 'store'])->name('cajas.store');
+        Route::post('/cajas/edit/{id}', [CajaController::class, 'update'])->name('cajas.edit');
+        Route::delete('/cajas/delete/{id}', [CajaController::class, 'delete'])->name('cajas.delete');
+    });
+
+    //Kardex
+    Route::controller(KardexController::class)->group(function () {
+        Route::get('/allKardex', [KardexController::class, 'getAllKardex'])->name('allKardex');
+        Route::get('/kardex', [KardexController::class, 'index'])->name('kardex');
+        Route::post('/kardex/store', [KardexController::class, 'store'])->name('kardex.store');
+        Route::post('/kardex/edit/{id}', [KardexController::class, 'update'])->name('kardex.edit');
+        Route::delete('/kardex/delete/{id}', [KardexController::class, 'delete'])->name('kardex.delete');
     });
 });
