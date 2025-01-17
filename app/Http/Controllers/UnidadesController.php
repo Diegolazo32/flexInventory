@@ -24,28 +24,36 @@ class UnidadesController extends Controller
         return view('unidades.index');
     }
 
-    public function getAllUnidades()
+    public function getAllUnidades(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(11);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $unidades = unidades::where('descripcion', 'like', '%' . $request->search . '%')
+                ->orWhere('abreviatura', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            return response()->json($unidades);
+        }
+
+        if ($request->onlyActive) {
+            $unidades = unidades::where('estado', 1)->get();
+            return response()->json($unidades);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $unidades = unidades::paginate($request->per_page);
+            return response()->json($unidades);
         }
 
         $unidades = unidades::all();
-        return response()->json($unidades);
-    }
-    public function getAllPaginatedUnidades(Request $request)
-    {
-        $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(11);
-
-        if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
-        }
-
-        $unidades = unidades::paginate($request->per_page);
         return response()->json($unidades);
     }
 

@@ -37,8 +37,21 @@ class RolPermisoController extends Controller
             }
 
             return true;
+
         } catch (\Exception $e) {
+            
             return false;
         }
+    }
+
+    public function permisosRolAuth()
+    {
+
+        $this->checkPermisos(46);
+
+        $rol = Auth::user()->rol;
+        $permisos = rolPermiso::where('rol', $rol)->get();
+
+        return response()->json($permisos);
     }
 }

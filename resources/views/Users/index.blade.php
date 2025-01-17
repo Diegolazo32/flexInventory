@@ -9,7 +9,7 @@
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
                         <h1>Usuarios</h1>
-                        <small class="text-muted">@{{ mensaje }}</small>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
@@ -47,8 +47,8 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="getAllUsers"><i class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
@@ -548,7 +548,7 @@
                 nextPageUrl: '',
                 prevPageUrl: '',
                 mensaje: '',
-                posiblesMensajes:['Gestion de usuarios', 'Administracion de usuarios', 'Personas de confianza'],
+                posiblesMensajes: ['Gestion de usuarios', 'Administracion de usuarios', 'Personas de confianza'],
             },
             methods: {
 
@@ -558,10 +558,11 @@
                     try {
                         axios({
                             method: 'get',
-                            url: '/allUsersP',
+                            url: '/allUsers',
                             params: {
                                 page: this.page,
-                                per_page: this.per_page
+                                per_page: this.per_page,
+                                search: this.search
                             }
                         }).then(response => {
                             this.loading = false;
@@ -570,12 +571,17 @@
 
                             this.total = response.data.total;
                             this.totalPages = response.data.last_page;
-                            this.page = response.data.current_page;
+                            if (this.page > this.totalPages) {
+                                this.page = 1;
+                                this.getAllUsers();
+                            } else {
+                                this.page = response.data.current_page;
+                            }
                             this.per_page = response.data.per_page;
                             this.nextPageUrl = response.data.next_page_url;
                             this.prevPageUrl = response.data.prev_page_url;
 
-                            console.log(response.data);
+
                         }).catch(error => {
                             this.loading = false;
                             swal.fire({
@@ -1167,48 +1173,7 @@
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.usuarios = this.searchUsuarios;
-                },
-                //Funciones de busqueda
-                searchFn() {
-
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let users = this.searchUsuarios;
-
-                    try {
-                        this.filtered = users.filter(user => {
-                            return user.nombre.toLowerCase().includes(search) ||
-                                user.apellido.toLowerCase().includes(search) ||
-                                user.usuario.toLowerCase().includes(search)
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: error,
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.usuarios = this.filtered;
+                    this.getAllUsers();
                 },
                 //Funciones de formateo
                 formatDate(date) {

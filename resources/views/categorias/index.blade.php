@@ -9,7 +9,7 @@
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
                         <h1>Categorias</h1>
-                        <small class="text-muted">@{{ mensaje }}</small>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
@@ -42,8 +42,8 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="getAllCategorias"><i class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
@@ -327,9 +327,7 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
+
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -627,44 +625,6 @@
                     this.getAllCategorias();
                 },
                 //Limpiar formulario y busqueda
-                searchFn() {
-
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let categorias = this.searchCategorias;
-
-                    try {
-                        this.filtered = categorias.filter(categoria => {
-                            return categoria.descripcion.toLowerCase().includes(search)
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al buscar la categoria',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.categorias = this.filtered;
-                },
                 cleanForm() {
 
                     this.item = {
@@ -701,39 +661,45 @@
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.categorias = this.searchCategorias;
+                    this.getAllCategorias();
                 },
                 //Obtener recursos
                 async getAllCategorias() {
                     axios({
-                            method: 'get',
-                            url: '/allCategoriasP',
-                            params: {
-                                page: this.page,
-                                per_page: this.per_page
-                            }
-                        }).then(response => {
-                            this.loading = false;
-                            this.categorias = response.data.data;
-                            this.searchCategorias = response.data.data;
+                        method: 'get',
+                        url: '/allCategorias',
+                        params: {
+                            page: this.page,
+                            per_page: this.per_page,
+                            search: this.search
+                        }
+                    }).then(response => {
+                        this.loading = false;
+                        this.categorias = response.data.data;
+                        this.searchCategorias = response.data.data;
 
-                            this.total = response.data.total;
-                            this.totalPages = response.data.last_page;
+                        this.total = response.data.total;
+                        this.totalPages = response.data.last_page;
+                        if (this.page > this.totalPages) {
+                            this.page = 1;
+                            this.getAllCategorias();
+                        } else {
                             this.page = response.data.current_page;
-                            this.per_page = response.data.per_page;
-                            this.nextPageUrl = response.data.next_page_url;
-                            this.prevPageUrl = response.data.prev_page_url;
+                        }
+                        this.per_page = response.data.per_page;
+                        this.nextPageUrl = response.data.next_page_url;
+                        this.prevPageUrl = response.data.prev_page_url;
 
-                            console.log(response.data);
-                        }).catch(error => {
-                            this.loading = false;
-                            swal.fire({
-                                title: 'Error',
-                                text: 'Ha ocurrido un error al obtener las categorias',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-                        })
+
+                    }).catch(error => {
+                        this.loading = false;
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al obtener las categorias',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    })
                 },
                 async getAllEstados() {
 

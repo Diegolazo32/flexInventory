@@ -16,7 +16,12 @@ return new class extends Migration
             $table->date('fechaApertura');
             $table->date('fechaCierre')->nullable();
             $table->integer('ProductosApertura');
+            $table->integer('StockApertura');
             $table->integer('ProductosCierre');
+            $table->integer('StockCierre');
+            $table->float('totalInventario');
+            $table->foreignId('aperturadoPor')->references('id')->on('users');
+            $table->foreignId('cerradoPor')->references('id')->on('users');
             $table->foreignId('estado')->references('id')->on('estados');
             $table->timestamps();
         });

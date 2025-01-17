@@ -9,7 +9,7 @@
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
                         <h1>Unidades</h1>
-                        <small class="text-muted">@{{ mensaje }}</small>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
@@ -41,8 +41,8 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="getAllUnidades"><i class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
@@ -357,9 +357,7 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
+
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -642,44 +640,6 @@
 
                 },
                 //Limpiar formulario y busqueda
-                searchFn() {
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let unidades = this.searchUnidades;
-
-                    try {
-                        this.filtered = unidades.filter(unidad => {
-                            return unidad.descripcion.toLowerCase().includes(search) ||
-                                unidad.abreviatura.toLowerCase().includes(search)
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al buscar la unidad',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.unidades = this.filtered;
-                },
                 cleanForm() {
 
                     this.item = {
@@ -716,7 +676,7 @@
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.unidades = this.searchUnidades;
+                    this.getAllUnidades();
                 },
                 //Paginacion
                 pageMinus() {
@@ -745,10 +705,11 @@
                     try {
                         axios({
                             method: 'get',
-                            url: '/allUnidadesP',
+                            url: '/allUnidades',
                             params: {
                                 page: this.page,
-                                per_page: this.per_page
+                                per_page: this.per_page,
+                                search: this.search
                             }
                         }).then(response => {
                             this.loading = false;
@@ -757,12 +718,17 @@
 
                             this.total = response.data.total;
                             this.totalPages = response.data.last_page;
-                            this.page = response.data.current_page;
+                            if (this.page > this.totalPages) {
+                                this.page = 1;
+                                this.getAllUnidades();
+                            } else {
+                                this.page = response.data.current_page;
+                            }
                             this.per_page = response.data.per_page;
                             this.nextPageUrl = response.data.next_page_url;
                             this.prevPageUrl = response.data.prev_page_url;
 
-                            console.log(response.data);
+
                         }).catch(error => {
                             this.loading = false;
                             swal.fire({

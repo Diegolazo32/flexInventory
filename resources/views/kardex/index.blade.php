@@ -9,7 +9,7 @@
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
                         <h1>Kardex</h1>
-                        <small class="text-muted">@{{ mensaje }}</small>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end" style="display: flex; gap: 5px;">
@@ -30,9 +30,16 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input :disabled="mainProductos < 1" type="text" class="form-control"
-                                    placeholder="Buscar producto" v-model="searchMainProductos" @keyup="searchProductoFn">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="Buscar por codigo o nombre" v-model="searchMainProductos">
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
+                            </div>
+                            <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="searchProductoFn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <button v-if="searchMainProductos" class="btn btn-primary"
+                                    style="height: 40px; max-height: 40px;" @click="cleanSearchMain"><i
+                                        class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
 
@@ -43,9 +50,8 @@
             <div class="row">
                 <div class="card-body">
 
-
-                    <div v-if="productos.error" class="alert alert-danger" role="alert">
-                        <h3>@{{ productos.error }}</h3>
+                    <div v-if="productoError" class="alert alert-danger" role="alert">
+                        <h3>@{{ productoError }}</h3>
                     </div>
 
                     <div class="table-responsive">
@@ -65,7 +71,7 @@
                                     <td colspan="6"><i class="fas fa-spinner fa-spin"></i> Cargando productos...</td>
                                 </tr>
                                 <!-- vue foreach -->
-                                <tr v-else v-for="producto in productos" :key="producto.id">
+                                <tr v-else v-for="producto in mainProductos" :key="producto.id">
                                     <td>@{{ producto.codigo }}</td>
                                     <td>@{{ producto.nombre }}</td>
                                     <td>@{{ producto.stockInicial }}</td>
@@ -128,6 +134,9 @@
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProductoModalLabel">Realizar movimiento </h1>
                         <small class="text-muted">Seleccione los productos para realizar un movimiento</small>
+                        <br>
+                        <small class="text-muted">Si se deja en blanco la obervacion se guardara
+                            como "Movimiento de stock"</small>
                     </div>
                     <div class="modal-body">
 
@@ -141,7 +150,8 @@
                                         <ul v-if="results.length > 0" class="list-group">
                                             <li v-for="result in results" class="list-group-item"
                                                 @click="selectResult(result)" style="cursor: pointer;"
-                                                @keyup.enter="selectResult(result)" tabindex="0">
+                                                @keyup.enter="selectResult(result)" tabindex="0">@{{ result.codigo }}
+                                                -
                                                 @{{ result.nombre }}</li>
                                         </ul>
                                     </div>
@@ -170,6 +180,7 @@
                                         <table ref="table" class="table table-hover" style="text-align: center;">
                                             <thead>
                                                 <tr>
+                                                    <th scope="col">Codigo</th>
                                                     <th scope="col">Nombre</th>
                                                     <th scope="col">Accion</th>
                                                     <th scope="col">Cantidad</th>
@@ -179,11 +190,16 @@
                                             </thead>
                                             <tbody>
                                                 <tr v-if="loading" role="alert" id="loading">
-                                                    <td colspan="5"><i class="fas fa-spinner fa-spin"></i> Cargando
+                                                    <td colspan="6"><i class="fas fa-spinner fa-spin"></i> Cargando
                                                         productos...</td>
                                                 </tr>
                                                 <!-- vue foreach -->
                                                 <tr v-else v-for="kard in kardex" :key="kard.id">
+                                                    <td>
+                                                        <input type="text" class="form-control"
+                                                            :id="'codigo' + kard.id" name="codigo" placeholder="Codigo"
+                                                            v-model="kard.item.codigo" disabled>
+                                                    </td>
                                                     <td>
                                                         <input type="text" class="form-control"
                                                             :id="'nombre' + kard.id" name="nombre" placeholder="Nombre"
@@ -268,13 +284,18 @@
         new Vue({
             el: '#app',
             data: {
+                //Variables de modal de movimientos
                 search: null,
+                productos: [],
+                searchProductos: [],
+
+                //Variables de tabla de kardex
                 searchMainProductos: null,
                 mainProductos: [],
                 searchMainProd: [],
+
+                //Variables
                 errors: {},
-                productos: [],
-                searchProductos: [],
                 filtered: [],
                 estados: [],
                 categorias: [],
@@ -310,6 +331,7 @@
                 totalPages: 0,
                 nextPageUrl: '',
                 prevPageUrl: '',
+                productoError: '',
             },
             methods: {
                 //Crear
@@ -335,9 +357,7 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
+
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -381,6 +401,7 @@
                             this.cleanForm();
                             //Recargar productos
                             this.getAllProductos();
+                            this.getAllKardex();
                         })
 
                     }
@@ -388,7 +409,6 @@
                 //Eliminar
                 deleteKardex(id) {
                     this.kardex = this.kardex.filter(kard => kard.id != id);
-                    console.log(this.kardex);
                 },
                 //Tabla
                 getEntradas(id) {
@@ -410,7 +430,8 @@
                     return salidas;
                 },
                 getTotal(id) {
-                    let total = 0;
+                    let total = this.mainProductos.find(producto => producto.id == id).stockInicial;
+
                     this.movimientosKardex.forEach(movimiento => {
                         if (movimiento.producto == id && movimiento.accion == 1) {
                             total += movimiento.cantidad;
@@ -418,6 +439,7 @@
                             total -= movimiento.cantidad;
                         }
                     });
+
                     return total;
                 },
                 //Validaciones
@@ -438,22 +460,22 @@
                 pageMinus() {
                     if (this.page > 1) {
                         this.page--;
-                        this.getAllUnidades();
+                        this.getAllProductos();
                     }
                 },
                 pagePlus() {
                     if (this.page < this.totalPages) {
                         this.page++;
-                        this.getAllUnidades();
+                        this.getAllProductos();
                     }
                 },
                 specificPage(page) {
                     this.page = page;
-                    this.getAllUnidades();
+                    this.getAllProductos();
                 },
                 changePerPage() {
                     this.page = 1;
-                    this.getAllUnidades();
+                    this.getAllProductos();
                 },
                 //Busqueda
                 searchFn() {
@@ -483,7 +505,8 @@
 
                             try {
                                 this.filtered = productos.filter(producto => {
-                                    return producto.nombre.toLowerCase().includes(nombre)
+                                    return producto.nombre.toLowerCase().includes(nombre) ||
+                                        producto.codigo.toLowerCase().includes(nombre)
                                 });
                             } catch (error) {
                                 swal.fire({
@@ -510,7 +533,8 @@
 
                             try {
                                 this.filtered = productos.filter(producto => {
-                                    return producto.nombre.toLowerCase().includes(search)
+                                    return producto.nombre.toLowerCase().includes(search) ||
+                                        producto.codigo.toLowerCase().includes(search)
                                 });
                             } catch (error) {
                                 swal.fire({
@@ -560,6 +584,8 @@
                     } else {
                         this.productos = this.searchProductos;
                     }
+
+                    this.cleanSearchMain();
                 },
                 cleanSearch() {
                     this.search = null;
@@ -568,18 +594,13 @@
                     this.results = [];
                 },
                 selectResult(result) {
-
-                    console.log(result);
-
                     this.kardexItem.id = result.id;
                     this.kardexItem.producto = result.nombre;
                     this.kardexItem.item = result;
                     this.kardexItem.accion = 1;
                     this.kardexItem.cantidad = this.quantity || 1;
                     this.kardexItem.observacion = '';
-
                     this.kardex.push(this.kardexItem);
-
                     this.results = [];
                     this.search = null;
                     this.quantity = 1;
@@ -591,55 +612,103 @@
                         cantidad: null,
                         observacion: null,
                     };
-
-                    console.log(this.kardex);
                 },
                 searchProductoFn() {
-
                     this.searchError = '';
 
-                    if (this.searchMainProductos) {
-                        let search = this.searchMainProductos.toLowerCase();
-                        let productos = this.searchMainProd;
-
-                        try {
-                            this.filtered = productos.filter(producto => {
-                                return producto.nombre.toLowerCase().includes(search)
-                            });
-                        } catch (error) {
-                            swal.fire({
-                                title: 'Error',
-                                text: error,
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-                        }
-
-                        if (this.filtered.length == 0) {
-                            this.productos = ['No se encontraron resultados'];
-                        }
-
-                        if (this.filtered.length > 5) {
-                            this.productos = this.filtered.slice(0, 5);
-                        } else {
-                            this.productos = this.filtered;
-                        }
-                    } else {
-                        this.productos = this.searchMainProd;
+                    if (!this.searchMainProductos) {
+                        this.searchError = 'El campo de busqueda esta vacio';
+                        return;
                     }
 
+                    axios({
+                        method: 'get',
+                        url: '/allProductos',
+                        params: {
+                            search: this.searchMainProductos,
+                            page: this.page,
+                            per_page: this.per_page,
+                            onlyActive: true,
+                        }
+                    }).then(response => {
 
+                        this.mainProductos = response.data.data;
 
+                        this.total = response.data.total;
+                        this.totalPages = response.data.last_page;
+                        if (this.page > this.totalPages) {
+                            this.page = 1;
+                            this.searchProductoFn();
+                        } else {
+                            this.page = response.data.current_page;
+                        }
+                        this.per_page = response.data.per_page;
+                        this.nextPageUrl = response.data.next_page_url;
+                        this.prevPageUrl = response.data.prev_page_url;
+
+                    }).catch(error => {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al buscar el producto',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    })
+                },
+                cleanSearchMain() {
+                    this.searchMainProductos = '';
+                    this.searchError = '';
+                    this.getAllProductos();
                 },
                 //Obtener recursos
                 async getAllProductos() {
-                    let response = await fetch('/allProductos');
-                    let data = await response.json();
-                    this.loading = false;
-                    this.productos = data;
-                    this.searchProductos = data;
-                    this.mainProductos = data;
-                    this.searchMainProd = data;
+                    axios({
+                        method: 'get',
+                        url: '/allProductos',
+                        params: {
+                            page: this.page,
+                            per_page: this.per_page,
+                            onlyActive: true,
+                            search: this.searchMainProductos,
+                        },
+                    }).then(response => {
+
+                        this.productoError = response.data.error;
+
+                        if (this.productoError) {
+                            this.loading = false;
+                            this.productos = [];
+                            this.searchProductos = [];
+                            this.mainProductos = [];
+                            this.searchMainProd = [];
+                            return;
+                        }
+
+                        this.loading = false;
+                        this.productos = response.data.data;
+                        this.searchProductos = response.data.data;
+                        this.mainProductos = response.data.data;
+                        this.searchMainProd = response.data.data;
+                        this.total = response.data.total;
+                        this.totalPages = response.data.last_page;
+                        if (this.page > this.totalPages) {
+                            this.page = 1;
+                            this.getAllProductos();
+                        } else {
+                            this.page = response.data.current_page;
+                        }
+                        this.per_page = response.data.per_page;
+                        this.nextPageUrl = response.data.next_page_url;
+                        this.prevPageUrl = response.data.prev_page_url;
+                    }).catch(error => {
+                        this.loading = false;
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al obtener las unidades',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    });
                 },
                 async getAllEstados() {
 
@@ -682,7 +751,6 @@
                     let data = await response.json();
                     this.movimientosKardex = data;
                 },
-
             },
             mounted() {
                 this.getAllKardex();
@@ -692,7 +760,6 @@
                 this.getAllUnidades();
                 this.getAllEstados();
                 this.getAllProductos();
-
             }
         });
     </script>

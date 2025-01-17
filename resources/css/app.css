@@ -10,6 +10,18 @@
     align-items: center;
 }
 
+.empresaLogo {
+    background-image: url(../../public/storage/logo_empresa.jpg);
+    background-position-y: center;
+    background-position-x: left;
+    background-size: auto;
+    background-repeat: no-repeat;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
 html,
 body {
     height: 100vh;
@@ -117,7 +129,7 @@ body {
 }
 
 .mdl {
-    max-width: 900px;
+    max-width: 1125px;
 }
 
 .hoverCardCenter {
@@ -175,7 +187,7 @@ body {
         padding: 15px;
         margin-right: 0;
     }
-    
+
 }
 
 @media(max-width: 600px) {

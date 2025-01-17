@@ -15,7 +15,7 @@ class CajaSeeder extends Seeder
     public function run(): void
     {
 
-        $caja = [
+        $cajas = [
             [
                 'nombre' => 'Caja Principal',
                 'ubicacion' => 'Ubicacion Principal',
@@ -32,6 +32,10 @@ class CajaSeeder extends Seeder
                 'estado' => 1,
             ],
         ];
+
+        foreach ($cajas as $caja) {
+            CajaFactory::new()->create($caja);
+        }
 
     }
 }

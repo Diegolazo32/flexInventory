@@ -9,7 +9,7 @@
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
                         <h1>Estados</h1>
-                        <small class="text-muted">@{{ mensaje }}</small>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
@@ -42,7 +42,7 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="getAllEstados"><i
                                         class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
@@ -86,9 +86,9 @@
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteEstado(estado)">
+                                        <!--<button class="btn btn-danger" id="dltBTN" @click="DeleteEstado(estado)">
                                             <i class="fas fa-trash"></i>
-                                        </button>
+                                        </button>-->
                                     </td>
                                 </tr>
                             </tbody>
@@ -118,7 +118,8 @@
                                             <ul class="pagination justify-content-center">
 
                                                 <li class="page-item">
-                                                    <select class="form-select" v-model="per_page" @change="changePerPage">
+                                                    <select class="form-select" v-model="per_page"
+                                                        @change="changePerPage">
                                                         <option value="5">5</option>
                                                         <option value="10">10</option>
                                                         <option value="15">15</option>
@@ -291,10 +292,6 @@
                             //Habilitar boton
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
-
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -589,45 +586,6 @@
                     this.getAllEstados();
                 },
                 //Limpiar formulario y busqueda
-                searchFn() {
-
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let estados = this.searchEstados;
-
-                    try {
-                        this.filtered = estados.filter(estado => {
-                            return estado.descripcion.toLowerCase().includes(search)
-
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al buscar la estado',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.estados = this.filtered;
-                },
                 cleanForm() {
 
                     this.item = {
@@ -661,7 +619,7 @@
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.estados = this.searchEstados;
+                    this.getAllEstados();
                 },
                 //Obtener recursos
                 async getAllEstados() {
@@ -669,10 +627,11 @@
                     try {
                         axios({
                             method: 'get',
-                            url: '/allEstadosP',
+                            url: '/allEstados',
                             params: {
                                 page: this.page,
-                                per_page: this.per_page
+                                per_page: this.per_page,
+                                search: this.search
                             }
                         }).then(response => {
                             this.loading = false;
@@ -681,12 +640,17 @@
 
                             this.total = response.data.total;
                             this.totalPages = response.data.last_page;
-                            this.page = response.data.current_page;
+                            if (this.page > this.totalPages) {
+                                this.page = 1;
+                                this.getAllEstados();
+                            } else {
+                                this.page = response.data.current_page;
+                            }
                             this.per_page = response.data.per_page;
                             this.nextPageUrl = response.data.next_page_url;
                             this.prevPageUrl = response.data.prev_page_url;
 
-                            console.log(response.data);
+
                         }).catch(error => {
                             this.loading = false;
                             swal.fire({

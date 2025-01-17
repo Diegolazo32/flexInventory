@@ -98,7 +98,22 @@
                         <h5>Productos proximos a vencer</h5>
 
                         <div class="table-responsive">
-                            <table ref="table" class="table table-striped table-hover" style="text-align: center;">
+
+                            <div v-if="loading" class="spinner-border text-primary" role="status">
+                                <span class="sr-only"></span>
+
+                            </div>
+
+                            <div v-if="!loading && productosError" class="alert alert-danger" role="alert">
+                                @{{ productosError }}
+                            </div>
+
+                            <div v-if="!productosError && !loading && productosVencimiento.length == 0" class="alert alert-warning" role="alert">
+                                No hay productos proximos a vencer
+                            </div>
+
+                            <table v-if="!loading && productosVencimiento.length > 0" ref="table"
+                                class="table table-striped table-hover" style="text-align: center;">
                                 <thead>
                                     <tr>
                                         <th scope="col">Producto</th>
@@ -148,6 +163,7 @@
                 productos: [],
                 productosVencimiento: [],
                 loading: true,
+                productosError: ''
             },
             methods: {
                 //Parse
@@ -170,7 +186,12 @@
                     let response = await fetch('/allProductos');
                     let data = await response.json();
                     this.loading = false;
-                    console.log(data);
+
+                    if (data.error) {
+                        this.productosError = data.error;
+                        return;
+                    }
+
                     this.productos = data;
 
                     this.productos.forEach(producto => {

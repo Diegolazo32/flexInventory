@@ -9,29 +9,36 @@ class CajaController extends Controller
 {
     private $rolPermisoController;
 
-    public function getAllCajas()
+    public function getAllCajas(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(21);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $cajas = caja::where('nombre', 'like', '%' . $request->search . '%')
+                ->orWhere('ubicacion', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            return response()->json($cajas);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $cajas = caja::paginate($request->per_page);
+            return response()->json($cajas);
+        }
+
+        if ($request->onlyActive) {
+            $cajas = caja::where('estado', 1)->get();
+            return response()->json($cajas);
         }
 
         $cajas = caja::all();
-        return response()->json($cajas);
-    }
-
-    public function getAllPaginatedCajas(Request $request)
-    {
-        $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(21);
-
-        if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
-        }
-
-        $cajas = caja::paginate($request->per_page);
         return response()->json($cajas);
     }
 

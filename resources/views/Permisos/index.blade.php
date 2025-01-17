@@ -9,7 +9,7 @@
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
                         <h1>Permisos</h1>
-                        <small class="text-muted">@{{ mensaje }}</small>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
@@ -41,8 +41,8 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="getAllPermisos"><i class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
@@ -84,11 +84,11 @@
                                         @{{ permiso.nombre }}
                                     </td>
                                     <!--<td v-if="permiso.ruta.length > 25">
-                                            @{{ permiso.ruta.substring(0, 25) }}...
-                                        </td>
-                                        <td v-else>
-                                            @{{ permiso.ruta }}
-                                        </td>-->
+                                                                @{{ permiso.ruta.substring(0, 25) }}...
+                                                            </td>
+                                                            <td v-else>
+                                                                @{{ permiso.ruta }}
+                                                            </td>-->
                                     <td v-if="permiso.descripcion.length > 100">
                                         @{{ permiso.descripcion.substring(0, 100) }}...
                                     </td>
@@ -99,19 +99,19 @@
                                         @{{ grupos.find(grupo => grupo.id == permiso.grupo).descripcion }}
                                     </td>
                                     <!--<td>
-                                            @{{ permiso.endpoint }}
-                                        </td>
-                                        <td>
-                                            @{{ metodos.find(metodo => metodo.id == permiso.metodo).descripcion }}
-                                        </td>-->
+                                                                @{{ permiso.endpoint }}
+                                                            </td>
+                                                            <td>
+                                                                @{{ metodos.find(metodo => metodo.id == permiso.metodo).descripcion }}
+                                                            </td>-->
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editPermiso(permiso)">
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
                                         <!--<button class="btn btn-danger" id="dltBTN" @click="DeletePermiso(permiso)">
-                                                <i class="fas fa-trash"></i>
-                                            </button>-->
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>-->
                                     </td>
                                 </tr>
 
@@ -405,9 +405,7 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
+
 
                             //Cerrar modal
                             //document.getElementById('cancelButton').click();
@@ -775,51 +773,6 @@
                     this.getAllPermisos();
                 },
                 //Limpiar formulario y busqueda
-                searchFn() {
-
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let permisos = this.searchPermisos;
-
-                    try {
-                        this.filtered = permisos.filter(permiso => {
-                            return permiso.descripcion.toLowerCase().includes(search) ||
-                                permiso.nombre.toLowerCase().includes(search) ||
-                                permiso.ruta.toLowerCase().includes(search) ||
-                                permiso.endpoint.toLowerCase().includes(search) ||
-                                this.grupos.find(grupo => grupo.id == permiso.grupo).descripcion
-                                .toLowerCase().includes(search) ||
-                                this.metodos.find(metodo => metodo.id == permiso.metodo).descripcion
-                                .toLowerCase().includes(search);
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al buscar la permiso',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.permisos = this.filtered;
-                },
                 cleanForm() {
 
                     this.item = {
@@ -858,31 +811,40 @@
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.permisos = this.searchPermisos;
+                    this.getAllPermisos();
                 },
                 //Obtener recursos
                 async getAllPermisos() {
+
                     try {
                         axios({
                             method: 'get',
-                            url: '/allPermisosP',
+                            url: '/allPermisos',
                             params: {
                                 page: this.page,
-                                per_page: this.per_page
+                                per_page: this.per_page,
+                                search: this.search,
                             }
                         }).then(response => {
+
                             this.loading = false;
                             this.permisos = response.data.data;
                             this.searchPermisos = response.data.data;
 
                             this.total = response.data.total;
                             this.totalPages = response.data.last_page;
-                            this.page = response.data.current_page;
+
+                            if (this.page > this.totalPages) {
+                                this.page = 1;
+                                this.getAllPermisos();
+                            } else {
+                                this.page = response.data.current_page;
+                            }
+
                             this.per_page = response.data.per_page;
                             this.nextPageUrl = response.data.next_page_url;
                             this.prevPageUrl = response.data.prev_page_url;
 
-                            console.log(response.data);
                         }).catch(error => {
                             this.loading = false;
                             swal.fire({
@@ -905,13 +867,9 @@
 
                         this.estados = data;
 
-                        //console.log(this.estados);
-
                     } catch (error) {
 
                     }
-
-
                 },
                 async getAllGrupos() {
                     let response = await fetch('/allGrupos');

@@ -11,29 +11,37 @@ class PermisosController extends Controller
 
     private $rolPermisoController;
 
-    public function getAllPermisos()
+    public function getAllPermisos(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(46);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $permissions = permisos::where('nombre', 'like', '%' . $request->search . '%')
+                ->orWhere('descripcion', 'like', '%' . $request->search . '%')
+                ->orWhere('grupo', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            return response()->json($permissions);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $permissions = permisos::paginate($request->per_page);
+            return response()->json($permissions);
+        }
+
+        if ($request->onlyActive) {
+            $permissions = permisos::where('estado', 1)->get();
+            return response()->json($permissions);
         }
 
         $permissions = permisos::all();
-        return response()->json($permissions);
-    }
-
-    public function getAllPaginatedPermisos(Request $request)
-    {
-        $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(46);
-
-        if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
-        }
-
-        $permissions = permisos::paginate($request->per_page);
         return response()->json($permissions);
     }
 

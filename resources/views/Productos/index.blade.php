@@ -9,7 +9,7 @@
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
                         <h1>Productos</h1>
-                        <small class="text-muted">@{{ mensaje }}</small>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
@@ -23,11 +23,6 @@
                             Editar producto
                         </button>
 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteProductoModalBtn"
-                            data-bs-target="#deleteProductoModal" style="height: 40px;" hidden>
-                            Eliminar producto
-                        </button>
-
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="showProductoModalBtn"
                             data-bs-target="#showProductoModal" style="height: 40px;" hidden>
                             Ver producto
@@ -39,21 +34,19 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-10">
-
                         <div class="row">
                             <div class="col-6">
                                 <input type="text" class="form-control" name="search"
-                                    placeholder="Buscar por descripcion" v-model="search">
+                                    placeholder="Buscar por codigo o nombre" v-model="search">
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="getAllProductos"><i class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -65,11 +58,11 @@
                         <i class="fas fa-spinner fa-spin"></i> Cargando...
                     </div>
 
-                    <div v-if="productos.error" class="alert alert-danger" role="alert">
-                        <h3>@{{ productos.error }}</h3>
+                    <div v-if="productoError" class="alert alert-danger" role="alert">
+                        <h3>@{{ productoError }}</h3>
                     </div>
 
-                    <div v-if="productos.length == 0 && !loading" class="alert alert-warning" role="alert">
+                    <div v-if="productos.length == 0 && !loading && !productoError" class="alert alert-warning" role="alert">
                         <h3>No hay productos registrados</h3>
                     </div>
 
@@ -87,7 +80,7 @@
                                     <th scope="col">Fecha Vencimiento</th>
                                     <th scope="col">Stock</th>
                                     <th scope="col">Stock Minimo</th>
-                                    <th scope="col">Stock Maximo</th>
+                                    <!--<th scope="col">Stock Maximo</th>-->
                                     <th scope="col">Categoria</th>
                                     <th scope="col">Tipo Venta</th>
                                     <th scope="col">Proveedor</th>
@@ -108,7 +101,7 @@
                                     <td>@{{ formatDate(producto.fechaVencimiento) ?? '-' }}</td>
                                     <td>@{{ producto.stock ?? '-' }}</td>
                                     <td>@{{ producto.stockMinimo ?? '-' }}</td>
-                                    <td>@{{ producto.stockMaximo ?? '-' }}</td>
+                                    <!--<td>@{{ producto.stockMaximo ?? '-' }}</td>-->
                                     <td>@{{ categorias.find(categoria => categoria.id == producto.categoria).descripcion }} </td>
                                     <td>@{{ tipoVentas.find(tipoVenta => tipoVenta.id == producto.tipoVenta).descripcion }}</td>
                                     <td>@{{ proveedores.find(proveedor => proveedor.id == producto.proveedor).nombre }}</td>
@@ -128,10 +121,6 @@
 
                                         <button id="showBTN" class="btn btn-warning" @click="viewProducto(producto)">
                                             <i class="fas fa-eye"></i>
-                                        </button>
-
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteProducto(producto)">
-                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -300,7 +289,7 @@
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockInicial" name="stockInicial"
                                             placeholder="Stock Inicial" @blur="validateForm" v-model="item.stockInicial"
-                                            step="1" min="0" max="999999" maxlength="6">
+                                            step="1" min="0" max="999999" maxlength="6" disabled>
                                         <label for="floatingInput">Stock Inicial*</label>
                                         <small class="text-danger"
                                             v-if="errors.stockInicial">@{{ errors.stockInicial }}</small>
@@ -508,7 +497,7 @@
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockEdit" name="stock"
                                             placeholder="Stock" @blur="validateEditForm" v-model="editItem.stock"
-                                            step="1" min="0" max="999999" maxlength="6">
+                                            step="1" min="0" max="999999" maxlength="6" disabled>
                                         <label for="floatingInput">Stock*</label>
                                         <small class="text-danger" v-if="editErrors.stock">@{{ editErrors.stock }}</small>
                                     </div>
@@ -638,28 +627,6 @@
                             @click="cleanForm">Cancelar</button>
                         <button type="button" class="btn btn-primary" id="SubmitFormEdit"
                             @click="sendFormEdit">Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--Delete modal-->
-        <div class="modal fade" id="deleteProductoModal" tabindex="-1" aria-labelledby="deleteProductoModalLabel"
-            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
-                <div class="modal-content">
-                    <div class="modal-header" style="display: block;">
-                        <h1 class="modal-title fs-5" id="deleteProductoModalLabel">Eliminar producto</h1>
-                        <small class="text-muted text-danger"> ¿Estas seguro de eliminar este producto?</small>
-                    </div>
-                    <div class="modal-body text-center" style="padding: 25px;">
-                        <h3>Nombre: @{{ deleteItem.nombre }}</h3>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="canceldeleteButton"
-                            @click="cleanForm">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="deleteButton"
-                            @click="sendDeleteForm">Eliminar</button>
                     </div>
                 </div>
             </div>
@@ -898,26 +865,6 @@
                     estado: null,
                     id: null,
                 },
-                deleteItem: {
-                    codigo: null,
-                    nombre: null,
-                    descripcion: null,
-                    precioCompra: null,
-                    precioVenta: null,
-                    precioDescuento: null,
-                    precioEspecial: null,
-                    fechaVencimiento: null,
-                    stock: null,
-                    stockInicial: null,
-                    stockMinimo: null,
-                    stockMaximo: null,
-                    categoria: null,
-                    tipoVenta: null,
-                    proveedor: null,
-                    unidad: null,
-                    estado: null,
-                    id: null,
-                },
                 showItem: {
                     codigo: null,
                     nombre: null,
@@ -942,6 +889,7 @@
                 errors: {},
                 editErrors: {},
                 productos: [],
+                productoError: '',
                 searchProductos: [],
                 filtered: [],
                 estados: [],
@@ -982,9 +930,7 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
+
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -1133,110 +1079,6 @@
                     document.getElementById('editProductoModalBtn').click();
 
                 },
-                //Eliminar
-                sendDeleteForm() {
-                    //Inhabilitar botones
-                    document.getElementById('deleteButton').disabled = true;
-                    document.getElementById('canceldeleteButton').disabled = true;
-
-                    //Cambiar icono de boton
-                    document.getElementById('deleteButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
-
-                    axios({
-                        method: 'delete',
-                        url: '/productos/delete/' + this.deleteItem.id,
-                    }).then(response => {
-
-                        if (response.data.error) {
-                            //Habilitar boton
-                            document.getElementById('deleteButton').disabled = false;
-                            document.getElementById('canceldeleteButton').disabled = false;
-
-                            //Quitar icono de boton
-                            document.getElementById('deleteButton').innerHTML = 'Eliminar';
-
-                            //Cerrar modal
-                            document.getElementById('canceldeleteButton').click();
-
-                            swal.fire({
-                                title: 'Error',
-                                text: response.data.error,
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-                        } else {
-
-
-                            //Habilitar boton
-                            document.getElementById('deleteButton').disabled = false;
-                            document.getElementById('canceldeleteButton').disabled = false;
-
-                            //Quitar icono de boton
-                            document.getElementById('deleteButton').innerHTML =
-                                '<i class="fas fa-trash"></i>';
-
-                            //Cerrar modal
-                            document.getElementById('canceldeleteButton').click();
-
-                            swal.fire({
-                                title: 'Producto eliminado',
-                                text: response.data.success,
-                                icon: 'success',
-                                confirmButtonText: 'Aceptar',
-                            });
-                        }
-
-                    }).catch(error => {
-
-                        //Habilitar boton
-                        document.getElementById('deleteButton').disabled = false;
-                        document.getElementById('canceldeleteButton').disabled = false;
-
-                        //Quitar icono de boton
-                        document.getElementById('deleteButton').innerHTML = 'Eliminar';
-
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al eliminar el producto',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-
-                    }).finally(() => {
-
-                        //limpiar
-                        this.cleanForm();
-                        //Recargar productos
-                        this.getAllProductos();
-                    })
-
-
-                },
-                DeleteProducto(producto) {
-
-                    this.deleteItem.codigo = producto.codigo;
-                    this.deleteItem.nombre = producto.nombre;
-                    this.deleteItem.descripcion = producto.descripcion;
-                    this.deleteItem.precioCompra = producto.precioCompra;
-                    this.deleteItem.precioVenta = producto.precioVenta;
-                    this.deleteItem.precioDescuento = producto.precioDescuento;
-                    this.deleteItem.precioEspecial = producto.precioEspecial;
-                    this.deleteItem.fechaVencimiento = producto.fechaVencimiento;
-                    this.deleteItem.stock = producto.stock;
-                    this.deleteItem.stockInicial = producto.stockInicial;
-                    this.deleteItem.stockMinimo = producto.stockMinimo;
-                    this.deleteItem.stockMaximo = producto.stockMaximo;
-                    this.deleteItem.categoria = producto.categoria;
-                    this.deleteItem.tipoVenta = producto.tipoVenta;
-                    this.deleteItem.proveedor = producto.proveedor;
-                    this.deleteItem.unidad = producto.unidad;
-                    this.deleteItem.estado = producto.estado;
-                    this.deleteItem.id = producto.id;
-
-                    //dar click al boton de modal
-                    document.getElementById('deleteProductoModalBtn').click();
-                },
                 //Mostrar
                 viewProducto(producto) {
 
@@ -1267,6 +1109,7 @@
                 validateForm() {
                     this.errors = {};
 
+                    this.item.stockInicial = this.item.stock;
                     if (!this.item.nombre) {
                         this.errors.nombre = 'Este campo es obligatorio';
                         document.getElementById('nombre').style.border = '1px solid red';
@@ -1602,44 +1445,6 @@
                     this.getAllProductos();
                 },
                 //Limpiar formulario y busqueda
-                searchFn() {
-
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let productos = this.searchProductos;
-
-                    try {
-                        this.filtered = productos.filter(producto => {
-                            return producto.nombre.toLowerCase().includes(search)
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: error,
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.productos = this.filtered;
-                },
                 cleanForm() {
 
                     this.item = {
@@ -1773,40 +1578,58 @@
                 },
                 cleanSearch() {
                     this.search = null;
-                    this.productos = this.searchProductos;
+                    this.getAllProductos();
                     this.searchError = '';
                 },
                 //Obtener recursos
                 async getAllProductos() {
                     axios({
-                            method: 'get',
-                            url: '/allProductosP',
-                            params: {
-                                page: this.page,
-                                per_page: this.per_page
-                            }
-                        }).then(response => {
-                            this.loading = false;
-                            this.productos = response.data.data;
-                            this.searchProductos = response.data.data;
+                        method: 'get',
+                        url: '/allProductos',
+                        params: {
+                            page: this.page,
+                            per_page: this.per_page,
+                            //onlyActive: true,
+                            search: this.search
+                        }
+                    }).then(response => {
 
-                            this.total = response.data.total;
-                            this.totalPages = response.data.last_page;
+                        this.productoError = response.data.error;
+
+                        if (this.productoError) {
+                            this.loading = false;
+                            this.productos = [];
+                            this.searchProductos = [];
+                            return;
+                        }
+
+                        this.loading = false;
+                        this.productos = response.data.data;
+
+                        this.searchProductos = response.data.data;
+
+                        this.total = response.data.total;
+                        this.totalPages = response.data.last_page;
+                        if (this.page > this.totalPages) {
+                            this.page = 1;
+                            this.getAllProductos();
+                        } else {
                             this.page = response.data.current_page;
-                            this.per_page = response.data.per_page;
-                            this.nextPageUrl = response.data.next_page_url;
-                            this.prevPageUrl = response.data.prev_page_url;
+                        }
+                        this.per_page = response.data.per_page;
+                        this.nextPageUrl = response.data.next_page_url;
+                        this.prevPageUrl = response.data.prev_page_url;
 
-                            console.log(response.data);
-                        }).catch(error => {
-                            this.loading = false;
-                            swal.fire({
-                                title: 'Error',
-                                text: 'Ha ocurrido un error al obtener los productos',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-                        })
+
+                    }).catch(error => {
+                        this.loading = false;
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al obtener los productos',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    })
                 },
                 async getAllEstados() {
 

@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             GruposSeeder::class,
             PermisosSeeder::class,
-            InventarioSeeder::class,
+            //InventarioSeeder::class,
             RolPermisoSeeder::class,
         ]);
 

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\productos;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,12 +13,21 @@ class InventarioSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $productos = productos::count();
+        $stock = productos::sum('stock');
+
         $inventarios = [[
-            'fechaApertura' => '2022-01-01',
+            'fechaApertura' => now(),
             'fechaCierre' => null,
-            'ProductosApertura' => 0,
+            'ProductosApertura' => $productos,
+            'StockApertura' => $stock,
             'ProductosCierre' => 0,
-            'estado' => 1,
+            'StockCierre' => 0,
+            'totalInventario' => 0,
+            'aperturadoPor' => 1,
+            'cerradoPor' => 1,
+            'estado' => 3,
         ]];
 
         foreach ($inventarios as $inventario) {

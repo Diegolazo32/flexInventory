@@ -9,7 +9,7 @@
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
                         <h1>Clientes</h1>
-                        <small class="text-muted">@{{ mensaje }}</small>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
@@ -47,7 +47,7 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="getAllClientes"><i
                                         class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
@@ -480,9 +480,6 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -899,48 +896,6 @@
                     this.getAllClientes();
                 },
                 //Limpiar formulario y busqueda
-                searchFn() {
-
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let clientes = this.searchClientes;
-
-                    try {
-                        this.filtered = clientes.filter(cliente => {
-                            return cliente.nombre.toLowerCase().includes(search) ||
-                                cliente.apellido.toLowerCase().includes(search) ||
-                                cliente.telefono.toLowerCase().includes(search) ||
-                                cliente.email.toLowerCase().includes(search) ||
-                                cliente.DUI.toLowerCase().includes(search)
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al buscar el cliente',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.clientes = this.filtered;
-                },
                 cleanForm() {
 
                     this.item = {
@@ -1012,7 +967,7 @@
                 cleanSearch() {
                     this.search = null;
                     this.searchError = '';
-                    this.clientes = this.searchClientes;
+                    this.getAllClientes();
                 },
                 formatDate(date) {
                     let fecha = new Date(date);
@@ -1026,34 +981,40 @@
                 //Obtener recursos
                 async getAllClientes() {
                     axios({
-                            method: 'get',
-                            url: '/allClientesP',
-                            params: {
-                                page: this.page,
-                                per_page: this.per_page
+                        method: 'get',
+                        url: '/allClientes',
+                        params: {
+                            page: this.page,
+                            per_page: this.per_page,
+                            search: this.search
+                        }
+                    }).then(response => {
+                        this.loading = false;
+                        this.clientes = response.data.data;
+                        this.searchClientes = response.data.data;
+
+                        this.total = response.data.total;
+                        this.totalPages = response.data.last_page;
+                        if (this.page > this.totalPages) {
+                                this.page = 1;
+                                this.getAllClientes();
+                            } else {
+                                this.page = response.data.current_page;
                             }
-                        }).then(response => {
-                            this.loading = false;
-                            this.clientes = response.data.data;
-                            this.searchClientes = response.data.data;
+                        this.per_page = response.data.per_page;
+                        this.nextPageUrl = response.data.next_page_url;
+                        this.prevPageUrl = response.data.prev_page_url;
 
-                            this.total = response.data.total;
-                            this.totalPages = response.data.last_page;
-                            this.page = response.data.current_page;
-                            this.per_page = response.data.per_page;
-                            this.nextPageUrl = response.data.next_page_url;
-                            this.prevPageUrl = response.data.prev_page_url;
 
-                            console.log(response.data);
-                        }).catch(error => {
-                            this.loading = false;
-                            swal.fire({
-                                title: 'Error',
-                                text: 'Ha ocurrido un error al obtener los clientes',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-                        })
+                    }).catch(error => {
+                        this.loading = false;
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al obtener los clientes',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    })
                 },
                 async getAllEstados() {
 
