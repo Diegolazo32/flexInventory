@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kardex', function (Blueprint $table) {
+        Schema::create('kardexes', function (Blueprint $table) {
             $table->id();
-            //$table->foreignId('producto')->references('id')->on('productos');
+            $table->foreignId('producto')->references('id')->on('productos');
             $table->float('cantidad');
-            $table->integer('tipo');
-            //stock inicial
-            $table->float('stockInicial');
+            $table->integer('accion'); //1 entrada 2 salida
+            //$table->float('stockInicial');
             $table->foreignId('inventario')->references('id')->on('inventarios');
+            $table->string('observacion')->nullable();
             $table->timestamps();
         });
     }

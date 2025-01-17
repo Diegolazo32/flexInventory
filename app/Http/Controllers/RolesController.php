@@ -12,13 +12,32 @@ class RolesController extends Controller
 
     private $rolPermisoController;
 
-    public function getAllRoles()
+    public function getAllRoles(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(41);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $roles = roles::where('descripcion', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            return response()->json($roles);
+        }
+
+        if ($request->onlyActive) {
+            $roles = roles::where('estado', 1)->get();
+            return response()->json($roles);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $roles = roles::paginate($request->per_page);
+            return response()->json($roles);
         }
 
         $roles = roles::all();
@@ -114,8 +133,6 @@ class RolesController extends Controller
         }
 
         try {
-            //Encuentra el rol
-            $rol = roles::find($request->id);
             //Obtiene todos los permisos del rol en la tabla rolPermiso
             $rolpermiso = rolPermiso::where('rol', $request->id)->get();
             //Permisos del rol entrantes

@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\EstadosController;
 use App\Http\Controllers\GruposController;
+use App\Http\Controllers\InventarioController;
+use App\Http\Controllers\KardexController;
 use App\Http\Controllers\PermisosController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
@@ -154,5 +158,43 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(RolPermisoController::class)->group(function () {
         Route::get('/allRolPermiso', [RolPermisoController::class, 'getAllRolPermiso'])->name('allRolPermiso');
         Route::get('/permisosByRol/{id}', [RolPermisoController::class, 'getPermisosByRol'])->name('permisosByRol');
+        Route::get('/permisosRolAuth', [RolPermisoController::class, 'permisosRolAuth'])->name('permisosRolAuth');
+        Route::get('/checkPermisos/{id}', [RolPermisoController::class, 'checkPermisos'])->name('checkPermisos');
+    });
+
+    //Cajas
+    Route::controller(CajaController::class)->group(function () {
+        Route::get('/allCajas', [CajaController::class, 'getAllCajas'])->name('allCajas');
+        Route::get('/cajas', [CajaController::class, 'index'])->name('cajas');
+        Route::post('/cajas/store', [CajaController::class, 'store'])->name('cajas.store');
+        Route::post('/cajas/edit/{id}', [CajaController::class, 'update'])->name('cajas.edit');
+        Route::delete('/cajas/delete/{id}', [CajaController::class, 'delete'])->name('cajas.delete');
+    });
+
+    //Kardex
+    Route::controller(KardexController::class)->group(function () {
+        Route::get('/allKardex', [KardexController::class, 'getAllKardex'])->name('allKardex');
+        Route::get('/kardex', [KardexController::class, 'index'])->name('kardex');
+        Route::post('/kardex/store', [KardexController::class, 'store'])->name('kardex.store');
+        Route::post('/kardex/edit/{id}', [KardexController::class, 'update'])->name('kardex.edit');
+        Route::delete('/kardex/delete/{id}', [KardexController::class, 'delete'])->name('kardex.delete');
+    });
+
+    //Inventario
+    Route::controller(InventarioController::class)->group(function () {
+        Route::get('/allInventario', [InventarioController::class, 'getAllInventario'])->name('allInventario');
+        Route::get('/inventario', [InventarioController::class, 'index'])->name('inventario');
+
+        Route::post('/inventario/open', [InventarioController::class, 'open'])->name('inventario.open');
+        Route::post('/inventario/close', [InventarioController::class, 'close'])->name('inventario.close');
+    });
+
+    //Empresa
+    Route::controller(EmpresaController::class)->group(function () {
+        Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa');
+        Route::get('/allEmpresa', [EmpresaController::class, 'getAllEmpresa'])->name('allEmpresa');
+        Route::post('/empresa/edit/{id}', [EmpresaController::class, 'update'])->name('empresa.edit');
+        Route::get('/empresa/logo', [EmpresaController::class, 'logo'])->name('empresa.logo');
+        Route::get('/empresaName', [EmpresaController::class, 'empresaName'])->name('empresaName');
     });
 });

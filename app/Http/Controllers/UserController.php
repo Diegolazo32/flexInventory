@@ -18,7 +18,7 @@ class UserController extends Controller
     //Instancia de rolpermisoController
     private $rolPermisoController;
 
-    public function getAllUsers()
+    public function getAllUsers(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(6);
@@ -27,10 +27,61 @@ class UserController extends Controller
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
+        if ($request->search) {
+
+            $users = User::where('nombre', 'like', '%' . $request->search . '%')
+                ->orWhere('apellido', 'like', '%' . $request->search . '%')
+                ->orWhere('usuario', 'like', '%' . $request->search . '%')
+                ->orWhere('rol', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            foreach ($users as $user) {
+
+                if ($user->password == Hash::check('0000', $user->password)) {
+                    $user->hasPassword = false;
+                } else {
+                    $user->hasPassword = true;
+                }
+            }
+
+            return response()->json($users);
+        }
+
+        if ($request->onlyActive) {
+
+            $users = User::where('estado', 1)->get();
+
+            foreach ($users as $user) {
+
+                if ($user->password == Hash::check('0000', $user->password)) {
+                    $user->hasPassword = false;
+                } else {
+                    $user->hasPassword = true;
+                }
+            }
+
+            return response()->json($users);
+        }
+
+        if ($request->per_page) {
+
+            $users = User::paginate($request->per_page);
+
+            foreach ($users as $user) {
+
+                if ($user->password == Hash::check('0000', $user->password)) {
+                    $user->hasPassword = false;
+                } else {
+                    $user->hasPassword = true;
+                }
+            }
+
+            return response()->json($users);
+        }
+
         $users = User::all();
 
         foreach ($users as $user) {
-            //$user->fechaNacimiento = date('d/m/Y', strtotime($user->fechaNacimiento));
 
             if ($user->password == Hash::check('0000', $user->password)) {
                 $user->hasPassword = false;
@@ -117,23 +168,14 @@ class UserController extends Controller
 
         //No usuario no puede ser repetido
         $usuario = User::where('usuario', $request->usuario)->first();
-        //dd($usuario);
-
 
         if ($usuario) {
-            flash('El usuario ya existe', 'error');
-            return redirect()->back();
+            return response()->json(['error' => 'El usuario ya existe']);
         }
 
         //Calcular la edad
         $fechaNacimiento = $request->fechaNacimiento;
         $edad = date_diff(date_create($fechaNacimiento), date_create('now'))->y;
-
-
-        //dd($fechaNacimiento);
-        //dd($edad);
-
-        //dd($fechaNacimiento);
 
         try {
 
@@ -151,11 +193,9 @@ class UserController extends Controller
 
             $user->save();
 
-            flash('Usuario creado correctamente', 'success');
-            return redirect()->back();
+            return response()->json(['success' => 'Usuario guardado correctamente']);
         } catch (\Exception $e) {
-            flash('Error al guardar el usuario', 'error');
-            return redirect()->back();
+            return response()->json(['error' => 'Error al guardar el usuario']);
         }
     }
 
@@ -212,11 +252,9 @@ class UserController extends Controller
 
             $user->save();
 
-            flash('Usuario actualizado correctamente', 'success');
-            return redirect()->back();
+            return response()->json(['success' => 'Usuario actualizado correctamente']);
         } catch (\Exception $e) {
-            flash('Error al actualizar el usuario', 'error');
-            return redirect()->back();
+            return response()->json(['error' => 'Error al actualizar el usuario']);
         }
     }
 

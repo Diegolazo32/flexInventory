@@ -23,13 +23,36 @@ class ClientesController extends Controller
         return view('clientes.index');
     }
 
-    public function getAllClientes()
+    public function getAllClientes(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(26);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $clientes = clientes::where('nombre', 'like', '%' . $request->search . '%')
+                ->orWhere('apellido', 'like', '%' . $request->search . '%')
+                ->orWhere('telefono', 'like', '%' . $request->search . '%')
+                ->orWhere('email', 'like', '%' . $request->search . '%')
+                ->orWhere('DUI', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            return response()->json($clientes);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $clientes = clientes::paginate($request->per_page);
+            return response()->json($clientes);
+        }
+
+        if ($request->onlyActive) {
+            $clientes = clientes::where('estado', 1)->get();
+            return response()->json($clientes);
         }
 
         $clientes = clientes::all();

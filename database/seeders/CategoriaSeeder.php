@@ -36,6 +36,7 @@ class CategoriaSeeder extends Seeder
                 'descripcion' => 'Deportes',
                 'estado' => 1,
             ],
+            
 
         ];
 

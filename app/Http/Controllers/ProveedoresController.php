@@ -25,13 +25,38 @@ class ProveedoresController extends Controller
         return view('proveedores.index');
     }
 
-    public function getAllProveedores()
+    public function getAllProveedores(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(52);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $proveedores = proveedores::where('nombre', 'like', '%' . $request->search . '%')
+                ->orWhere('NIT', 'like', '%' . $request->search . '%')
+                //->orWhere('telefonoPrincipal', 'like', '%' . $request->search . '%')
+                ->orWhere('emailPrincipal', 'like', '%' . $request->search . '%')
+                ->orWhere('representante', 'like', '%' . $request->search . '%')
+                //->orWhere('telefonoRepresentante', 'like', '%' . $request->search . '%')
+                ->orWhere('emailRepresentante', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            return response()->json($proveedores);
+        }
+
+        if ($request->onlyActive) {
+            $proveedores = proveedores::where('estado', 1)->get();
+            return response()->json($proveedores);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $proveedores = proveedores::paginate($request->per_page);
+            return response()->json($proveedores);
         }
 
         $proveedores = proveedores::all();

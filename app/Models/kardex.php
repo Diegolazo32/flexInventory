@@ -5,9 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kardex extends Model
+class kardex extends Model
 {
     use HasFactory;
-
-    protected $fillable = [ 'producto', 'cantidad', 'tipo', 'stockInicial', 'inventario'];
+    
+    protected $fillable = [
+        'accion',
+        'cantidad',
+        'producto',
+        'inventario',
+        'observacion'
+    ];
 }

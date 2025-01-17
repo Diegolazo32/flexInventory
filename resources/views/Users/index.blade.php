@@ -7,11 +7,12 @@
         <div class="card">
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
                         <h1>Usuarios</h1>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
-                    <div class="col-md-2 d-flex justify-content-end">
+                    <div class="col-lg-2 d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearUserModal"
                             style="height: 40px;">
                             <i class="fas fa-plus"></i>
@@ -37,7 +38,7 @@
             <!-- Buscador -->
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
 
                         <div class="row">
                             <div class="col-6">
@@ -46,8 +47,8 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="getAllUsers"><i class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
@@ -166,7 +167,43 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="12">
+                                        <div class="d-flex justify-content-center" style="gap: 10px;">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item" :disabled="page === 1">
+                                                    <a class="page-link" href="#" aria-label="Previous"
+                                                        @click="pageMinus">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" v-for="pageNumber in totalPages"
+                                                    :key="pageNumber" :class="{ active: pageNumber === page }">
+                                                    <a class="page-link" href="#"
+                                                        @click="specificPage(pageNumber)">
+                                                        @{{ pageNumber }}
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" :disabled="page === totalPages">
+                                                    <a class="page-link" href="#" aria-label="Next"
+                                                        @click="pagePlus">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="pagination justify-content-center">
 
+                                                <li class="page-item">
+                                                    <select class="form-select" v-model="per_page"
+                                                        @change="changePerPage">
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -178,9 +215,9 @@
         </div>
 
         <!-- Create Modal -->
-        <div class="modal fade" id="crearUserModal" tabindex="-1" aria-labelledby="crearUserModalLabel"
+        <div class="modal fade " id="crearUserModal" tabindex="-1" aria-labelledby="crearUserModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearUserModalLabel">Crear usuario </h1>
@@ -191,7 +228,7 @@
                         <form ref="form" action="{{ route('users.store') }}" method="POST">
                             @csrf
                             <div class="row">
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" v-model="item.nombre"
@@ -200,7 +237,7 @@
                                         <small class="text-danger" v-if="errors.nombre">@{{ errors.nombre }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="apellido" name="apellido"
                                             value="{{ old('apellido') }}" placeholder="Apellido" v-model="item.apellido"
@@ -209,7 +246,7 @@
                                         <small class="text-danger" v-if="errors.apellido">@{{ errors.apellido }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="DUI" name="DUI"
                                             value="{{ old('DUI') }}" placeholder="DUI" @blur="validateForm"
@@ -217,7 +254,7 @@
                                         <small class="text-danger" v-if="errors.DUI">@{{ errors.DUI }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="fechaNacimiento"
                                             name="fechaNacimiento" placeholder="Fecha de nacimiento"
@@ -228,7 +265,7 @@
                                             v-if="errors.fechaNacimiento">@{{ errors.fechaNacimiento }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="genero" name="genero" v-model="item.genero"
                                             @change="validateForm">
@@ -239,7 +276,7 @@
                                         <small class="text-danger" v-if="errors.genero">@{{ errors.genero }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="usuario" name="usuario"
                                             value="{{ old('usuario') }}" placeholder="Usuario" v-model="item.usuario"
@@ -248,7 +285,7 @@
                                         <small class="text-danger" v-if="errors.usuario">@{{ errors.usuario }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="rol" name="rol" v-model="item.rol"
                                             @change="validateForm">
@@ -275,7 +312,7 @@
         <!--Edit modal-->
         <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editUserModalLabel">Editar usuario</h1>
@@ -286,7 +323,7 @@
                         <form ref="formEdit">
                             @csrf
                             <div class="row">
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
 
                                     <div class="form-floating mb-3">
                                         <!-- Nombre -->
@@ -298,7 +335,7 @@
                                     </div>
 
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- Apellido -->
@@ -309,7 +346,7 @@
                                             v-if="editErrors.apellido">@{{ editErrors.apellido }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- DUI -->
@@ -320,7 +357,7 @@
                                         <small class="text-danger" v-if="editErrors.DUI">@{{ editErrors.DUI }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- Fecha de nacimiento -->
@@ -333,7 +370,7 @@
                                         </small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- Genero -->
@@ -347,7 +384,7 @@
                                             v-if="editErrors.genero">@{{ editErrors.genero }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- Usuario -->
@@ -359,7 +396,7 @@
                                             v-if="editErrors.usuario">@{{ editErrors.usuario }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- Rol -->
@@ -372,7 +409,7 @@
                                         <small class="text-danger" v-if="editErrors.rol">@{{ editErrors.rol }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- Estado -->
@@ -405,7 +442,7 @@
         <!--Delete modal-->
         <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="deleteUserModalLabel">Eliminar usuario</h1>
@@ -430,7 +467,7 @@
         <!--revert password modal-->
         <div class="modal fade" id="revertModal" tabindex="-1" aria-labelledby="revertModalLabel" aria-hidden="inert"
             data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="revertModalLabel">Restablecer contraseña</h1>
@@ -503,7 +540,15 @@
                 },
                 estados: [],
                 searchError: '',
-                loading: true
+                loading: true,
+                page: 1,
+                per_page: 5,
+                total: 0,
+                totalPages: 0,
+                nextPageUrl: '',
+                prevPageUrl: '',
+                mensaje: '',
+                posiblesMensajes: ['Gestion de usuarios', 'Administracion de usuarios', 'Personas de confianza'],
             },
             methods: {
 
@@ -511,11 +556,41 @@
                 async getAllUsers() {
 
                     try {
-                        let response = await fetch('/allUsers');
-                        let data = await response.json();
-                        this.loading = false;
-                        this.usuarios = data;
-                        this.searchUsuarios = data;
+                        axios({
+                            method: 'get',
+                            url: '/allUsers',
+                            params: {
+                                page: this.page,
+                                per_page: this.per_page,
+                                search: this.search
+                            }
+                        }).then(response => {
+                            this.loading = false;
+                            this.usuarios = response.data.data;
+                            this.searchUsuarios = response.data.data;
+
+                            this.total = response.data.total;
+                            this.totalPages = response.data.last_page;
+                            if (this.page > this.totalPages) {
+                                this.page = 1;
+                                this.getAllUsers();
+                            } else {
+                                this.page = response.data.current_page;
+                            }
+                            this.per_page = response.data.per_page;
+                            this.nextPageUrl = response.data.next_page_url;
+                            this.prevPageUrl = response.data.prev_page_url;
+
+
+                        }).catch(error => {
+                            this.loading = false;
+                            swal.fire({
+                                title: 'Error',
+                                text: 'Ha ocurrido un error al obtener los usuarios',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        })
 
                     } catch (error) {
 
@@ -742,6 +817,27 @@
                         }
                     }
 
+                },
+                //Paginacion
+                pageMinus() {
+                    if (this.page > 1) {
+                        this.page--;
+                        this.getAllUsers();
+                    }
+                },
+                pagePlus() {
+                    if (this.page < this.totalPages) {
+                        this.page++;
+                        this.getAllUsers();
+                    }
+                },
+                specificPage(page) {
+                    this.page = page;
+                    this.getAllUsers();
+                },
+                changePerPage() {
+                    this.page = 1;
+                    this.getAllUsers();
                 },
                 //Funciones de envio de formularios
                 sendForm() {
@@ -1077,48 +1173,7 @@
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.usuarios = this.searchUsuarios;
-                },
-                //Funciones de busqueda
-                searchFn() {
-
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let users = this.searchUsuarios;
-
-                    try {
-                        this.filtered = users.filter(user => {
-                            return user.nombre.toLowerCase().includes(search) ||
-                                user.apellido.toLowerCase().includes(search) ||
-                                user.usuario.toLowerCase().includes(search)
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: error,
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.usuarios = this.filtered;
+                    this.getAllUsers();
                 },
                 //Funciones de formateo
                 formatDate(date) {
@@ -1132,11 +1187,17 @@
                     return fecha.toLocaleDateString('es-ES', options);
 
                 },
+                //Misc.
+                randomMessage() {
+                    let random = Math.floor(Math.random() * this.posiblesMensajes.length);
+                    this.mensaje = this.posiblesMensajes[random];
+                }
 
             },
             mounted() {
                 this.getAllEstados();
                 this.getAllUsers();
+                this.randomMessage();
             }
         });
     </script>

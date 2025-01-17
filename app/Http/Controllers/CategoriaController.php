@@ -11,13 +11,32 @@ class CategoriaController extends Controller
     private $rolPermisoController;
 
 
-    public function getAllCategorias()
+    public function getAllCategorias(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(21);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $categorias = categoria::where('descripcion', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            return response()->json($categorias);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $categorias = categoria::paginate($request->per_page);
+            return response()->json($categorias);
+        }
+
+        if ($request->onlyActive) {
+            $categorias = categoria::where('estado', 1)->get();
+            return response()->json($categorias);
         }
 
         $categorias = categoria::all();

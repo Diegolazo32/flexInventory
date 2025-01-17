@@ -6,7 +6,7 @@
 
     <body class="container BgLogin">
         <div class="row" id="ResetPassword">
-            <div class="col-md-12 LoginPosition">
+            <div class="col-lg-12 LoginPosition">
                 <div class="card LoginForm">
                     <div class="card-body" style="display: flex; justify-content: center; flex-direction: column;">
                         <div class="card-title">

@@ -20,6 +20,13 @@ class EstadosSeeder extends Seeder
             [
                 'descripcion' => 'Inactivo',
             ],
+            [
+                'descripcion' => 'Abierto',
+            ],
+            [
+                'descripcion' => 'Cerrado',
+            ],
+
 
         ];
 

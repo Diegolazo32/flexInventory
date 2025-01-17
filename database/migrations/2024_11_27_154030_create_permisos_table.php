@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('permisos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre')->unique();
-            $table->string('ruta')->unique();
+           // $table->string('ruta')->unique();
             $table->string('descripcion');
-            $table->string('endpoint')->unique();
+            //$table->string('endpoint');
             //$table->foreignId('grupo')->references('id')->on('grupos');
-            $table->string('metodo');
+            //$table->string('metodo');
             $table->timestamps();
         });
     }

@@ -7,11 +7,12 @@
         <div class="card">
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
                         <h1>Unidades</h1>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
-                    <div class="col-md-2 d-flex justify-content-end">
+                    <div class="col-lg-2 d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#crearUnidadModal" style="height: 40px;">
                             <i class="fas fa-plus"></i>
@@ -32,8 +33,7 @@
             <!-- Buscador -->
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-10">
-
+                    <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
                                 <input type="text" class="form-control" name="search"
@@ -41,13 +41,12 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="getAllUnidades"><i class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -55,8 +54,7 @@
             <div class="row">
                 <div class="card-body">
 
-                    <div v-if="unidades.length == 0 && searchUnidades == 0" role="alert"
-                        style="display:block; margin-left: 50%;" id="loading">
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
                         <i class="fas fa-spinner fa-spin"></i> Cargando...
                     </div>
 
@@ -65,7 +63,6 @@
                     </div>
 
                     <div v-if="unidades.length > 0" class="table-responsive">
-
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
@@ -105,18 +102,51 @@
                                         </button>
                                     </td>
                                 </tr>
-
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="12">
+                                        <div class="d-flex justify-content-center" style="gap: 10px;">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item" :disabled="page === 1">
+                                                    <a class="page-link" href="#" aria-label="Previous"
+                                                        @click="pageMinus">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" v-for="pageNumber in totalPages"
+                                                    :key="pageNumber" :class="{ active: pageNumber === page }">
+                                                    <a class="page-link" href="#" @click="specificPage(pageNumber)">
+                                                        @{{ pageNumber }}
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" :disabled="page === totalPages">
+                                                    <a class="page-link" href="#" aria-label="Next"
+                                                        @click="pagePlus">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="pagination justify-content-center">
 
+                                                <li class="page-item">
+                                                    <select class="form-select" v-model="per_page"
+                                                        @change="changePerPage">
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -124,7 +154,7 @@
         <!-- Create Modal -->
         <div class="modal fade" id="crearUnidadModal" tabindex="-1" aria-labelledby="crearUnidadModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearUnidadModalLabel">Crear unidad </h1>
@@ -134,7 +164,7 @@
                         <form ref="form" action="{{ route('unidades.store') }}" method="POST">
                             @csrf
                             <div class="row">
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcion" name="descripcion"
                                             placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
@@ -144,7 +174,7 @@
                                             v-if="errors.descripcion">@{{ errors.descripcion }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="abreviatura" name="abreviatura"
                                             value="{{ old('abreviatura') }}" placeholder="Abreviatura"
@@ -170,7 +200,7 @@
         <!--Edit modal-->
         <div class="modal fade" id="editUnidadModal" tabindex="-1" aria-labelledby="editUnidadModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editUnidadModalLabel">Editar unidad</h1>
@@ -180,7 +210,7 @@
                         <form ref="formEdit">
                             @csrf
                             <div class="row">
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
 
                                     <div class="form-floating mb-3">
                                         <!-- Descripcion -->
@@ -193,7 +223,7 @@
                                     </div>
 
                                 </div>
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- Abreviatura -->
@@ -205,7 +235,7 @@
                                             v-if="editErrors.abreviatura">@{{ editErrors.abreviatura }}</small>
                                     </div>
                                 </div>
-                                <div class="form-floating col-md-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
 
                                         <!-- Estado -->
@@ -239,7 +269,7 @@
         <!--Delete modal-->
         <div class="modal fade" id="deleteUnidadModal" tabindex="-1" aria-labelledby="deleteUnidadModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="deleteUnidadModalLabel">Eliminar unidad</h1>
@@ -287,7 +317,21 @@
                 searchUnidades: [],
                 filtered: [],
                 estados: [],
+                loading: true,
                 searchError: '',
+                page: 1,
+                per_page: 5,
+                total: 0,
+                totalPages: 0,
+                nextPageUrl: '',
+                prevPageUrl: '',
+                mensaje: '',
+                posiblesMensajes: [
+                    'Bienvenido a la sección de unidades',
+                    'Aqui puedes crear, editar y eliminar unidades',
+                    'Recuerda que los campos marcados con * son obligatorios',
+                    'Puedes buscar una unidad por su descripcion o abreviatura'
+                ]
             },
             methods: {
                 //Crear
@@ -313,9 +357,7 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
+
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -598,44 +640,6 @@
 
                 },
                 //Limpiar formulario y busqueda
-                searchFn() {
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let unidades = this.searchUnidades;
-
-                    try {
-                        this.filtered = unidades.filter(unidad => {
-                            return unidad.descripcion.toLowerCase().includes(search) ||
-                                unidad.abreviatura.toLowerCase().includes(search)
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al buscar la unidad',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.unidades = this.filtered;
-                },
                 cleanForm() {
 
                     this.item = {
@@ -672,22 +676,69 @@
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.unidades = this.searchUnidades;
+                    this.getAllUnidades();
+                },
+                //Paginacion
+                pageMinus() {
+                    if (this.page > 1) {
+                        this.page--;
+                        this.getAllUnidades();
+                    }
+                },
+                pagePlus() {
+                    if (this.page < this.totalPages) {
+                        this.page++;
+                        this.getAllUnidades();
+                    }
+                },
+                specificPage(page) {
+                    this.page = page;
+                    this.getAllUnidades();
+                },
+                changePerPage() {
+                    this.page = 1;
+                    this.getAllUnidades();
                 },
                 //Obtener recursos
                 async getAllUnidades() {
 
                     try {
-                        let response = await fetch('/allUnidades');
-                        let data = await response.json();
+                        axios({
+                            method: 'get',
+                            url: '/allUnidades',
+                            params: {
+                                page: this.page,
+                                per_page: this.per_page,
+                                search: this.search
+                            }
+                        }).then(response => {
+                            this.loading = false;
+                            this.unidades = response.data.data;
+                            this.searchUnidades = response.data.data;
 
-                        if (data.length == 0) {
-                            document.getElementById('loading').style.display = 'block';
-                            document.getElementById('loading').innerHTML = 'No hay unidades registradas';
-                        } else {
-                            this.unidades = data;
-                            this.searchUnidades = data;
-                        }
+                            this.total = response.data.total;
+                            this.totalPages = response.data.last_page;
+                            if (this.page > this.totalPages) {
+                                this.page = 1;
+                                this.getAllUnidades();
+                            } else {
+                                this.page = response.data.current_page;
+                            }
+                            this.per_page = response.data.per_page;
+                            this.nextPageUrl = response.data.next_page_url;
+                            this.prevPageUrl = response.data.prev_page_url;
+
+
+                        }).catch(error => {
+                            this.loading = false;
+                            swal.fire({
+                                title: 'Error',
+                                text: 'Ha ocurrido un error al obtener las unidades',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        })
+
                     } catch (error) {
 
                     }
@@ -697,20 +748,24 @@
                     try {
                         let response = await fetch('/allEstados');
                         let data = await response.json();
-
                         this.estados = data;
-
                     } catch (error) {
 
                     }
 
 
                 },
+                //Misc
+                randomMessage() {
+                    let random = Math.floor(Math.random() * this.posiblesMensajes.length);
+                    this.mensaje = this.posiblesMensajes[random];
+                },
 
             },
             mounted() {
                 this.getAllEstados();
                 this.getAllUnidades();
+                this.randomMessage();
 
             }
         });

@@ -14,9 +14,14 @@ return new class extends Migration
         Schema::create('inventarios', function (Blueprint $table) {
             $table->id();
             $table->date('fechaApertura');
-            $table->date('fechaCierre');
+            $table->date('fechaCierre')->nullable();
             $table->integer('ProductosApertura');
+            $table->integer('StockApertura');
             $table->integer('ProductosCierre');
+            $table->integer('StockCierre');
+            $table->float('totalInventario');
+            $table->foreignId('aperturadoPor')->references('id')->on('users');
+            $table->foreignId('cerradoPor')->references('id')->on('users');
             $table->foreignId('estado')->references('id')->on('estados');
             $table->timestamps();
         });

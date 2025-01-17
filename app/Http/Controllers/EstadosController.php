@@ -11,7 +11,7 @@ class EstadosController extends Controller
 
     private $rolPermisoController;
 
-    public function getAllEstados()
+    public function getAllEstados(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(16);
@@ -20,8 +20,23 @@ class EstadosController extends Controller
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $estados = estados::where('descripcion', 'like', '%' . $request->search . '%')
+                ->paginate($request->per_page);
+
+            return response()->json($estados);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $estados = estados::paginate($request->per_page);
+            return response()->json($estados);
+        }
+
         $estados = estados::all();
         return response()->json($estados);
+
     }
 
     public function index()

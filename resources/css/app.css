@@ -10,6 +10,18 @@
     align-items: center;
 }
 
+.empresaLogo {
+    background-image: url(../../public/storage/logo_empresa.jpg);
+    background-position-y: center;
+    background-position-x: left;
+    background-size: auto;
+    background-repeat: no-repeat;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
 html,
 body {
     height: 100vh;
@@ -48,6 +60,10 @@ body {
     max-width: 400px;
     padding: 10px;
     border-radius: 15px;
+}
+
+.titleBar {
+    padding: 5px;
 }
 
 .form-control {
@@ -112,6 +128,10 @@ body {
     box-shadow: 20px 20px 20px 0px rgb(150, 150, 150);
 }
 
+.mdl {
+    max-width: 1125px;
+}
+
 .hoverCardCenter {
     transition: 0.5s;
 }
@@ -168,4 +188,20 @@ body {
         margin-right: 0;
     }
 
+}
+
+@media(max-width: 600px) {
+    .titleBar {
+        padding: 10px;
+    }
+}
+
+@media(max-width: 425px) {
+    .titleBar {
+        padding: 10px;
+    }
+
+    .nombreMarca {
+        display: none;
+    }
 }

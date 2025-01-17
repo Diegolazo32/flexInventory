@@ -47,7 +47,7 @@ class AuthController extends Controller
                         return back();
                     }
 
-                    if (Hash::check('0000', $usuario->password)) {
+                    if (Hash::check('0000', $usuario->password) || $usuario->password == null) {
                         Auth::login($usuario);
                         //dd('Bienvenido ' . $usuario->nombre);
                         flash('Por favor cambie su contraseña', 'warning');

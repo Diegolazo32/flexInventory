@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kardex;
 use App\Models\productos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 class ProductosController extends Controller
 {
     private $rolPermisoController;
+
+    private $inventarioActivo;
 
     public function index()
     {
@@ -23,7 +26,7 @@ class ProductosController extends Controller
         return view('productos.index');
     }
 
-    public function getAllProductos()
+    public function getAllProductos(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(36);
@@ -32,7 +35,38 @@ class ProductosController extends Controller
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
-        $productos = productos::all();
+        $this->inventarioActivo = new InventarioController();
+        $activo = $this->inventarioActivo->checkInventarioStatus();
+
+        if (!$activo) {
+            return response()->json(['error' => 'No hay un inventario activo']);
+        }
+
+        //Si el request trae un search, se filtra la busqueda
+        if ($request->search) {
+            $productos = productos::where('codigo', 'like', '%' . $request->search . '%')
+                ->orWhere('nombre', 'like', '%' . $request->search . '%')
+                ->orWhere('categoria', 'like', '%' . $request->search . '%')
+                /*  ->orWhere('tipoVenta', 'like', '%' . $request->search . '%')
+                ->orWhere('proveedor', 'like', '%' . $request->search . '%')
+                ->orWhere('unidad', 'like', '%' . $request->search . '%')*/
+                ->paginate($request->per_page);
+            return response()->json($productos);
+        }
+
+        //Si trae un per_page, se paginan los resultados
+        if ($request->per_page) {
+            $productos = productos::paginate($request->per_page);
+        }
+        else {
+            $productos = productos::all();
+        }
+
+        if ($request->onlyActive) {
+            //Filtra los productos activos
+            $productos = productos::where('estado', 1)->paginate($request->per_page);
+        }
+
         return response()->json($productos);
     }
 
@@ -43,6 +77,13 @@ class ProductosController extends Controller
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $this->inventarioActivo = new InventarioController();
+        $activo = $this->inventarioActivo->checkInventarioStatus();
+
+        if (!$activo) {
+            return response()->json(['error' => 'No hay un inventario activo']);
         }
 
         $request->validate(
@@ -74,6 +115,8 @@ class ProductosController extends Controller
         );
 
         try {
+
+            //Crear producto
             $producto = new productos();
             $producto->codigo = $request->codigo;
             $producto->nombre = $request->nombre;
@@ -84,7 +127,7 @@ class ProductosController extends Controller
             $producto->precioEspecial = $request->precioEspecial;
             $producto->fechaVencimiento = $request->fechaVencimiento;
             $producto->stock = $request->stock;
-            $producto->stockInicial = $request->stockInicial;
+            $producto->stockInicial = $request->stock;
             $producto->stockMinimo = $request->stockMinimo;
             $producto->stockMaximo = $request->stockMaximo;
             $producto->categoria = $request->categoria;
@@ -93,6 +136,12 @@ class ProductosController extends Controller
             $producto->unidad = $request->unidad;
             $producto->estado = 1;
             $producto->save();
+
+            //Crear kardex
+            $kardex = new Kardex();
+            $kardex->producto = $producto->id;
+
+
             return response()->json(['success' => 'Producto guardado correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al guardar el producto']);
@@ -108,6 +157,13 @@ class ProductosController extends Controller
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
+        $this->inventarioActivo = new InventarioController();
+        $activo = $this->inventarioActivo->checkInventarioStatus();
+
+        if (!$activo) {
+            return response()->json(['error' => 'No hay un inventario activo']);
+        }
+
         $request->validate(
             [
                 'codigo' => 'required',
@@ -154,30 +210,11 @@ class ProductosController extends Controller
             $producto->tipoVenta = $request->tipoVenta;
             $producto->proveedor = $request->proveedor;
             $producto->unidad = $request->unidad;
-            $producto->estado = 1;
+            $producto->estado = $request->estado;
             $producto->save();
             return response()->json(['success' => 'Producto actualizado correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar el producto']);
-        }
-    }
-
-    public function delete(Request $request)
-    {
-        $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(35);
-
-        if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
-        }
-
-        try {
-            $producto = productos::find($request->id);
-            $producto->delete();
-
-            return response()->json(['success' => 'Producto eliminado correctamente']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar el producto']);
         }
     }
 }

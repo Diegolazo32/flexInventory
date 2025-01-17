@@ -7,11 +7,12 @@
         <div class="card">
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
                         <h1>Permisos</h1>
+                        <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->
-                    <div class="col-md-2 d-flex justify-content-end">
+                    <div class="col-lg-2 d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#crearPermisoModal" style="height: 40px;">
                             <i class="fas fa-plus"></i>
@@ -32,7 +33,7 @@
             <!-- Buscador -->
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
                                 <input type="text" class="form-control" name="search"
@@ -40,8 +41,8 @@
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
-                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;" @click="searchFn"><i
-                                        class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
+                                    @click="getAllPermisos"><i class="fa-solid fa-magnifying-glass"></i></button>
                                 <button v-if="search" class="btn btn-primary" style="height: 40px; max-height: 40px;"
                                     @click="cleanSearch"><i class="fa-solid fa-filter-circle-xmark"></i></button>
                             </div>
@@ -83,11 +84,11 @@
                                         @{{ permiso.nombre }}
                                     </td>
                                     <!--<td v-if="permiso.ruta.length > 25">
-                                        @{{ permiso.ruta.substring(0, 25) }}...
-                                    </td>
-                                    <td v-else>
-                                        @{{ permiso.ruta }}
-                                    </td>-->
+                                                                @{{ permiso.ruta.substring(0, 25) }}...
+                                                            </td>
+                                                            <td v-else>
+                                                                @{{ permiso.ruta }}
+                                                            </td>-->
                                     <td v-if="permiso.descripcion.length > 100">
                                         @{{ permiso.descripcion.substring(0, 100) }}...
                                     </td>
@@ -98,19 +99,19 @@
                                         @{{ grupos.find(grupo => grupo.id == permiso.grupo).descripcion }}
                                     </td>
                                     <!--<td>
-                                        @{{ permiso.endpoint }}
-                                    </td>
-                                    <td>
-                                        @{{ metodos.find(metodo => metodo.id == permiso.metodo).descripcion }}
-                                    </td>-->
+                                                                @{{ permiso.endpoint }}
+                                                            </td>
+                                                            <td>
+                                                                @{{ metodos.find(metodo => metodo.id == permiso.metodo).descripcion }}
+                                                            </td>-->
                                     <td>
                                         <button id="editBTN" class="btn btn-primary" @click="editPermiso(permiso)">
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
                                         <!--<button class="btn btn-danger" id="dltBTN" @click="DeletePermiso(permiso)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>-->
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>-->
                                     </td>
                                 </tr>
 
@@ -118,7 +119,42 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="12">
+                                        <div class="d-flex justify-content-center" style="gap: 10px;">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item" :disabled="page === 1">
+                                                    <a class="page-link" href="#" aria-label="Previous"
+                                                        @click="pageMinus">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" v-for="pageNumber in totalPages"
+                                                    :key="pageNumber" :class="{ active: pageNumber === page }">
+                                                    <a class="page-link" href="#" @click="specificPage(pageNumber)">
+                                                        @{{ pageNumber }}
+                                                    </a>
+                                                </li>
+                                                <li class="page-item" :disabled="page === totalPages">
+                                                    <a class="page-link" href="#" aria-label="Next"
+                                                        @click="pagePlus">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="pagination justify-content-center">
 
+                                                <li class="page-item">
+                                                    <select class="form-select" v-model="per_page"
+                                                        @change="changePerPage">
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="15">15</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -131,7 +167,7 @@
         <!-- Create Modal -->
         <div class="modal fade" id="crearPermisoModal" tabindex="-1" aria-labelledby="crearPermisoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearPermisoModalLabel">Crear permiso </h1>
@@ -142,7 +178,7 @@
                             @csrf
                             <div class="row">
                                 <!--Nombre-->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" v-model="item.nombre"
@@ -151,18 +187,8 @@
                                         <small class="text-danger" v-if="errors.nombre">@{{ errors.nombre }}</small>
                                     </div>
                                 </div>
-                                <!--ruta-->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="ruta" name="ruta"
-                                            placeholder="Ruta" @blur="validateForm" v-model="item.ruta"
-                                            value="{{ old('ruta') }}">
-                                        <label for="floatingInput">Ruta*</label>
-                                        <small class="text-danger" v-if="errors.ruta">@{{ errors.ruta }}</small>
-                                    </div>
-                                </div>
                                 <!--descripcion-->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcion" name="descripcion"
                                             placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
@@ -173,7 +199,7 @@
                                     </div>
                                 </div>
                                 <!-- Grupo -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="grupo" name="grupo" v-model="item.grupo"
                                             @blur="validateForm" @change="validateForm">
@@ -183,30 +209,6 @@
                                         </select>
                                         <label for="floatingInput">Grupo*</label>
                                         <small class="text-danger" v-if="errors.grupo">@{{ errors.grupo }}</small>
-                                    </div>
-                                </div>
-                                <!-- Endpoint -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="endpoint" name="endpoint"
-                                            placeholder="Endpoint" @blur="validateForm" v-model="item.endpoint"
-                                            value="{{ old('endpoint') }}">
-                                        <label for="floatingInput">Endpoint*</label>
-                                        <small class="text-danger" v-if="errors.endpoint">@{{ errors.endpoint }}</small>
-                                    </div>
-                                </div>
-                                <!-- Metodo -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" id="metodo" name="metodo" v-model="item.metodo"
-                                            @blur="validateForm" @change="validateForm">
-                                            <option v-for="metodo in metodos" :key="metodo.id"
-                                                :value="metodo.id">
-                                                @{{ metodo.descripcion }}
-                                            </option>
-                                        </select>
-                                        <label for="floatingInput">Metodo*</label>
-                                        <small class="text-danger" v-if="errors.metodo">@{{ errors.metodo }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +227,7 @@
         <!--Edit modal-->
         <div class="modal fade" id="editPermisoModal" tabindex="-1" aria-labelledby="editPermisoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editPermisoModalLabel">Editar permiso</h1>
@@ -236,7 +238,7 @@
                             @csrf
                             <div class="row">
                                 <!--Nombre-->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             placeholder="Nombre" @blur="validateEditForm" v-model="editItem.nombre">
@@ -245,17 +247,8 @@
                                             v-if="editErrors.nombre">@{{ editErrors.nombre }}</small>
                                     </div>
                                 </div>
-                                <!--ruta-->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="rutaEdit" name="ruta"
-                                            placeholder="Ruta" @blur="validateEditForm" v-model="editItem.ruta">
-                                        <label for="floatingInput">Ruta*</label>
-                                        <small class="text-danger" v-if="editErrors.ruta">@{{ editErrors.ruta }}</small>
-                                    </div>
-                                </div>
                                 <!-- Descripcion -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcionEdit"
                                             name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
@@ -266,7 +259,7 @@
                                     </div>
                                 </div>
                                 <!-- Grupo -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="grupoEdit" name="grupo"
                                             v-model="editItem.grupo" @blur="validateEditForm" @change="validateEditForm">
@@ -276,32 +269,6 @@
                                         </select>
                                         <label for="floatingInput">Grupo*</label>
                                         <small class="text-danger" v-if="editErrors.grupo">@{{ editErrors.grupo }}</small>
-                                    </div>
-                                </div>
-                                <!-- Endpoint -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="endpointEdit" name="endpoint"
-                                            placeholder="Endpoint" @blur="validateEditForm" v-model="editItem.endpoint">
-                                        <label for="floatingInput">Endpoint*</label>
-                                        <small class="text-danger"
-                                            v-if="editErrors.endpoint">@{{ editErrors.endpoint }}</small>
-                                    </div>
-                                </div>
-                                <!-- Metodo -->
-                                <div class="form-floating col-md-6" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <select class="form-select" id="metodoEdit" name="metodo"
-                                            v-model="editItem.metodo" @blur="validateEditForm"
-                                            @change="validateEditForm">
-                                            <option v-for="metodo in metodos" :key="metodo.id"
-                                                :value="metodo.id">
-                                                @{{ metodo.descripcion }}
-                                            </option>
-                                        </select>
-                                        <label for="floatingInput">Metodo*</label>
-                                        <small class="text-danger"
-                                            v-if="editErrors.metodo">@{{ editErrors.metodo }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -320,7 +287,7 @@
         <!--Delete modal-->
         <div class="modal fade" id="deletePermisoModal" tabindex="-1" aria-labelledby="deletePermisoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="deletePermisoModalLabel">Eliminar permiso</h1>
@@ -407,6 +374,12 @@
                 grupos: [],
                 loading: true,
                 searchError: '',
+                page: 1,
+                per_page: 5,
+                total: 0,
+                totalPages: 0,
+                nextPageUrl: '',
+                prevPageUrl: '',
             },
             methods: {
                 //Crear
@@ -432,9 +405,7 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-                            //Quitar icono de boton
-                            document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i>';
+
 
                             //Cerrar modal
                             //document.getElementById('cancelButton').click();
@@ -780,52 +751,28 @@
                     }
 
                 },
-                //Limpiar formulario y busqueda
-                searchFn() {
-
-                    this.searchError = '';
-
-                    if (this.search == null) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
+                //Paginacion
+                pageMinus() {
+                    if (this.page > 1) {
+                        this.page--;
+                        this.getAllPermisos();
                     }
-
-                    if (!this.search) {
-                        this.productos = this.searchProductos;
-                        this.searchError = 'El campo está vacío';
-                        return;
-                    }
-
-                    let search = this.search.toLowerCase();
-                    let permisos = this.searchPermisos;
-
-                    try {
-                        this.filtered = permisos.filter(permiso => {
-                            return permiso.descripcion.toLowerCase().includes(search) ||
-                                permiso.nombre.toLowerCase().includes(search) ||
-                                permiso.ruta.toLowerCase().includes(search) ||
-                                permiso.endpoint.toLowerCase().includes(search) ||
-                                this.grupos.find(grupo => grupo.id == permiso.grupo).descripcion
-                                .toLowerCase().includes(search) ||
-                                this.metodos.find(metodo => metodo.id == permiso.metodo).descripcion
-                                .toLowerCase().includes(search);
-                        });
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al buscar la permiso',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-
-                    if (this.filtered.length == 0) {
-                        this.searchError = 'No se encontraron resultados';
-                    }
-
-                    this.permisos = this.filtered;
                 },
+                pagePlus() {
+                    if (this.page < this.totalPages) {
+                        this.page++;
+                        this.getAllPermisos();
+                    }
+                },
+                specificPage(page) {
+                    this.page = page;
+                    this.getAllPermisos();
+                },
+                changePerPage() {
+                    this.page = 1;
+                    this.getAllPermisos();
+                },
+                //Limpiar formulario y busqueda
                 cleanForm() {
 
                     this.item = {
@@ -864,17 +811,49 @@
                 cleanSearch() {
                     this.search = '';
                     this.searchError = '';
-                    this.permisos = this.searchPermisos;
+                    this.getAllPermisos();
                 },
                 //Obtener recursos
                 async getAllPermisos() {
-                    try {
-                        let response = await fetch('/allPermisos');
-                        let data = await response.json();
 
-                        this.loading = false;
-                        this.permisos = data;
-                        this.searchPermisos = data;
+                    try {
+                        axios({
+                            method: 'get',
+                            url: '/allPermisos',
+                            params: {
+                                page: this.page,
+                                per_page: this.per_page,
+                                search: this.search,
+                            }
+                        }).then(response => {
+
+                            this.loading = false;
+                            this.permisos = response.data.data;
+                            this.searchPermisos = response.data.data;
+
+                            this.total = response.data.total;
+                            this.totalPages = response.data.last_page;
+
+                            if (this.page > this.totalPages) {
+                                this.page = 1;
+                                this.getAllPermisos();
+                            } else {
+                                this.page = response.data.current_page;
+                            }
+
+                            this.per_page = response.data.per_page;
+                            this.nextPageUrl = response.data.next_page_url;
+                            this.prevPageUrl = response.data.prev_page_url;
+
+                        }).catch(error => {
+                            this.loading = false;
+                            swal.fire({
+                                title: 'Error',
+                                text: 'Ha ocurrido un error al obtener los permisos',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        })
 
                     } catch (error) {
 
@@ -888,13 +867,9 @@
 
                         this.estados = data;
 
-                        //console.log(this.estados);
-
                     } catch (error) {
 
                     }
-
-
                 },
                 async getAllGrupos() {
                     let response = await fetch('/allGrupos');

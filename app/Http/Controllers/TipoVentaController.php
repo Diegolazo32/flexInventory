@@ -8,28 +8,35 @@ use Illuminate\Support\Facades\Auth;
 
 class TipoVentaController extends Controller
 {
-    public function checkRole()
-    {
-        try {
-            if (Auth::user()->rol != 1) {
-                flash('No tiene permisos para acceder a esta sección', 'error');
-                return redirect()->route('dashboard');
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al verificar el rol']);
-        }
-    }
+    private $rolPermisoController;
 
-    public function getAllTipoVenta()
+    public function getAllTipoVenta(Request $request)
     {
-        $this->checkRole();
-        $tipoventa = tipoVenta::all();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(41);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        if ($request->onlyActive) {
+            $tipoventa = tipoVenta::where('estado', 1)->get();
+        } else {
+            $tipoventa = tipoVenta::all();
+        }
+
         return response()->json($tipoventa);
     }
 
     public function index()
     {
-        $this->checkRole();
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(41);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         return view('tipoventa.index');
     }
 }
