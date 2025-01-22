@@ -1,6 +1,6 @@
 @extends('layouts.Navigation')
 
-@section('title', 'Kardex')
+@section('title', 'Lotes')
 
 @section('content')
     <div id="app">
@@ -8,7 +8,7 @@
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
-                        <h1>Kardex</h1>
+                        <h1>Lotes</h1>
                         <small class="text-muted"></small>
                     </div>
                     <!-- Botones de accion -->

@@ -20,8 +20,8 @@ class ProductosSeeder extends Seeder
                 'descripcion' => 'Pizza de pepperoni',
                 'precioCompra' => 10.00,
                 'precioVenta' => 150.00,
-                'stock' => 100,
-                'stockInicial' => 100,
+                'stock' => 0,
+                'stockInicial' => 0,
                 'categoria' => 1,
                 'tipoVenta' => 1,
                 'proveedor' => 1,
@@ -34,8 +34,8 @@ class ProductosSeeder extends Seeder
                 'descripcion' => 'Toallas humedas para bebe',
                 'precioCompra' => 20.00,
                 'precioVenta' => 150.00,
-                'stock' => 200,
-                'stockInicial' => 200,
+                'stock' => 0,
+                'stockInicial' => 0,
                 'categoria' => 1,
                 'tipoVenta' => 1,
                 'proveedor' => 1,
@@ -48,8 +48,8 @@ class ProductosSeeder extends Seeder
                 'descripcion' => 'Cafe Juan Valdez Organico',
                 'precioCompra' => 100.00,
                 'precioVenta' => 150.00,
-                'stock' => 50,
-                'stockInicial' => 50,
+                'stock' => 0,
+                'stockInicial' => 0,
                 'categoria' => 1,
                 'tipoVenta' => 1,
                 'proveedor' => 1,
@@ -59,8 +59,8 @@ class ProductosSeeder extends Seeder
 
         ];
 
-        foreach ($productos as $producto) {
+        /*foreach ($productos as $producto) {
             ProductosFactory::new()->create($producto);
-        }
+        }*/
     }
 }

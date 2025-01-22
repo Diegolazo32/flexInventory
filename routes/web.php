@@ -4,12 +4,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\ComprasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\EstadosController;
 use App\Http\Controllers\GruposController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\KardexController;
+use App\Http\Controllers\LotesController;
 use App\Http\Controllers\PermisosController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
@@ -196,5 +198,23 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/empresa/edit/{id}', [EmpresaController::class, 'update'])->name('empresa.edit');
         Route::get('/empresa/logo', [EmpresaController::class, 'logo'])->name('empresa.logo');
         Route::get('/empresaName', [EmpresaController::class, 'empresaName'])->name('empresaName');
+    });
+
+    //Lotes
+    Route::controller(LotesController::class)->group(function () {
+        Route::get('/allLotes', [LotesController::class, 'getAllLotes'])->name('allLotes');
+        Route::get('/lotes', [LotesController::class, 'index'])->name('lotes');
+        Route::get('/lotesByInventario/{id}', [LotesController::class, 'getLotesByInventario'])->name('lotesByInventario');
+        Route::get('/getLotes/{id}', [LotesController::class, 'getLotesByProduct'])->name('lotesByProduct');
+        Route::post('/lotes/update/{id}', [LotesController::class, 'actualizarLotes'])->name('lotes.update');
+        Route::post('/lotes/store', [LotesController::class, 'store'])->name('lotes.store');
+    });
+
+    //Compras
+    Route::controller(ComprasController::class)->group(function () {
+        Route::get('/allCompras', [ComprasController::class, 'getAllCompras'])->name('allCompras');
+        Route::get('/compras', [ComprasController::class, 'index'])->name('compras');
+        Route::post('/compras/store', [ComprasController::class, 'store'])->name('compras.store');
+        
     });
 });

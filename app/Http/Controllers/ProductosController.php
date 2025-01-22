@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\inventario;
 use App\Models\Kardex;
+use App\Models\lotes;
 use App\Models\productos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 class ProductosController extends Controller
 {
     private $rolPermisoController;
-
+    private $lotesController;
+    private $kardexController;
     private $inventarioActivo;
 
     public function index()
@@ -57,8 +60,7 @@ class ProductosController extends Controller
         //Si trae un per_page, se paginan los resultados
         if ($request->per_page) {
             $productos = productos::paginate($request->per_page);
-        }
-        else {
+        } else {
             $productos = productos::all();
         }
 
@@ -85,6 +87,10 @@ class ProductosController extends Controller
         if (!$activo) {
             return response()->json(['error' => 'No hay un inventario activo']);
         }
+
+        $inventario = inventario::where('estado', 3)->first();
+
+        //dd($inventario);
 
         $request->validate(
             [
@@ -116,6 +122,8 @@ class ProductosController extends Controller
 
         try {
 
+            $stockTotal = 0;
+
             //Crear producto
             $producto = new productos();
             $producto->codigo = $request->codigo;
@@ -126,10 +134,9 @@ class ProductosController extends Controller
             $producto->precioDescuento = $request->precioDescuento;
             $producto->precioEspecial = $request->precioEspecial;
             $producto->fechaVencimiento = $request->fechaVencimiento;
-            $producto->stock = $request->stock;
+            $producto->stock = 0;
             $producto->stockInicial = $request->stock;
             $producto->stockMinimo = $request->stockMinimo;
-            $producto->stockMaximo = $request->stockMaximo;
             $producto->categoria = $request->categoria;
             $producto->tipoVenta = $request->tipoVenta;
             $producto->proveedor = $request->proveedor;
@@ -137,10 +144,22 @@ class ProductosController extends Controller
             $producto->estado = 1;
             $producto->save();
 
-            //Crear kardex
-            $kardex = new Kardex();
-            $kardex->producto = $producto->id;
+            $this->lotesController = new LotesController();
+            $this->lotesController->storeWithProduct($producto, $request, $inventario);
 
+            //Actualizar stock
+            $productoUpdate = productos::find($producto->id);
+            $lotes = lotes::where('producto', $producto->id)->get();
+
+            //dd($productoUpdate);
+
+            foreach ($lotes as $lote) {
+                $stockTotal += $lote->cantidad;
+            }
+
+            $productoUpdate->stock = $stockTotal;
+
+            $productoUpdate->save();
 
             return response()->json(['success' => 'Producto guardado correctamente']);
         } catch (\Exception $e) {
@@ -201,11 +220,9 @@ class ProductosController extends Controller
             $producto->precioVenta = $request->precioVenta;
             $producto->precioDescuento = $request->precioDescuento;
             $producto->precioEspecial = $request->precioEspecial;
-            $producto->fechaVencimiento = $request->fechaVencimiento;
             $producto->stock = $request->stock;
             $producto->stockInicial = $request->stockInicial;
             $producto->stockMinimo = $request->stockMinimo;
-            $producto->stockMaximo = $request->stockMaximo;
             $producto->categoria = $request->categoria;
             $producto->tipoVenta = $request->tipoVenta;
             $producto->proveedor = $request->proveedor;
@@ -216,5 +233,18 @@ class ProductosController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar el producto']);
         }
+    }
+
+    public function lotes(Request $request)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(35);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $lotes = lotes::all();
+        return response()->json($lotes);
     }
 }

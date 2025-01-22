@@ -53,7 +53,13 @@
                     style="margin-left:15px; font-weight: normal"><?php
                     use App\Models\empresa;
                     $empresaName = empresa::select('nombre')->first();
-                    echo $empresaName->nombre;
+
+                    if ($empresaName == null) {
+                        echo 'Flex Inventory';
+                    } else {
+                        echo $empresaName->nombre;
+                    }
+
                     ?></a>
             </div>
             <div class="col-2 d-flex justify-content-center">
@@ -78,8 +84,7 @@
     <div class="container-fluid">
 
         <div data-bs-theme="dark" class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
-            aria-labelledby="offcanvasExampleLabel" style="max-width: fit-content;">
-
+            aria-labelledby="offcanvasExampleLabel" style="max-width: 225px;">
             <ul class="navbar-nav navbar-nav-scroll" style="--bs-scroll-height: 100%">
                 <!-- Logo circular -->
                 <div class="offcanvas-title">
@@ -87,8 +92,8 @@
                         <div class="d-flex justify-content-center align-items-center"
                             style="margin-bottom: 20px; margin-top: 20px;">
                             <a href="{{ route('dashboard') }}" style="font-weight: normal">
-                                <img src="{{ asset('storage/logo/logo_empresa.jpg') }}" alt="Logo" class="rounded-circle"
-                                    style="width: 50px; height: 50px;">
+                                <img src="{{ asset('storage/logo/logo_empresa.jpg') }}" alt="Logo"
+                                    class="rounded-circle" style="width: 50px; height: 50px;">
                             </a>
                         </div>
                     </li>
@@ -251,6 +256,20 @@
                         </li>
                         <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                             <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                onClick="window.location.href='{{ route('lotes') }}'">
+                                <i class="fa-solid fa-cart-flatbed"></i>
+                                <span>Lotes</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                onClick="window.location.href='{{ route('compras') }}'">
+                                <i class="fa-solid fa-cart-flatbed"></i>
+                                <span>Compras</span>
+                            </button>
+                        </li>
+                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                 onClick="window.location.href='{{ route('kardex') }}'">
                                 <i class="fa-solid fa-warehouse"></i>
                                 <span>Kardex</span>
@@ -287,6 +306,11 @@
                     url: '/empresaName',
                 }).then((response) => {
                     this.empresaName = response.data;
+
+                    if (this.empresaName == null) {
+                        this.empresaName = 'Flex Inventory';
+                    }
+
                 }).catch((error) => {
                     console.log(error);
                 });
