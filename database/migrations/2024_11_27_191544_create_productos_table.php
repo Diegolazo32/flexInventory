@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo')->unique(); 
+            $table->string('codigo')->unique();
             $table->string('nombre');
             $table->string('descripcion')->nullable();
             $table->float('precioCompra');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('stock');
             $table->integer('stockInicial');
             $table->integer('stockMinimo')->nullable();
-            $table->integer('stockMaximo')->nullable();
+            //$table->integer('stockMaximo')->nullable();
             $table->foreignId('categoria')->references('id')->on('categorias');
             $table->foreignId('tipoVenta')->references('id')->on('tipo_ventas');
             $table->foreignId('proveedor')->references('id')->on('proveedores');

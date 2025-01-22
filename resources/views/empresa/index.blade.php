@@ -34,42 +34,42 @@
                             <div class="col-lg-4"
                                 style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                                 <img src="{{ asset('storage/logo/logo_empresa.jpg') }}" alt="Logo de la empresa"
-                                    style=" height: 250px; width: 250px; border-radius: 15px; border: ;">
+                                    style=" height: 250px; width: 250px; border-radius: 15px; border: ; margin-bottom: 20px;">
                                 <p class="display-6 fw-bold" style="text-align: center; margin-bottom: 10px;">
-                                    @{{ empresaInfo.nombre }}</p>
+                                    @{{ empresaInfo.nombre ?? '-' }}</p>
 
                             </div>
                             <div class="col-lg-4"
                                 style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <h1 class="display-6 fw-bold">----- Empresa -----</h1>
+                                <h1 class="display-6 fw-bold"> Empresa </h1>
                                 <label for="direccion" class="fw-bold col-lg-12 fs-4">Giro:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.giro }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.giro ?? '-' }}</p>
                                 <label for="direccion" class="fw-bold col-lg-12 fs-4">Direccion:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.direccion }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.direccion ?? '-' }}</p>
                                 <label for="NIT" class="fw-bold col-lg-12 fs-4">NIT:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.NIT }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.NIT ?? '-' }}</p>
                                 <label for="NRC" class="fw-bold col-lg-12 fs-4">NRC:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.NRC }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.NRC ?? '-' }}</p>
                                 <label for="telefono" class="fw-bold col-lg-12 fs-4">Telefono:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.telefono }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.telefono ?? '-' }}</p>
                                 <label for="email" class="fw-bold col-lg-12 fs-4">Correo electronico:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.email }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.email ?? '-' }}</p>
                                 <hr>
                                 <!--<button class="btn btn-primary btn-lg" type="button">Example button</button>-->
                             </div>
                             <div class="col-lg-4"
                                 style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <h1 class="display-6 fw-bold">--- Representante ---</h1>
+                                <h1 class="display-6 fw-bold"> Representante </h1>
                                 <label for="direccion" class="fw-bold col-lg-12 fs-4">Nombre:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.representante }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.representante ?? '-' }}</p>
                                 <label for="direccion" class="fw-bold col-lg-12 fs-4">DUI:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.dui }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.dui ?? '-' }}</p>
                                 <label for="NIT" class="fw-bold col-lg-12 fs-4">NIT:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.nit_representante }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.nit_representante ?? '-' }}</p>
                                 <label for="telefono" class="fw-bold col-lg-12 fs-4">Telefono:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.telefono_representante }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.telefono_representante ?? '-' }}</p>
                                 <label for="email" class="fw-bold col-lg-12 fs-4">Correo electronico:</label>
-                                <p class="col-lg-12 fs-5">@{{ empresaInfo.email_representante }}</p>
+                                <p class="col-lg-12 fs-5">@{{ empresaInfo.email_representante ?? '-' }}</p>
                                 <br>
                                 <br>
                                 <hr>
@@ -292,11 +292,15 @@
                     this.loading = true;
                     await axios.get('/allEmpresa')
                         .then(response => {
-                            //console.log(response);
+
+                            if (response.data.length == 0) {
+                                this.loading = false;
+                                return;
+                            }
+
                             this.empresaInfo = response.data[0];
                             this.loading = false;
 
-                            console.log(this.empresaInfo);
                         })
                         .catch(error => {
                             console.log(error);
@@ -371,8 +375,12 @@
                     }
 
                     //nit_representante
-
-                    document.getElementById('nitRepresentante').style.borderColor = 'green';
+                    if (!this.empresa.nitRepresentante) {
+                        this.errors.nitRepresentante = 'El NIT del representante es requerido';
+                        document.getElementById('nitRepresentante').style.borderColor = 'red';
+                    } else {
+                        document.getElementById('nitRepresentante').style.borderColor = 'green';
+                    }
 
 
                     //telefono_representante
@@ -384,8 +392,12 @@
                     }
 
                     //email_representante
-
-                    document.getElementById('emailRepresentante').style.borderColor = 'green';
+                    if (!this.empresa.emailRepresentante) {
+                        this.errors.emailRepresentante = 'El correo electronico del representante es requerido';
+                        document.getElementById('emailRepresentante').style.borderColor = 'red';
+                    } else {
+                        document.getElementById('emailRepresentante').style.borderColor = 'green';
+                    }
 
 
                     //dui
@@ -425,6 +437,9 @@
                         formData.append('logo', logoInput.files[0]);
                     }
 
+                    if (this.empresaInfo.id == null) {
+                        this.empresaInfo.id = 0;
+                    }
 
                     if (Object.keys(this.errors).length === 0) {
                         try {
@@ -437,11 +452,11 @@
                                 .then(response => {
                                     if (response.data.success) {
                                         swal.fire({
-                                            title: 'Éxito',
+                                            title: 'Cambios guardados',
                                             text: response.data.success,
                                             icon: 'success',
-                                            confirmButtonText: 'Aceptar',
                                         });
+                                        window.location.reload();
                                     } else {
                                         swal.fire({
                                             title: 'Error',
@@ -459,11 +474,7 @@
                                         confirmButtonText: 'Aceptar',
                                     });
                                 }).finally(() => {
-
                                     document.getElementById('cancelButton').click();
-
-                                    this.getAllEmpresa();
-                                    this.cleanForm();
                                 });
                         } catch (error) {
                             swal.fire({

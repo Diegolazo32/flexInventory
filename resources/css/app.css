@@ -132,6 +132,10 @@ body {
     max-width: 1125px;
 }
 
+.mdl-lg {
+    max-width: 90%;
+}
+
 .hoverCardCenter {
     transition: 0.5s;
 }
@@ -161,6 +165,35 @@ body {
         background-size: contain;
         background-repeat: no-repeat;
         justify-content: end;
+    }
+
+}
+
+@media(max-width: 992px) {
+    .BgLogin {
+        background-image: url(../../public/storage/Inventory.jpg);
+        background-position-y: center;
+        background-position-x: center;
+        background-size: auto;
+        background-repeat: no-repeat;
+        justify-content: center;
+    }
+
+    .LoginPosition {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .LoginForm {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin-right: 0;
+    }
+
+    .mdl-lg {
+        max-width: 100%;
     }
 
 }

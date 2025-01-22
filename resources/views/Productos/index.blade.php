@@ -23,6 +23,11 @@
                             Editar producto
                         </button>
 
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="getAllLotesModalBtn"
+                            data-bs-target="#getAllLotesModal" style="height: 40px;" hidden>
+                            Ver lotes
+                        </button>
+
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="showProductoModalBtn"
                             data-bs-target="#showProductoModal" style="height: 40px;" hidden>
                             Ver producto
@@ -62,7 +67,8 @@
                         <h3>@{{ productoError }}</h3>
                     </div>
 
-                    <div v-if="productos.length == 0 && !loading && !productoError" class="alert alert-warning" role="alert">
+                    <div v-if="productos.length == 0 && !loading && !productoError" class="alert alert-warning"
+                        role="alert">
                         <h3>No hay productos registrados</h3>
                     </div>
 
@@ -80,7 +86,6 @@
                                     <th scope="col">Fecha Vencimiento</th>
                                     <th scope="col">Stock</th>
                                     <th scope="col">Stock Minimo</th>
-                                    <!--<th scope="col">Stock Maximo</th>-->
                                     <th scope="col">Categoria</th>
                                     <th scope="col">Tipo Venta</th>
                                     <th scope="col">Proveedor</th>
@@ -101,7 +106,6 @@
                                     <td>@{{ formatDate(producto.fechaVencimiento) ?? '-' }}</td>
                                     <td>@{{ producto.stock ?? '-' }}</td>
                                     <td>@{{ producto.stockMinimo ?? '-' }}</td>
-                                    <!--<td>@{{ producto.stockMaximo ?? '-' }}</td>-->
                                     <td>@{{ categorias.find(categoria => categoria.id == producto.categoria).descripcion }} </td>
                                     <td>@{{ tipoVentas.find(tipoVenta => tipoVenta.id == producto.tipoVenta).descripcion }}</td>
                                     <td>@{{ proveedores.find(proveedor => proveedor.id == producto.proveedor).nombre }}</td>
@@ -121,6 +125,10 @@
 
                                         <button id="showBTN" class="btn btn-warning" @click="viewProducto(producto)">
                                             <i class="fas fa-eye"></i>
+                                        </button>
+
+                                        <button id="lotesBte" class="btn btn-success" @click="getAllLotes(producto)">
+                                            <i class="fa-solid fa-table-cells"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -183,7 +191,11 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProductoModalLabel">Crear producto </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con * son obligatorios</small><br>
+                        <small class="text-muted"> Al crear un producto, se creara un lote con la cantidad asignada en
+                            'stock' y con fecha de vencimiento
+                            asignada en 'fecha vencimiento'
+                        </small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('productos.store') }}" method="POST">
@@ -275,7 +287,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock -->
-                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stock" name="stock"
                                             placeholder="Stock" @blur="validateForm" v-model="item.stock" step="1"
@@ -285,7 +297,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Inicial -->
-                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockInicial" name="stockInicial"
                                             placeholder="Stock Inicial" @blur="validateForm" v-model="item.stockInicial"
@@ -296,7 +308,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Minimo -->
-                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockMinimo" name="stockMinimo"
                                             placeholder="Stock Minimo" @blur="validateForm" v-model="item.stockMinimo"
@@ -304,17 +316,6 @@
                                         <label for="floatingInput">Stock Minimo</label>
                                         <small class="text-danger"
                                             v-if="errors.stockMinimo">@{{ errors.stockMinimo }}</small>
-                                    </div>
-                                </div>
-                                <!-- Stock Maximo -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input type="number" class="form-control" id="stockMaximo" name="stockMaximo"
-                                            placeholder="Stock Maximo" @blur="validateForm" v-model="item.stockMaximo"
-                                            step="1" min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Stock Maximo</label>
-                                        <small class="text-danger"
-                                            v-if="errors.stockMaximo">@{{ errors.stockMaximo }}</small>
                                     </div>
                                 </div>
                                 <!-- Categoria -->
@@ -394,7 +395,10 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editProductoModalLabel">Editar producto</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con * son obligatorios</small><br>
+                        <small class="text-muted">Para modificar la fecha de vencimiento de un producto, debe modificarla
+                            en la seccion de lotes, y modificar la del lote entero. </small>
+
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
@@ -484,7 +488,7 @@
                                 <!-- Fecha Vencimiento -->
                                 <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="fechaVencimientoEdit"
+                                        <input disabled type="date" class="form-control" id="fechaVencimientoEdit"
                                             name="fechaVencimiento" placeholder="Fecha Vencimiento"
                                             @blur="validateEditForm" v-model="editItem.fechaVencimiento">
                                         <label for="floatingInput">Fecha Vencimiento</label>
@@ -524,18 +528,6 @@
                                         <label for="floatingInput">Stock Minimo</label>
                                         <small class="text-danger"
                                             v-if="editErrors.stockMinimo">@{{ editErrors.stockMinimo }}</small>
-                                    </div>
-                                </div>
-                                <!-- Stock Maximo -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input type="number" class="form-control" id="stockMaximoEdit"
-                                            name="stockMaximo" placeholder="Stock Maximo" @blur="validateEditForm"
-                                            v-model="editItem.stockMaximo" step="1" min="0" max="999999"
-                                            maxlength="6">
-                                        <label for="floatingInput">Stock Maximo</label>
-                                        <small class="text-danger"
-                                            v-if="editErrors.stockMaximo">@{{ editErrors.stockMaximo }}</small>
                                     </div>
                                 </div>
                                 <!-- Categoria -->
@@ -603,7 +595,7 @@
                                     </div>
                                 </div>
                                 <!-- Estado -->
-                                <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="estadoEdit" name="estado"
                                             :disabled="estados.error" v-model="editItem.estado" @blur="validateEditForm"
@@ -746,15 +738,6 @@
                                         <label for="floatingInput">Stock Minimo</label>
                                     </div>
                                 </div>
-                                <!-- Stock Maximo -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="stockMaximoEdit"
-                                            name="stockMaximo" placeholder="Stock Maximo" v-model="showItem.stockMaximo"
-                                            step="1" min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Stock Maximo</label>
-                                    </div>
-                                </div>
                                 <!-- Categoria -->
                                 <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
@@ -821,12 +804,89 @@
                 </div>
             </div>
         </div>
+
+        <!--lotes modal-->
+        <div class="modal fade" id="getAllLotesModal" tabindex="-1" aria-labelledby="getAllLotesModalLabel"
+            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl">
+                <div class="modal-content">
+                    <div class="modal-header row" style="display: flex; justify-content: space-between;">
+                        <div class="col-lg-6">
+                            <h1 class="modal-title fs-5" id="getAllLotesModalLabel">Lotes del producto</h1>
+                            <small class="text-muted">Aqui puede modificar la fecha de vencimiento de un lote</small><br>
+                        </div>
+
+                        <div class="col-lg-6" style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" class="btn btn-success" id="editLoteButton" @click="toggleEdit">
+                                <i v-if="!editMode" class="fas fa-edit"></i>
+                                <i v-else class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-body text-center" style="padding: 25px;">
+
+
+                        <div v-if="loading" role="alert" id="loading">
+                            <i class="fas fa-spinner fa-spin"></i> Cargando...
+                        </div>
+
+
+                        <table v-if="!loading" ref="table" class="table table-striped table-hover"
+                            style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Codigo</th>
+                                    <th scope="col">Lote n°</th>
+                                    <th scope="col">Fecha Vencimiento</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- vue foreach -->
+                                <tr v-for='lote in lotes' :key="lote.id">
+                                    <td>@{{ lote.codigo }}</td>
+                                    <td>@{{ lote.numero }}</td>
+                                    <td><input :disabled="!editMode" type="date" class="form-control"
+                                            id="fechaVencimientoLote" @blur="validateLote"
+                                            v-model="lote.fechaVencimiento">
+                                        <small class="text-danger"
+                                            v-if="lotesError.fechaVencimiento">@{{ lotesError.fechaVencimiento }}</small>
+                                    </td>
+                                    <td>@{{ lote.cantidad }}
+                                    </td>
+                                    <td v-if="lote.estado == 1">
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-success">@{{ estados.find(estado => estado.id == lote.estado).descripcion }}</span>
+                                    </td>
+                                    <td v-else>
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == lote.estado).descripcion }}</span>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelLotesButton"
+                            @click="cleanForm">Cerrar</button>
+                        <button type="button" class="btn btn-primary" id="submitLotesButton"
+                            @click="sendLotes(lotes[0].producto)">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         new Vue({
             el: '#app',
             data: {
+                editMode: false,
                 item: {
                     codigo: null,
                     nombre: null,
@@ -839,7 +899,7 @@
                     stock: null,
                     stockInicial: null,
                     stockMinimo: null,
-                    stockMaximo: null,
+
                     categoria: null,
                     tipoVenta: null,
                     proveedor: null,
@@ -857,7 +917,6 @@
                     stock: null,
                     stockInicial: null,
                     stockMinimo: null,
-                    stockMaximo: null,
                     categoria: null,
                     tipoVenta: null,
                     proveedor: null,
@@ -877,7 +936,6 @@
                     stock: null,
                     stockInicial: null,
                     stockMinimo: null,
-                    stockMaximo: null,
                     categoria: null,
                     tipoVenta: null,
                     proveedor: null,
@@ -905,6 +963,9 @@
                 totalPages: 0,
                 nextPageUrl: '',
                 prevPageUrl: '',
+                lotes: [],
+                lotesError: {},
+
             },
             methods: {
                 //Crear
@@ -929,8 +990,7 @@
                             //Habilitar boton
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
-
-
+                            document.getElementById('SubmitForm').innerHTML = 'Guardar';
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -1067,7 +1127,6 @@
                     this.editItem.stock = producto.stock;
                     this.editItem.stockInicial = producto.stockInicial;
                     this.editItem.stockMinimo = producto.stockMinimo;
-                    this.editItem.stockMaximo = producto.stockMaximo;
                     this.editItem.categoria = producto.categoria;
                     this.editItem.tipoVenta = producto.tipoVenta;
                     this.editItem.proveedor = producto.proveedor;
@@ -1093,7 +1152,6 @@
                     this.showItem.stock = producto.stock;
                     this.showItem.stockInicial = producto.stockInicial;
                     this.showItem.stockMinimo = producto.stockMinimo;
-                    this.showItem.stockMaximo = producto.stockMaximo;
                     this.showItem.categoria = producto.categoria;
                     this.showItem.tipoVenta = producto.tipoVenta;
                     this.showItem.proveedor = producto.proveedor;
@@ -1187,12 +1245,6 @@
                         document.getElementById('stockMinimo').style.border = '1px solid green';
                     }
 
-                    if (this.item.stockMaximo < 0) {
-                        this.errors.stockMaximo = 'El stock no puede ser negativo';
-                        document.getElementById('stockMaximo').style.border = '1px solid red';
-                    } else {
-                        document.getElementById('stockMaximo').style.border = '1px solid green';
-                    }
 
                     if (!this.item.categoria) {
                         this.errors.categoria = 'Este campo es obligatorio';
@@ -1307,12 +1359,6 @@
                         document.getElementById('stockMinimoEdit').style.border = '1px solid green';
                     }
 
-                    if (this.editItem.stockMaximo < 0) {
-                        this.editErrors.stockMaximo = 'El stock no puede ser negativo';
-                        document.getElementById('stockMaximoEdit').style.border = '1px solid red';
-                    } else {
-                        document.getElementById('stockMaximoEdit').style.border = '1px solid green';
-                    }
 
                     document.getElementById('categoriaEdit').style.border = '1px solid green';
                     document.getElementById('tipoVentaEdit').style.border = '1px solid green';
@@ -1418,10 +1464,12 @@
                     let fecha = new Date(date);
                     let options = {
                         year: 'numeric',
-                        month: 'long',
+                        month: 'numeric',
                         day: 'numeric'
                     };
+
                     return fecha.toLocaleDateString('es-ES', options);
+
                 },
                 //Paginacion
                 pageMinus() {
@@ -1444,6 +1492,80 @@
                     this.page = 1;
                     this.getAllProductos();
                 },
+                //Lotes
+                sendLotes(producto) {
+
+                    this.validateLote();
+
+                    if (Object.keys(this.lotesError).length > 0) {
+                        return;
+                    }
+
+                    axios({
+                        method: 'post',
+                        url: '/lotes/update/' + producto,
+                        data: {
+                            lotes: this.lotes
+                        }
+                    }).then(response => {
+
+                        if (response.data.success) {
+                            swal.fire({
+                                title: 'Lotes actualizados',
+                                text: response.data.success,
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar',
+                            });
+                        } else {
+                            swal.fire({
+                                title: 'Error',
+                                text: response.data.error,
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+
+                    }).catch(error => {
+
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al actualizar los lotes',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+
+                    }).finally(() => {
+                        document.getElementById('cancelLotesButton').click();
+                        //limpiar
+                        this.cleanForm();
+                        //Recargar productos
+                        this.getAllProductos();
+                    })
+                },
+                toggleEdit() {
+                    this.editMode = !this.editMode;
+                },
+                validateLote() {
+                    this.lotesError = {};
+
+                    for (let i = 0; i < this.lotes.length; i++) {
+
+                        if (this.lotes[i].fechaVencimiento) {
+
+                            if (new Date(this.lotes[i].fechaVencimiento) < new Date()) {
+                                this.lotesError.fechaVencimiento =
+                                    'La fecha de vencimiento no puede ser menor o igual a la fecha actual';
+                                document.getElementById('fechaVencimientoLote').style.border = '1px solid red';
+                            } else {
+                                document.getElementById('fechaVencimientoLote').style.border = '1px solid green';
+                            }
+
+                        } else {
+                            document.getElementById('fechaVencimientoLote').style.border = '1px solid green';
+                        }
+
+                    }
+                },
                 //Limpiar formulario y busqueda
                 cleanForm() {
 
@@ -1459,7 +1581,6 @@
                         stock: null,
                         stockInicial: null,
                         stockMinimo: null,
-                        stockMaximo: null,
                         categoria: null,
                         tipoVenta: null,
                         proveedor: null,
@@ -1469,6 +1590,9 @@
                     this.editErrors = {};
                     this.searchError = '';
                     this.search = null;
+                    this.lotes = [];
+                    this.lotesError = {};
+                    this.editMode = false;
                     //this.productos = [];
                     this.editItem = {
                         codigo: null,
@@ -1482,7 +1606,6 @@
                         stock: null,
                         stockInicial: null,
                         stockMinimo: null,
-                        stockMaximo: null,
                         categoria: null,
                         tipoVenta: null,
                         proveedor: null,
@@ -1502,7 +1625,6 @@
                         stock: null,
                         stockInicial: null,
                         stockMinimo: null,
-                        stockMaximo: null,
                         categoria: null,
                         tipoVenta: null,
                         proveedor: null,
@@ -1522,7 +1644,6 @@
                         stock: null,
                         stockInicial: null,
                         stockMinimo: null,
-                        stockMaximo: null,
                         categoria: null,
                         tipoVenta: null,
                         proveedor: null,
@@ -1542,7 +1663,6 @@
                     document.getElementById('stock').style.border = '1px solid #ced4da';
                     document.getElementById('stockInicial').style.border = '1px solid #ced4da';
                     document.getElementById('stockMinimo').style.border = '1px solid #ced4da';
-                    document.getElementById('stockMaximo').style.border = '1px solid #ced4da';
                     document.getElementById('categoria').style.border = '1px solid #ced4da';
                     document.getElementById('tipoVenta').style.border = '1px solid #ced4da';
                     document.getElementById('proveedor').style.border = '1px solid #ced4da';
@@ -1559,7 +1679,6 @@
                     document.getElementById('stockEdit').style.border = '1px solid #ced4da';
                     document.getElementById('stockInicialEdit').style.border = '1px solid #ced4da';
                     document.getElementById('stockMinimoEdit').style.border = '1px solid #ced4da';
-                    document.getElementById('stockMaximoEdit').style.border = '1px solid #ced4da';
                     document.getElementById('categoriaEdit').style.border = '1px solid #ced4da';
                     document.getElementById('tipoVentaEdit').style.border = '1px solid #ced4da';
                     document.getElementById('proveedorEdit').style.border = '1px solid #ced4da';
@@ -1667,6 +1786,15 @@
                     let data = await response.json();
                     this.unidades = data;
                 },
+                async getAllLotes($producto) {
+                    document.getElementById('getAllLotesModalBtn').click();
+                    this.loading = true;
+                    let response = await fetch('/getLotes/' + $producto.id);
+                    let data = await response.json();
+                    this.lotes = data;
+                    this.loading = false;
+                },
+
             },
             mounted() {
                 this.getAllCategorias();

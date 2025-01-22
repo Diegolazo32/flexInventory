@@ -34,26 +34,28 @@ class EmpresaController extends Controller
                 $empresa = empresa::find($request->id);
             }
 
-            // Obtener el archivo subido
-            $documento = $request->file('logo');
+            if ($request->hasFile('logo')) {
+                // Obtener el archivo subido
+                $documento = $request->file('logo');
 
-            $extension = $documento->getClientOriginalExtension(); // Obtener la extensión del archivo
-            $nombreArchivo = 'logo_empresa' . '.' . $extension; // Nombre del archivo
-            $rutaLocal = 'logo/' . $nombreArchivo;
+                $extension = $documento->getClientOriginalExtension(); // Obtener la extensión del archivo
+                $nombreArchivo = 'logo_empresa' . '.' . $extension; // Nombre del archivo
+                $rutaLocal = 'logo/' . $nombreArchivo;
 
-            //Si el archivo ya existe, eliminarlo
-            if (Storage::disk('local')->exists($rutaLocal)) {
-                Storage::disk('local')->delete($rutaLocal);
+                //Si el archivo ya existe, eliminarlo
+                if (Storage::disk('local')->exists($rutaLocal)) {
+                    Storage::disk('local')->delete($rutaLocal);
+                }
+
+                // Guardar el archivo en el almacenamiento local
+                $documento->storeAs('logo', $nombreArchivo, 'local');
+
+                // Copiar el archivo al almacenamiento público
+                $rutaPublica = 'logo/' . $nombreArchivo;
+                Storage::disk('public')->put($rutaPublica, file_get_contents(storage_path('app/' . $rutaLocal)));
+            } else {
+                $rutaLocal = 'logo/logo_empresa.jpg';
             }
-
-            // Guardar el archivo en el almacenamiento local
-            $documento->storeAs('logo', $nombreArchivo, 'local');
-
-            // Copiar el archivo al almacenamiento público
-            $rutaPublica = 'logo/' . $nombreArchivo;
-            Storage::disk('public')->put($rutaPublica, file_get_contents(storage_path('app/' . $rutaLocal)));
-
-            // Crear URL pública del archivo almacenado
 
             $empresa->nombre = $request->nombre;
             $empresa->direccion = $request->direccion;
@@ -79,7 +81,12 @@ class EmpresaController extends Controller
 
     public function empresaName()
     {
-        $empresa = empresa::first();
-        return response()->json($empresa->nombre);
+
+        try {
+            $empresa = empresa::first();
+            return response()->json($empresa);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }
