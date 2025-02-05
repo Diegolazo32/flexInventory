@@ -30,7 +30,9 @@ class LotesController extends Controller
 
     public function getAllLotes()
     {
-        $lotes = lotes::all();
+
+        //All lotes sort by producto
+        $lotes = lotes::all()->sortBy('producto');
         return response()->json($lotes);
     }
 

@@ -33,15 +33,20 @@
                         <div class="row">
                             <div class="col-lg-4"
                                 style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <img src="{{ asset('storage/logo/logo_empresa.jpg') }}" alt="Logo de la empresa"
-                                    style=" height: 250px; width: 250px; border-radius: 15px; border: ; margin-bottom: 20px;">
-                                <p class="display-6 fw-bold" style="text-align: center; margin-bottom: 10px;">
-                                    @{{ empresaInfo.nombre ?? '-' }}</p>
+                                <dvi>
+                                    <img src="{{ asset('storage/logo/logo_empresa.jpg') }}" alt="Logo de la empresa"
+                                        style=" height: 250px; width: 250px; border-radius: 15px; border: ; margin-bottom: 20px;">
+                                </dvi>
+                                <div>
+
+                                    <p class="display-6 fw-bold" style="text-align: center; margin-bottom: 10px;">
+                                        @{{ empresaInfo.nombre ?? '-' }}</p>
+                                </div>
 
                             </div>
                             <div class="col-lg-4"
                                 style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <h1 class="display-6 fw-bold"> Empresa </h1>
+                                <h1 class="display-6 fw-bold"> Detalles </h1>
                                 <label for="direccion" class="fw-bold col-lg-12 fs-4">Giro:</label>
                                 <p class="col-lg-12 fs-5">@{{ empresaInfo.giro ?? '-' }}</p>
                                 <label for="direccion" class="fw-bold col-lg-12 fs-4">Direccion:</label>
