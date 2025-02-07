@@ -91,7 +91,7 @@
 
         <div class="row">
             <div class="col-lg-4" style="margin-bottom: 15px;">
-                <!-- Ultimos productos vendidos -->
+                <!-- Productos proximos a vencer -->
                 <div class="card customShadow">
                     <div class="card-body" style="text-align: center">
 
@@ -108,7 +108,8 @@
                                 @{{ productosError }}
                             </div>
 
-                            <div v-if="!productosError && !loading && productosVencimiento.length == 0" class="alert alert-warning" role="alert">
+                            <div v-if="!productosError && !loading && productosVencimiento.length == 0"
+                                class="alert alert-warning" role="alert">
                                 No hay productos proximos a vencer
                             </div>
 
@@ -123,7 +124,9 @@
                                 <tbody>
                                     <tr v-for="producto in productosVencimiento">
                                         <td>@{{ producto.nombre }}</td>
-                                        <td>@{{ formatDate(producto.fechaVencimiento) }}</td>
+                                        <td v-if="producto.fechaVencimiento < today"><span
+                                                class="badge bg-danger">Vencido</span></td>
+                                        <td v-else>@{{ formatDate(producto.fechaVencimiento) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -163,7 +166,8 @@
                 productos: [],
                 productosVencimiento: [],
                 loading: true,
-                productosError: ''
+                productosError: '',
+                today: new Date().toISOString().split('T')[0],
             },
             methods: {
                 //Parse
@@ -205,6 +209,8 @@
                             let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
                             if (diffDays <= 7) {
+                                this.productosVencimiento.push(producto);
+                            } else if (fechaVencimiento < fechaActual) {
                                 this.productosVencimiento.push(producto);
                             }
 

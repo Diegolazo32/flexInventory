@@ -103,7 +103,10 @@
                                     <td>$@{{ parseDouble(producto.precioVenta) ?? '-' }}</td>
                                     <td>$@{{ parseDouble(producto.precioDescuento) ?? '-' }}</td>
                                     <td>$@{{ parseDouble(producto.precioEspecial) ?? '-' }}</td>
-                                    <td>@{{ formatDate(producto.fechaVencimiento) ?? '-' }}</td>
+                                    <td v-if="producto.fechaVencimiento < today">
+                                        <span class="badge bg-danger">Expirado</span>
+                                    </td>
+                                    <td v-else>@{{ formatDate(producto.fechaVencimiento) ?? '-' }}</td>
                                     <td>@{{ producto.stock ?? '-' }}</td>
                                     <td>@{{ producto.stockMinimo ?? '-' }}</td>
                                     <td>@{{ categorias.find(categoria => categoria.id == producto.categoria).descripcion }} </td>
@@ -137,48 +140,47 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="16">
-                                        <div class="d-flex justify-content-center" style="gap: 10px;">
-                                            <ul class="pagination justify-content-center">
-                                                <li class="page-item" :disabled="page === 1">
-                                                    <a class="page-link" href="#" aria-label="Previous"
-                                                        @click="pageMinus">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                    </a>
-                                                </li>
-                                                <li class="page-item" v-for="pageNumber in totalPages"
-                                                    :key="pageNumber" :class="{ active: pageNumber === page }">
-                                                    <a class="page-link" href="#"
-                                                        @click="specificPage(pageNumber)">
-                                                        @{{ pageNumber }}
-                                                    </a>
-                                                </li>
-                                                <li class="page-item" :disabled="page === totalPages">
-                                                    <a class="page-link" href="#" aria-label="Next"
-                                                        @click="pagePlus">
-                                                        <span aria-hidden="true">&raquo;</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                            <ul class="pagination justify-content-center">
 
-                                                <li class="page-item">
-                                                    <select class="form-select" v-model="per_page"
-                                                        @change="changePerPage">
-                                                        <option value="5">5</option>
-                                                        <option value="10">10</option>
-                                                        <option value="15">15</option>
-                                                        <option value="20">20</option>
-                                                        <option value="50">50</option>
-                                                        <option value="100">100</option>
-                                                    </select>
-                                                </li>
-                                            </ul>
-                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
 
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center" style="gap: 10px;">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" :disabled="page === 1">
+                                <a class="page-link" href="#" aria-label="Previous" @click="pageMinus">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" v-for="pageNumber in totalPages" :key="pageNumber"
+                                :class="{ active: pageNumber === page }">
+                                <a class="page-link" href="#" @click="specificPage(pageNumber)">
+                                    @{{ pageNumber }}
+                                </a>
+                            </li>
+                            <li class="page-item" :disabled="page === totalPages">
+                                <a class="page-link" href="#" aria-label="Next" @click="pagePlus">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="pagination justify-content-center">
+
+                            <li class="page-item">
+                                <select class="form-select" v-model="per_page" @change="changePerPage">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -965,6 +967,7 @@
                 prevPageUrl: '',
                 lotes: [],
                 lotesError: {},
+                today: new Date().toISOString().split('T')[0],
 
             },
             methods: {
@@ -1367,7 +1370,7 @@
                     document.getElementById('estadoEdit').style.border = '1px solid green';
 
                     this.validateEditProductoname();
-                    this.validateEditDate(this.editItem.fechaVencimiento);
+                    //this.validateEditDate(this.editItem.fechaVencimiento);
                 },
                 validateProductoname() {
 
@@ -1467,6 +1470,9 @@
                         month: 'numeric',
                         day: 'numeric'
                     };
+
+                    //Today's date
+                    let hoy = new Date();
 
                     return fecha.toLocaleDateString('es-ES', options);
 

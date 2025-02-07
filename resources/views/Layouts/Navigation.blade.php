@@ -230,7 +230,7 @@
                             <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                 onClick="window.location.href='{{ route('inventario') }}'">
                                 <i class="fa-solid fa-warehouse"></i>
-                                <span>Apertura/Cierre</span>
+                                <span>Apertura</span>
                             </button>
                         </li>
                         <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
