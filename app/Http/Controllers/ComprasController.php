@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\compraProductos;
 use App\Models\compras;
 use App\Models\inventario;
+use App\Models\kardex;
 use App\Models\lotes;
 use App\Models\productos;
 use Illuminate\Http\Request;
@@ -66,21 +67,25 @@ class ComprasController extends Controller
 
         try {
 
+            //dd($request->all());
+
             //Obtener inventario activo
 
             $activo = inventario::where('estado', 3)->first();
+
+            if (!$activo) {
+                return response()->json(['error' => 'No hay un inventario activo']);
+            }
 
             //Crear compra
             $compra = new compras();
             $compra->codigo = $request->codigo;
             //Fecha de hoy
-            //$compra->fecha = $request->fecha;
+            $compra->fecha = $request->fecha;
             $compra->total = $request->total;
             $compra->save();
 
             $productos = $request->productos;
-
-
 
             foreach ($productos as $producto) {
 
@@ -107,11 +112,50 @@ class ComprasController extends Controller
                 $lote->codigo = 'L' . $product->codigo . $product->id . '-' . date('Y-m-d') . date('H:i:s');
                 $lote->numero = $loteProducto->numero + 1;
                 $lote->cantidad = $producto['cantidad'];
-                $lote->fechaVencimiento = $request->fechaVencimiento;
+                $lote->fechaVencimiento = $producto['fechaVencimiento'];
                 $lote->producto = $producto['id'];
                 $lote->estado = 1;
                 $lote->inventario = $activo->id;
                 $lote->save();
+
+                //Actualizar stock
+                //Obtener todos los lotes del producto
+                $lotes = lotes::where('producto', $product->id)->get();
+
+                $stockTotal = 0;
+                foreach ($lotes as $lote) {
+                    $stockTotal += $lote->cantidad;
+                }
+
+                $product->stock = $stockTotal;
+
+                $product->save();
+
+                //Actualizar fecha de vencimiento
+                $lotes = lotes::where('producto', $product->id)->get();
+                $fechaVencimiento = null;
+
+                foreach ($lotes as $lote) {
+                    if ($fechaVencimiento == null) {
+                        $fechaVencimiento = $lote->fechaVencimiento;
+                    } else {
+                        if ($lote->fechaVencimiento < $fechaVencimiento) {
+                            $fechaVencimiento = $lote->fechaVencimiento;
+                        }
+                    }
+                }
+
+                $product->fechaVencimiento = $fechaVencimiento;
+                $product->save();
+
+                //Crear movimiento de kardex
+                $kardex = new kardex();
+                $kardex->producto = $product->id;
+                $kardex->cantidad = $producto['cantidad'];
+                $kardex->accion = 1;
+                $kardex->inventario = $activo->id;
+                $kardex->observacion = 'Inventario inicial';
+                $kardex->save();
             }
 
             return response()->json(['success' => 'Compra realizada con éxito']);

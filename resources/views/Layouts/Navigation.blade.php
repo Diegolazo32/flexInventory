@@ -264,7 +264,7 @@
                         <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                             <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                 onClick="window.location.href='{{ route('compras') }}'">
-                                <i class="fa-solid fa-cart-flatbed"></i>
+                                <i class="fa-solid fa-basket-shopping"></i>
                                 <span>Compras</span>
                             </button>
                         </li>

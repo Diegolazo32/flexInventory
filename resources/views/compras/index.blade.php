@@ -59,14 +59,16 @@
                                 <tr>
                                     <th scope="col">Codigo</th>
                                     <th scope="col">Total</th>
+                                    <th scope="col">Fecha de compra</th>
                                     <th scope="col">Ver detalles</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- vue foreach -->
-                                <tr v-else v-for="compra in compras" :key="compra.id">
+                                <tr v-for="compra in compras" :key="compra.id">
                                     <td>@{{ compra.codigo }}</td>
-                                    <td>@{{ compra.total }}</td>
+                                    <td>$@{{ compra.total }}</td>
+                                    <td>@{{ compra.fecha }}</td>
                                     <td>
                                         <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#infoCompraModal" @click="cleanForm">Ver detalles</button>
@@ -201,7 +203,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="date" class="form-control"
+                                                <input type="date" class="form-control" name="fechaVencimiento"
                                                     v-model="producto.fechaVencimiento">
                                             </td>
                                             <td>
