@@ -28,7 +28,7 @@ class ProveedoresController extends Controller
     public function getAllProveedores(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(52);
+        $permiso = $this->rolPermisoController->checkPermisos(55);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -66,11 +66,22 @@ class ProveedoresController extends Controller
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(41);
+        $permiso = $this->rolPermisoController->checkPermisos(52);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
+
+        $request->validate([
+            'nombre' => 'required',
+            'direccion' => 'required',
+            'NIT' => 'required',
+            'telefonoPrincipal' => 'required',
+            'emailPrincipal' => 'required',
+            'representante' => 'required',
+            'telefonoRepresentante' => 'required',
+            'emailRepresentante' => 'required',
+        ]);
 
         try {
             $proveedor = new proveedores();
@@ -93,11 +104,24 @@ class ProveedoresController extends Controller
     public function update(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(41);
+        $permiso = $this->rolPermisoController->checkPermisos(53);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
+
+        $request->validate([
+            'id' => 'required',
+            'nombre' => 'required',
+            'direccion' => 'required',
+            'NIT' => 'required',
+            'telefonoPrincipal' => 'required',
+            'emailPrincipal' => 'required',
+            'representante' => 'required',
+            'telefonoRepresentante' => 'required',
+            'emailRepresentante' => 'required',
+            'estado' => 'required',
+        ]);
 
         try {
             $proveedor = proveedores::find($request->id);
@@ -120,7 +144,7 @@ class ProveedoresController extends Controller
     public function delete(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(41);
+        $permiso = $this->rolPermisoController->checkPermisos(54);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

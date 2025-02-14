@@ -220,7 +220,7 @@
                             data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false"
                             aria-controls="collapseInventario">
                             <i class="fa-solid fa-boxes-packing"></i>
-                            <span> Inventario</span>
+                            <span> Admin. Inventario</span>
                         </button>
                     </li>
 
@@ -230,7 +230,7 @@
                             <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                 onClick="window.location.href='{{ route('inventario') }}'">
                                 <i class="fa-solid fa-warehouse"></i>
-                                <span>Apertura</span>
+                                <span>Apertura/Cierre</span>
                             </button>
                         </li>
                         <li class="nav-item" style="width: 90%; margin-bottom: 10px;">

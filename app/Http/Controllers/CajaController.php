@@ -12,7 +12,7 @@ class CajaController extends Controller
     public function getAllCajas(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(21);
+        $permiso = $this->rolPermisoController->checkPermisos(36);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -45,7 +45,7 @@ class CajaController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(17);
+        $permiso = $this->rolPermisoController->checkPermisos(32);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -58,11 +58,16 @@ class CajaController extends Controller
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(18);
+        $permiso = $this->rolPermisoController->checkPermisos(33);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
+
+        $request->validate([
+            'nombre' => 'required',
+            'ubicacion' => 'required',
+        ]);
 
         try {
             $caja = new caja();
@@ -80,11 +85,17 @@ class CajaController extends Controller
     public function update(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(18);
+        $permiso = $this->rolPermisoController->checkPermisos(34);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
+
+        $request->validate([
+            'nombre' => 'required',
+            'ubicacion' => 'required',
+            'estado' => 'required',
+        ]);
 
         try {
             $caja = caja::find($request->id);
@@ -102,7 +113,7 @@ class CajaController extends Controller
     public function delete($id)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(18);
+        $permiso = $this->rolPermisoController->checkPermisos(35);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

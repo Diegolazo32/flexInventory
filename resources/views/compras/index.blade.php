@@ -21,6 +21,11 @@
                             data-bs-target="#nuevaCompraModal" style="height: 40px;">
                             <i class="fas fa-plus"></i>
                         </button>
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="compraDetallesModalBtn"
+                            data-bs-target="#compraDetallesModal" style="height: 40px;" hidden>
+                        </button>
+
                     </div>
                 </div>
             </div>
@@ -30,8 +35,8 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
-                                    placeholder="Buscar por codigo o nombre" v-model="searchCompra">
+                                <input type="text" class="form-control" name="search" placeholder="Buscar por codigo"
+                                    v-model="searchCompra">
                                 <small class="text-danger" v-if="searchError">@{{ searchError }}</small>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
@@ -49,11 +54,15 @@
             <div class="row">
                 <div class="card-body">
 
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+
                     <div v-if="comprasError" class="alert alert-danger" role="alert">
                         <h3>@{{ comprasError }}</h3>
                     </div>
 
-                    <div class="table-responsive">
+                    <div v-if="compras.length > 0 && !loading" class="table-responsive">
                         <table ref="table" class="table table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
@@ -67,11 +76,13 @@
                                 <!-- vue foreach -->
                                 <tr v-for="compra in compras" :key="compra.id">
                                     <td>@{{ compra.codigo }}</td>
-                                    <td>$@{{ compra.total }}</td>
-                                    <td>@{{ compra.fecha }}</td>
+                                    <td>$@{{ parseDouble(compra.total) }}</td>
+                                    <td>@{{ parseDate(compra.fecha) }}</td>
                                     <td>
                                         <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#infoCompraModal" @click="cleanForm">Ver detalles</button>
+                                            data-bs-target="#compraDetallesModal" @click="getCompraDetails(compra.id)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -101,7 +112,8 @@
                                             <ul class="pagination justify-content-center">
 
                                                 <li class="page-item">
-                                                    <select class="form-select" v-model="per_page" @change="changePerPage">
+                                                    <select class="form-select" v-model="per_page"
+                                                        @change="changePerPage">
                                                         <option value="5">5</option>
                                                         <option value="10">10</option>
                                                         <option value="15">15</option>
@@ -123,8 +135,8 @@
         </div>
 
         <!-- Nueva compra Modal -->
-        <div class="modal fade" id="nuevaCompraModal" tabindex="-1" aria-labelledby="nuevaCompraLabel" aria-hidden="inert"
-            data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal fade" id="nuevaCompraModal" tabindex="-1" aria-labelledby="nuevaCompraLabel"
+            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down mdl-lg">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
@@ -137,7 +149,7 @@
                             <div class="card-header">
                                 <div class="row" style="max-height: 38px;">
                                     <div class="col-6">
-                                        <input :disabled="productos < 1" type="text" class="form-control"
+                                        <input :disabled="productos <= 0" type="text" class="form-control"
                                             placeholder="Buscar producto" v-model="busquedaProducto"
                                             @keyup="searchProductoFn">
                                         <ul v-if="results.length > 0" class="list-group">
@@ -149,7 +161,7 @@
                                         </ul>
                                     </div>
                                     <div class="col-6" v-if="compras.length > 0"
-                                        style="display: flex; justify-content: flex-end;">
+                                        style="display: flex; justify-content: flex-end; max-height: 37px;">
                                         <button type="button" class="btn btn-outline-primary" @click="cleanForm">Limpiar
                                             tabla</button>
                                     </div>
@@ -173,6 +185,7 @@
                                             <th scope="col">Codigo</th>
                                             <th scope="col">Nombre</th>
                                             <th scope="col">Cantidad</th>
+                                            <th scope="col">Stock maximo</th>
                                             <th scope="col">Precio de compra</th>
                                             <th scope="col">Proveedor</th>
                                             <th scope="col">Fecha de vencimiento</th>
@@ -190,8 +203,9 @@
                                             <td>@{{ producto.nombre }}</td>
                                             <td>
                                                 <input type="number" class="form-control" v-model="producto.cantidad"
-                                                    @change="calcularTotal" min="1">
+                                                    @change="calcularTotal" min="1" :id="'cantidad' + producto.id">
                                             </td>
+                                            <td>@{{ producto.stockMaximo ?? '-' }}</td>
                                             <td>
                                                 <input type="number" class="form-control" v-model="producto.precio"
                                                     @change="calcularTotal" min="0.01">
@@ -253,19 +267,67 @@
             </div>
         </div>
 
-
         <!--Info modal-->
         <div class="modal fade" id="infoProductoModal" tabindex="-1" aria-labelledby="infoProductoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
-                        <h1 class="modal-title fs-5" id="infoProductoModalLabel">¿Como realizar una compra?</h1>
+                        <h1 class="modal-title fs-3" id="infoProductoModalLabel">¿Como realizar una compra?</h1>
                     </div>
                     <div class="modal-body">
                         <p>Para realizar una compra, seleccione el producto que desea comprar y la cantidad que desea
                             comprar. Luego seleccione el proveedor de ese producto, a continuacion puede ajustar el precio
                             de compra y finalmente presione el boton de guardar.</p>
+                        <h5>¿El precio de compra registrado es diferente al que le ofrece su proveedor?</h5>
+                        <p>No se preocupe, puede cambiarlo directamente en la tabla de productos, solo debe seleccionar el
+                            producto y cambiar el precio de compra. Esto hara que la compra se registre con el nuevo precio
+                            y el precio del producto se actualizara al nuevo ingresado</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelShowButton"
+                            @click="cleanForm">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- compraDetalles modal -->
+        <div class="modal fade" id="compraDetallesModal" tabindex="-1" aria-labelledby="compraDetallesModalLabel"
+            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mdl">
+                <div class="modal-content">
+                    <div class="modal-header" style="display: block;">
+                        <h1 class="modal-title fs-5" id="compraDetallesModalLabel">Codigo: @{{ compraDetalles.codigo ?? '-' }}</h1>
+                        <h1 class="modal-title fs-5" id="compraDetallesModalLabel">Fecha: @{{ compraDetalles.fecha ? parseDate(compraDetalles.fecha) : '-' }}</h1>
+                        <h2 class="modal-title fs-5" id="compraDetallesModalLabel">Total: $@{{ parseDouble(compraDetalles.total) ?? '-' }}</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table ref="table" class="table table-hover table-striped" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Codigo</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Precio de compra</th>
+                                        <th scope="col">Proveedor</th>
+                                        <th scope="col">Fecha de vencimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr v-for="producto in productosDetalles" :key="producto.id">
+                                        <td>@{{ producto.codigo ?? '-' }}</td>
+                                        <td>@{{ producto.nombre ?? '-' }}</td>
+                                        <td>@{{ producto.cantidad ?? '-' }}</td>
+                                        <td>$@{{ producto.precio ? parseDouble(producto.precio) : '-' }}</td>
+                                        <td>@{{ producto.proveedor ?? '-' }}</td>
+                                        <td>@{{ producto.fechaVencimiento ? parseDate(producto.fechaVencimiento) : '-' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelShowButton"
@@ -317,7 +379,12 @@
                 //Today's date
                 fechaCompra: new Date().toISOString().substr(0, 10),
 
+                //Detalles de compra
+                compraDetalles: [],
+                productosDetalles: [],
 
+                //overstock
+                maxStockError: false,
 
             },
             methods: {
@@ -325,22 +392,22 @@
                 pageMinus() {
                     if (this.page > 1) {
                         this.page--;
-                        this.getAllProductos();
+                        this.getAllCompras();
                     }
                 },
                 pagePlus() {
                     if (this.page < this.totalPages) {
                         this.page++;
-                        this.getAllProductos();
+                        this.getAllCompras();
                     }
                 },
                 specificPage(page) {
                     this.page = page;
-                    this.getAllProductos();
+                    this.getAllCompras();
                 },
                 changePerPage() {
                     this.page = 1;
-                    this.getAllProductos();
+                    this.getAllCompras();
                 },
 
                 //Busqueda
@@ -443,6 +510,8 @@
                         cantidad: this.quantity,
                         observacion: '',
                         fechaVencimiento: '',
+                        stockMaximo: result.stockMaximo,
+                        stock: result.stock,
                     };
 
                     //chequear si ya esta el producto en el array
@@ -517,22 +586,74 @@
                         return;
                     }
 
-                    console.log(this.nuevaCompraErrors);
+                    //Verificar si algun producto esta comprando mas del stock maximo permitido
+                    this.productosCompra.forEach(producto => {
+
+                        let cantidad = 0;
+                        cantidad = parseInt(producto.cantidad);
+
+                        if (cantidad + producto.stock > producto.stockMaximo) {
+
+                            document.getElementById('cantidad' + producto.id).setAttribute('class',
+                                'form-control is-invalid');
+
+                            this.nuevaCompraErrors.push('La cantidad de ' + producto.nombre +
+                                ' supera el stock maximo permitido');
+
+
+                            return;
+                        } else {
+                            document.getElementById('cantidad' + producto.id).setAttribute('class',
+                                'form-control');
+                        }
+
+                    });
+
 
                 },
 
                 //Limpieza
                 cleanForm() {
 
-                    this.productosCompra = [];
-                    this.results = [];
-                    this.totalCompra = 0;
-                    this.codigoCompra = '';
-                    this.quantity = 1;
-                    this.nuevaCompraErrors = [];
+                    //this.compras = []
+                    //this.comprasError = ''
+                    //this.searchCompra = ''
+                    this.busquedaProducto = ''
+                    this.proveedoresError = ''
+
+                    //Busqueda
+                    this.searchError = ''
+
+                    //Nueva compra
+                    this.productosCompra = []
+                    this.results = []
+                    this.totalCompra = 0
+                    this.codigoCompra = ''
+                    this.quantity = 1
+                    this.nuevaCompraErrors = []
+
+                    //Detalles
+                    this.compraDetalles = []
+                    this.productosDetalles = []
 
                 },
 
+                parseDouble(value) {
+                    if (value) {
+                        return parseFloat(value).toFixed(2);
+                    }
+                    return 0;
+                },
+                parseDate(date) {
+
+                    let dateObj = new Date(date);
+                    let month = dateObj.getUTCMonth() + 1;
+                    let day = dateObj.getUTCDate();
+                    let year = dateObj.getUTCFullYear();
+
+                    return day + "/" + month + "/" + year;
+
+                },
                 //Obtener recursos
                 async getAllCompras() {
                     axios({
@@ -585,7 +706,7 @@
                         params: {
                             //page: this.page,
                             //per_page: this.per_page,
-                            onlyActive: true,
+                            //onlyActive: false,
                             //search: this.busquedaProducto,
                         },
                     }).then(response => {
@@ -597,8 +718,8 @@
                             return;
                         }
 
-                        this.productos = response.data.data;
-                        this.searchProductos = response.data.data;
+                        this.productos = response.data;
+                        this.searchProductos = response.data;
                         this.loading = false;
 
                     }).catch(error => {
@@ -644,6 +765,38 @@
                         });
                     });
                 },
+                async getCompraDetails(id) {
+
+                    axios({
+                        method: 'get',
+                        url: '/getCompraDetails/' + id,
+                    }).then(response => {
+
+                        if (response.data.error) {
+                            swal.fire({
+                                title: 'Error',
+                                text: response.data.error,
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+
+                            return;
+                        }
+
+                        this.compraDetalles = response.data.compra;
+                        this.productosDetalles = response.data.productos;
+
+
+                    }).catch(error => {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al obtener los detalles de la compra',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    });
+
+                },
                 //Envio de formularios
                 sendForm() {
 
@@ -659,7 +812,6 @@
 
                         document.getElementById('SubmitForm').disabled = false;
                         document.getElementById('SubmitForm').innerHTML = 'Guardar';
-
                         document.getElementById('cancelButton').disabled = false;
 
                         return;
@@ -697,6 +849,8 @@
                             icon: 'success',
                             confirmButtonText: 'Aceptar'
                         });
+
+                        this.comprasError = '';
 
                     }).catch(error => {
                         swal.fire({

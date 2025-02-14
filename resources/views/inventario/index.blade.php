@@ -13,8 +13,8 @@
             <div class="col-lg-1"></div>
 
             <!--Inventario activo-->
-            <div v-if="!loading && inventarioActivo" class="card mb-3 col-lg-5">
-                <div class="card-body">
+            <div v-if="!loading && inventarioActivo" class="card hoverCardCenter mb-3 col-lg-5">
+                <div class="card-body ">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="rounded-3">

@@ -17,7 +17,7 @@ class KardexController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(19);
+        $permiso = $this->rolPermisoController->checkPermisos(70);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -30,7 +30,7 @@ class KardexController extends Controller
     public function getAllKardex()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(19);
+        $permiso = $this->rolPermisoController->checkPermisos(27);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para realizar esta acción'], 403);
@@ -53,7 +53,7 @@ class KardexController extends Controller
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(20);
+        $permiso = $this->rolPermisoController->checkPermisos(71);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para realizar esta acción'], 403);
@@ -78,7 +78,6 @@ class KardexController extends Controller
                 $kardex->cantidad = $movimiento['cantidad'];
                 $kardex->producto = $movimiento['id'];
                 $kardex->inventario = $inventario->id;
-                //$kardex->stockInicial = $movimiento['item']['stockInicial'];
 
                 if ($movimiento['observacion'] == null) {
                     $kardex->observacion = 'Movimiento de stock';
@@ -91,18 +90,12 @@ class KardexController extends Controller
                 //Actualizar stock
                 $producto = productos::find($movimiento['id']);
 
-                //dd($producto);
-
                 if ($movimiento['accion'] == 1) {
                     //Sumarle al lote mas reciente hasta agotar la cantidad
                     $cantidad = $movimiento['cantidad'];
 
-                    //dd($cantidad);
-
                     //Obtener lote mas reciente del producto
                     $lote = lotes::where('producto', $producto->id)->where('estado', 1)->orderBy('created_at', 'desc')->first();
-
-                    //$cantidadInicalLote = $lote->cantidad;
 
                     if ($cantidad > 0) {
                         $lote->cantidad = $lote->cantidad + $cantidad;
@@ -111,8 +104,6 @@ class KardexController extends Controller
 
                     //Actualizar el stock del producto sumando todos los lotes que tengan stock
                     $producto->stock = lotes::where('producto', $producto->id)->where('estado', 1)->sum('cantidad');
-
-
                 } else {
                     //Descontarle al lote mas antiguo hasta agotarlo, y luego seguir con el siguiente lote
                     $cantidad = $movimiento['cantidad'];
@@ -139,6 +130,17 @@ class KardexController extends Controller
                     $producto->stock = lotes::where('producto', $producto->id)->where('estado', 1)->sum('cantidad');
                 }
 
+                //Si el stock es menor al stock minimo, enviar notificación
+                if ($producto->stock < $producto->stockMinimo) {
+                    flash('El producto ' . $producto->nombre . ' tiene un stock menor al stock mínimo', 'warning');
+                }
+
+                //Si el producto tiene stock menor o igual a 0, enviar notificación y desactivar el producto
+                if ($producto->stock <= 0) {
+                    flash('El producto ' . $producto->nombre . ' tiene un stock menor o igual a 0', 'warning');
+                    $producto->estado = 2;
+                }
+
                 $producto->save();
             }
 
@@ -146,26 +148,6 @@ class KardexController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al guardar los movimientos'], 500);
         }
-    }
-
-    public function searchKardex(Request $request)
-    {
-        $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(19);
-
-        if (!$permiso) {
-            return response()->json(['error' => 'No tiene permisos para realizar esta acción'], 403);
-        }
-
-        $this->inventarioActivo = new InventarioController();
-        $activo = $this->inventarioActivo->checkInventarioStatus();
-
-        if (!$activo) {
-            return response()->json(['error' => 'No hay un inventario activo']);
-        }
-
-        $kardex = kardex::where('descripcion', 'like', '%' . $request->search . '%')->get();
-        return response()->json($kardex);
     }
 
     public function storeWithProduct($producto, $request, $inventario)

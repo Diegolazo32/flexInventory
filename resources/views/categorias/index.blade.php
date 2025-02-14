@@ -709,8 +709,6 @@
 
                         this.estados = data;
 
-                        //console.log(this.estados);
-
                     } catch (error) {
 
                     }

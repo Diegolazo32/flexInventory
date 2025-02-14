@@ -38,11 +38,16 @@
             <div class="row">
                 <div class="card-body">
 
+                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </div>
+
+
                     <div v-if="loteError" class="alert alert-danger" role="alert">
                         <h3>@{{ loteError }}</h3>
                     </div>
 
-                    <div class="table-responsive">
+                    <div v-if="lotes.length > 0 && !loading" class="table-responsive">
                         <table ref="table" class="table table-hover" style="text-align: center;">
                             <thead>
                                 <tr>

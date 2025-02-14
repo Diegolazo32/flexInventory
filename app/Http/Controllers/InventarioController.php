@@ -26,10 +26,11 @@ class InventarioController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(22);
+        $permiso = $this->rolPermisoController->checkPermisos(42);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
         }
 
         return view('inventario.index');
@@ -38,30 +39,14 @@ class InventarioController extends Controller
     public function getAllInventario(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(23);
+        $permiso = $this->rolPermisoController->checkPermisos(45);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
-        //Si el request trae un search, se filtra la busqueda
-        /*if ($request->search) {
-            $inventario = inventario::where('nombre', 'like', '%' . $request->search . '%')
-                ->orWhere('ubicacion', 'like', '%' . $request->search . '%')
-                ->paginate($request->per_page);
-
-            return response()->json($inventario);
-        }*/
-
-        //Si trae un per_page, se paginan los resultados
-        /*if ($request->per_page) {
-            $inventario = inventario::paginate($request->per_page);
-            return response()->json($inventario);
-        }*/
-
         $inventarioActivo = inventario::where('estado', 3)->orderBy('fechaApertura', 'desc')->first();
         $inventarioCerrado = inventario::where('estado', 4)->orderBy('fechaCierre', 'desc')->first();
-
 
         return response()->json(['inventarioActivo' => $inventarioActivo, 'inventarioCerrado' => $inventarioCerrado]);
     }
@@ -71,7 +56,7 @@ class InventarioController extends Controller
 
         try {
             $this->rolPermisoController = new RolPermisoController();
-            $permiso = $this->rolPermisoController->checkPermisos(24);
+            $permiso = $this->rolPermisoController->checkPermisos(43);
 
             if (!$permiso) {
                 return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -118,7 +103,7 @@ class InventarioController extends Controller
 
         try {
             $this->rolPermisoController = new RolPermisoController();
-            $permiso = $this->rolPermisoController->checkPermisos(24);
+            $permiso = $this->rolPermisoController->checkPermisos(44);
 
             if (!$permiso) {
                 return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

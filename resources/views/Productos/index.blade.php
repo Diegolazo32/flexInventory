@@ -148,40 +148,41 @@
 
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-center" style="gap: 10px;">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item" :disabled="page === 1">
-                                <a class="page-link" href="#" aria-label="Previous" @click="pageMinus">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item" v-for="pageNumber in totalPages" :key="pageNumber"
-                                :class="{ active: pageNumber === page }">
-                                <a class="page-link" href="#" @click="specificPage(pageNumber)">
-                                    @{{ pageNumber }}
-                                </a>
-                            </li>
-                            <li class="page-item" :disabled="page === totalPages">
-                                <a class="page-link" href="#" aria-label="Next" @click="pagePlus">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                        <ul class="pagination justify-content-center">
 
-                            <li class="page-item">
-                                <select class="form-select" v-model="per_page" @change="changePerPage">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </li>
-                        </ul>
-                    </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-center" style="gap: 10px;">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" :disabled="page === 1">
+                            <a class="page-link" href="#" aria-label="Previous" @click="pageMinus">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item" v-for="pageNumber in totalPages" :key="pageNumber"
+                            :class="{ active: pageNumber === page }">
+                            <a class="page-link" href="#" @click="specificPage(pageNumber)">
+                                @{{ pageNumber }}
+                            </a>
+                        </li>
+                        <li class="page-item" :disabled="page === totalPages">
+                            <a class="page-link" href="#" aria-label="Next" @click="pagePlus">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="pagination justify-content-center">
+
+                        <li class="page-item">
+                            <select class="form-select" v-model="per_page" @change="changePerPage">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -289,7 +290,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stock" name="stock"
                                             placeholder="Stock" @blur="validateForm" v-model="item.stock" step="1"
@@ -299,7 +300,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Inicial -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockInicial" name="stockInicial"
                                             placeholder="Stock Inicial" @blur="validateForm" v-model="item.stockInicial"
@@ -310,7 +311,7 @@
                                     </div>
                                 </div>
                                 <!-- Stock Minimo -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="stockMinimo" name="stockMinimo"
                                             placeholder="Stock Minimo" @blur="validateForm" v-model="item.stockMinimo"
@@ -318,6 +319,17 @@
                                         <label for="floatingInput">Stock Minimo</label>
                                         <small class="text-danger"
                                             v-if="errors.stockMinimo">@{{ errors.stockMinimo }}</small>
+                                    </div>
+                                </div>
+                                <!-- Stock Maximo -->
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="stockMaximo" name="stockMaximo"
+                                            placeholder="Stock Maximo" @blur="validateForm" v-model="item.stockMaximo"
+                                            step="1" min="0" max="999999" maxlength="6">
+                                        <label for="floatingInput">Stock Maximo</label>
+                                        <small class="text-danger"
+                                            v-if="errors.stockMaximo">@{{ errors.stockMaximo }}</small>
                                     </div>
                                 </div>
                                 <!-- Categoria -->
@@ -532,6 +544,18 @@
                                             v-if="editErrors.stockMinimo">@{{ editErrors.stockMinimo }}</small>
                                     </div>
                                 </div>
+                                <!-- Stock Maximo -->
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="stockMaximoEdit"
+                                            name="stockMaximo" placeholder="Stock Maximo" @blur="validateEditForm"
+                                            v-model="editItem.stockMaximo" step="1" min="0" max="999999"
+                                            maxlength="6">
+                                        <label for="floatingInput">Stock Maximo</label>
+                                        <small class="text-danger"
+                                            v-if="editErrors.stockMaximo">@{{ editErrors.stockMaximo }}</small>
+                                    </div>
+                                </div>
                                 <!-- Categoria -->
                                 <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
@@ -740,6 +764,15 @@
                                         <label for="floatingInput">Stock Minimo</label>
                                     </div>
                                 </div>
+                                <!-- Stock Maximo -->
+                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input disabled type="number" class="form-control" id="stockMaximoEdit"
+                                            name="stockMaximo" placeholder="Stock Maximo" v-model="showItem.stockMaximo"
+                                            step="1" min="0" max="999999" maxlength="6" disabled>
+                                        <label for="floatingInput">Stock Maximo</label>
+                                    </div>
+                                </div>
                                 <!-- Categoria -->
                                 <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
@@ -901,7 +934,7 @@
                     stock: null,
                     stockInicial: null,
                     stockMinimo: null,
-
+                    stockMaximo: null,
                     categoria: null,
                     tipoVenta: null,
                     proveedor: null,
@@ -919,6 +952,7 @@
                     stock: null,
                     stockInicial: null,
                     stockMinimo: null,
+                    stockMaximo: null,
                     categoria: null,
                     tipoVenta: null,
                     proveedor: null,
@@ -938,6 +972,7 @@
                     stock: null,
                     stockInicial: null,
                     stockMinimo: null,
+                    stockMaximo: null,
                     categoria: null,
                     tipoVenta: null,
                     proveedor: null,
@@ -1130,6 +1165,7 @@
                     this.editItem.stock = producto.stock;
                     this.editItem.stockInicial = producto.stockInicial;
                     this.editItem.stockMinimo = producto.stockMinimo;
+                    this.editItem.stockMaximo = producto.stockMaximo;
                     this.editItem.categoria = producto.categoria;
                     this.editItem.tipoVenta = producto.tipoVenta;
                     this.editItem.proveedor = producto.proveedor;
@@ -1155,6 +1191,7 @@
                     this.showItem.stock = producto.stock;
                     this.showItem.stockInicial = producto.stockInicial;
                     this.showItem.stockMinimo = producto.stockMinimo;
+                    this.showItem.stockMaximo = producto.stockMaximo;
                     this.showItem.categoria = producto.categoria;
                     this.showItem.tipoVenta = producto.tipoVenta;
                     this.showItem.proveedor = producto.proveedor;
@@ -1248,6 +1285,12 @@
                         document.getElementById('stockMinimo').style.border = '1px solid green';
                     }
 
+                    if (this.item.stockMaximo < 0) {
+                        this.errors.stockMaximo = 'El stock no puede ser negativo';
+                        document.getElementById('stockMaximo').style.border = '1px solid red';
+                    } else {
+                        document.getElementById('stockMaximo').style.border = '1px solid green';
+                    }
 
                     if (!this.item.categoria) {
                         this.errors.categoria = 'Este campo es obligatorio';
@@ -1362,6 +1405,13 @@
                         document.getElementById('stockMinimoEdit').style.border = '1px solid green';
                     }
 
+                    if (this.editItem.stockMaximo < 0) {
+                        this.editErrors.stockMaximo = 'El stock no puede ser negativo';
+                        document.getElementById('stockMaximoEdit').style.border = '1px solid red';
+                    } else {
+                        document.getElementById('stockMaximoEdit').style.border = '1px solid green';
+                    }
+
 
                     document.getElementById('categoriaEdit').style.border = '1px solid green';
                     document.getElementById('tipoVentaEdit').style.border = '1px solid green';
@@ -1464,17 +1514,12 @@
                         return;
                     }
 
-                    let fecha = new Date(date);
-                    let options = {
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric'
-                    };
+                    let dateObj = new Date(date);
+                    let month = dateObj.getUTCMonth() + 1;
+                    let day = dateObj.getUTCDate();
+                    let year = dateObj.getUTCFullYear();
 
-                    //Today's date
-                    let hoy = new Date();
-
-                    return fecha.toLocaleDateString('es-ES', options);
+                    return day + "/" + month + "/" + year;
 
                 },
                 //Paginacion
@@ -1587,6 +1632,7 @@
                         stock: null,
                         stockInicial: null,
                         stockMinimo: null,
+                        stockMaximo: null,
                         categoria: null,
                         tipoVenta: null,
                         proveedor: null,
@@ -1612,6 +1658,7 @@
                         stock: null,
                         stockInicial: null,
                         stockMinimo: null,
+                        stockMaximo: null,
                         categoria: null,
                         tipoVenta: null,
                         proveedor: null,
@@ -1631,6 +1678,7 @@
                         stock: null,
                         stockInicial: null,
                         stockMinimo: null,
+                        stockMaximo: null,
                         categoria: null,
                         tipoVenta: null,
                         proveedor: null,
@@ -1650,6 +1698,7 @@
                         stock: null,
                         stockInicial: null,
                         stockMinimo: null,
+                        stockMaximo: null,
                         categoria: null,
                         tipoVenta: null,
                         proveedor: null,
@@ -1669,6 +1718,7 @@
                     document.getElementById('stock').style.border = '1px solid #ced4da';
                     document.getElementById('stockInicial').style.border = '1px solid #ced4da';
                     document.getElementById('stockMinimo').style.border = '1px solid #ced4da';
+                    document.getElementById('stockMaximo').style.border = '1px solid #ced4da';
                     document.getElementById('categoria').style.border = '1px solid #ced4da';
                     document.getElementById('tipoVenta').style.border = '1px solid #ced4da';
                     document.getElementById('proveedor').style.border = '1px solid #ced4da';
@@ -1685,13 +1735,12 @@
                     document.getElementById('stockEdit').style.border = '1px solid #ced4da';
                     document.getElementById('stockInicialEdit').style.border = '1px solid #ced4da';
                     document.getElementById('stockMinimoEdit').style.border = '1px solid #ced4da';
+                    document.getElementById('stockMaximoEdit').style.border = '1px solid #ced4da';
                     document.getElementById('categoriaEdit').style.border = '1px solid #ced4da';
                     document.getElementById('tipoVentaEdit').style.border = '1px solid #ced4da';
                     document.getElementById('proveedorEdit').style.border = '1px solid #ced4da';
                     document.getElementById('unidadEdit').style.border = '1px solid #ced4da';
                     document.getElementById('estadoEdit').style.border = '1px solid #ced4da';
-
-                    //console.log(this.searchProductos);
 
                     if (this.searchProductos.length == 0) {
                         this.productos = [];
@@ -1715,7 +1764,8 @@
                             page: this.page,
                             per_page: this.per_page,
                             //onlyActive: true,
-                            search: this.search
+                            search: this.search,
+                            sortBy: 'estado',
                         }
                     }).then(response => {
 
@@ -1761,11 +1811,7 @@
                     try {
                         let response = await fetch('/allEstados');
                         let data = await response.json();
-
                         this.estados = data;
-
-                        //console.log(this.estados);
-
                     } catch (error) {
 
                     }

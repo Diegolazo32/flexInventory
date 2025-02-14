@@ -970,13 +970,12 @@
                     this.getAllClientes();
                 },
                 formatDate(date) {
-                    let fecha = new Date(date);
-                    let options = {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    };
-                    return fecha.toLocaleDateString('es-ES', options);
+                    let dateObj = new Date(date);
+                    let month = dateObj.getUTCMonth() + 1;
+                    let day = dateObj.getUTCDate();
+                    let year = dateObj.getUTCFullYear();
+
+                    return day + "/" + month + "/" + year;
                 },
                 //Obtener recursos
                 async getAllClientes() {
@@ -1021,11 +1020,7 @@
                     try {
                         let response = await fetch('/allEstados');
                         let data = await response.json();
-
                         this.estados = data;
-
-                        //console.log(this.estados);
-
                     } catch (error) {
 
                     }

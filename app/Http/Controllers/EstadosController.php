@@ -14,7 +14,7 @@ class EstadosController extends Controller
     public function getAllEstados(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(16);
+        $permiso = $this->rolPermisoController->checkPermisos(41);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
@@ -42,7 +42,7 @@ class EstadosController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(12);
+        $permiso = $this->rolPermisoController->checkPermisos(37);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -54,7 +54,7 @@ class EstadosController extends Controller
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(13);
+        $permiso = $this->rolPermisoController->checkPermisos(38);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
@@ -73,7 +73,7 @@ class EstadosController extends Controller
     public function update(Request $request, $id)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(14);
+        $permiso = $this->rolPermisoController->checkPermisos(39);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
@@ -92,7 +92,7 @@ class EstadosController extends Controller
     public function delete($id)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(15);
+        $permiso = $this->rolPermisoController->checkPermisos(40);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);

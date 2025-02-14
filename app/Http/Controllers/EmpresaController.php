@@ -8,19 +8,45 @@ use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
 {
+
+    private $rolPermisoController;
+
     public function index()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(2);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('empresa.index');
     }
 
     public function getAllEmpresa()
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(4);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $empresas = empresa::all();
         return response()->json($empresas);
     }
 
     public function update(Request $request)
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(3);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         $request->validate([
             'logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
@@ -81,6 +107,13 @@ class EmpresaController extends Controller
 
     public function empresaName()
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(3);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         try {
             $empresa = empresa::first();

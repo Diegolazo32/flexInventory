@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
-            //$table->foreignId('numero')->references('numero')->on('venta_tickets');
+            $table->string('numero');
             $table->foreignId('cliente')->references('id')->on('clientes');
             $table->foreignId('vendedor')->references('id')->on('users');
             $table->foreignId('turno')->references('id')->on('turnos');
             $table->float('total');
+            //$table->foreignId('resolucion')->references('id')->on('resolucion_tickets');
+            $table->foreignId('estado')->references('id')->on('estados');
             $table->timestamps();
         });
     }

@@ -92,7 +92,7 @@
         <div class="row">
             <div class="col-lg-4" style="margin-bottom: 15px;">
                 <!-- Productos proximos a vencer -->
-                <div class="card customShadow">
+                <div class="card hoverCardCenter customShadow">
                     <div class="card-body" style="text-align: center">
 
                         <h5>Productos proximos a vencer</h5>
@@ -139,9 +139,45 @@
 
             <div class="col-lg-4" style="margin-bottom: 15px;">
 
-                <div class="card customShadow">
+                <div class="card hoverCardCenter customShadow">
                     <div class="card-body" style="text-align: center">
-                        <h1>Bienvenido {{ Auth::user()->nombre }}</h1>
+
+                        <h5>Productos proximos a agotarse</h5>
+
+                        <div class="table-responsive">
+
+                            <div v-if="loading" class="spinner-border text-primary" role="status">
+                                <span class="sr-only"></span>
+                            </div>
+
+                            <div v-if="!loading && productosError" class="alert alert-danger" role="alert">
+                                @{{ productosError }}
+                            </div>
+
+                            <div v-if="!productosError && !loading && productosAgotados.length == 0"
+                                class="alert alert-warning" role="alert">
+                                No hay productos proximos a agotarse
+                            </div>
+
+                            <table v-if="!loading && productosAgotados.length > 0" ref="table"
+                                class="table table-striped table-hover" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Producto</th>
+                                        <th scope="col">Stock actual</th>
+                                        <th scope="col">Stock minimo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="producto in productosAgotados">
+                                        <td>@{{ producto.nombre }}</td>
+                                        <td>@{{ producto.stock }}</td>
+                                        <td>@{{ producto.stockMinimo ?? '-' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
 
@@ -149,9 +185,9 @@
 
             <div class="col-lg-4" style="margin-bottom: 15px;">
 
-                <div class="card customShadow">
+                <div class="card hoverCardCenter customShadow">
                     <div class="card-body" style="text-align: center">
-                        <h1>Bienvenido {{ Auth::user()->nombre }}</h1>
+                        <h1>Producto mas vendido</h1>
                     </div>
                 </div>
 
@@ -165,8 +201,10 @@
             data: {
                 productos: [],
                 productosVencimiento: [],
+                productosAgotados: [],
                 loading: true,
                 productosError: '',
+                agotarseError: '',
                 today: new Date().toISOString().split('T')[0],
             },
             methods: {
@@ -177,13 +215,12 @@
                         return;
                     }
 
-                    let fecha = new Date(date);
-                    let options = {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    };
-                    return fecha.toLocaleDateString('es-ES', options);
+                    let dateObj = new Date(date);
+                    let month = dateObj.getUTCMonth() + 1;
+                    let day = dateObj.getUTCDate();
+                    let year = dateObj.getUTCFullYear();
+
+                    return day + "/" + month + "/" + year;
                 },
                 //Obtener recursos
                 async getAllProductos() {
@@ -202,6 +239,10 @@
 
                         if (producto.fechaVencimiento != null) {
 
+                            if (this.productosVencimiento.length >= 5) {
+                                return;
+                            }
+
                             let fechaVencimiento = new Date(producto.fechaVencimiento);
                             let fechaActual = new Date();
 
@@ -216,7 +257,17 @@
 
                         }
 
+                        if (producto.stock <= producto.stockMinimo) {
+
+                            if (this.productosAgotados.length >= 5) {
+                                return;
+                            }
+
+                            this.productosAgotados.push(producto);
+                        }
+
                     });
+
                 },
 
             },

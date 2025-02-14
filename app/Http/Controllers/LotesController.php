@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class LotesController extends Controller
 {
+    private $rolPermisoController;
+    private $inventarioActivo;
 
     public function index()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(60);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('lotes.index');
     }
 
@@ -31,6 +41,20 @@ class LotesController extends Controller
     public function getAllLotes()
     {
 
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(63);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $this->inventarioActivo = new InventarioController();
+        $activo = $this->inventarioActivo->checkInventarioStatus();
+
+        if (!$activo) {
+            return response()->json(['error' => 'No hay un inventario activo']);
+        }
+
         //All lotes sort by producto
         $lotes = lotes::all()->sortBy('producto');
         return response()->json($lotes);
@@ -38,18 +62,39 @@ class LotesController extends Controller
 
     public function getLotesByInventario($id)
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(63);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $lotes = lotes::where('inventario', $id)->get();
         return response()->json($lotes);
     }
 
     public function getLotesByProduct($id)
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(63);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $lotes = lotes::where('producto', $id)->get();
         return response()->json($lotes);
     }
 
     public function actualizarLotes(Request $request)
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(62);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         $lotes = $request->lotes;
 

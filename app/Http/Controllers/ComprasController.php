@@ -8,25 +8,32 @@ use App\Models\inventario;
 use App\Models\kardex;
 use App\Models\lotes;
 use App\Models\productos;
+use App\Models\proveedores;
 use Illuminate\Http\Request;
 
 class ComprasController extends Controller
 {
 
     private $rolPermisoController;
-    private $lotesController;
-
     private $inventarioActivo;
 
     public function index()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(64);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('compras.index');
     }
 
     public function getAllCompras(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(36);
+        $permiso = $this->rolPermisoController->checkPermisos(68);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -37,6 +44,10 @@ class ComprasController extends Controller
 
         if (!$activo) {
             return response()->json(['error' => 'No hay un inventario activo']);
+        }
+
+        if (compras::all()->count() == 0) {
+            return response()->json(['error' => 'No hay compras registradas']);
         }
 
         //Si el request trae un search, se filtra la busqueda
@@ -61,15 +72,69 @@ class ComprasController extends Controller
         return response()->json($compras);
     }
 
+    public function getCompraDetails($id)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(69);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $compra = compras::find($id);
+
+        if (!$compra) {
+            return response()->json(['error' => 'Compra no encontrada']);
+        }
+
+        $compraProductos = compraProductos::where('compra', $compra->id)->get();
+
+        $productos = [];
+
+        foreach ($compraProductos as $compraProducto) {
+            $producto = productos::find($compraProducto->producto);
+            $proveedor = proveedores::find($compraProducto->proveedor);
+
+            $productos[] = [
+                'id' => $producto->id,
+                'codigo' => $producto->codigo,
+                'nombre' => $producto->nombre,
+                'proveedor' => $proveedor->nombre,
+                'cantidad' => $compraProducto->cantidad,
+                'precio' => $compraProducto->precioCompra,
+                'total' => $compraProducto->totalCompra
+            ];
+        }
+
+        return response()->json(['compra' => $compra, 'productos' => $productos]);
+    }
+
     public function store(Request $request)
     {
 
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(65);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $request->validate(
+            [
+                'codigo' => 'required',
+                'fecha' => 'required',
+                'total' => 'required',
+                'productos' => 'required'
+            ],
+            [
+                'codigo.required' => 'El código es requerido',
+                'fecha.required' => 'La fecha es requerida',
+                'total.required' => 'El total es requerido',
+                'productos.required' => 'Los productos son requeridos'
+            ]
+        );
 
         try {
-
-            //dd($request->all());
-
-            //Obtener inventario activo
 
             $activo = inventario::where('estado', 3)->first();
 
@@ -128,6 +193,11 @@ class ComprasController extends Controller
                 }
 
                 $product->stock = $stockTotal;
+                $product->precioCompra = $producto['precio'];
+
+                if ($product->stock > 0) {
+                    $product->estado = 1;
+                }
 
                 $product->save();
 
@@ -163,4 +233,8 @@ class ComprasController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
+
+    //Aprobar compra
+
+    //Anular compra
 }

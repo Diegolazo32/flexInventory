@@ -510,9 +510,6 @@
 
                 },
                 fillData() {
-
-                    console.log('llenando datos');
-
                     this.empresa.nombre = this.empresaInfo.nombre;
                     this.empresa.direccion = this.empresaInfo.direccion;
                     this.empresa.telefono = this.empresaInfo.telefono;

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('stock');
             $table->integer('stockInicial');
             $table->integer('stockMinimo')->nullable();
-            //$table->integer('stockMaximo')->nullable();
+            $table->integer('stockMaximo')->nullable();
             $table->foreignId('categoria')->references('id')->on('categorias');
             $table->foreignId('tipoVenta')->references('id')->on('tipo_ventas');
             $table->foreignId('proveedor')->references('id')->on('proveedores');

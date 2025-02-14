@@ -218,9 +218,11 @@
                                                         <input type="number" class="form-control"
                                                             :id="'cantidad' + kard.id" name="cantidad"
                                                             placeholder="Cantidad" v-model="kard.cantidad" step="1"
-                                                            min="0" maxlength="6">
+                                                            min="0" maxlength="6" :max="kard.item.stock"
+                                                            @blur="validateMinStock(kard.id)">
                                                         <small :id="'errorCantidad' + kard.id" class="text-danger"
-                                                            v-if="errors.cantidad"></small>
+                                                            v-if="errors.cantidad">La cantidad no puede ser mayor al
+                                                            stock</small>
                                                     </td>
                                                     <td>
                                                         <input type="text" class="form-control"
@@ -259,9 +261,10 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mdl">
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
-                        <h1 class="modal-title fs-5" id="infoProductoModalLabel">¿Como funciona el Kardex?</h1>
+                        <h1 class="modal-title fs-5" id="infoProductoModalLabel">Kardex</h1>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="text-align: justify;">
+                        <h4>¿Como funciona el Kardex?</h4>
                         <p>El Kardex es un sistema de control de inventarios que permite llevar un registro de las
                             entradas y salidas de productos en un almacén. El Kardex se puede llevar de forma manual o
                             automatizada, y es una herramienta fundamental para la gestión de inventarios.</p>
@@ -270,6 +273,11 @@
                             finalmente presione el boton de guardar.</p>
                         <p>El sistema se encargara de realizar la operacion correspondiente y actualizar el stock del
                             producto.</p>
+                        <h4>¿Que pasa si un producto se queda sin stock por un movimiento de Kardex?</h4>
+                        <p>Primero se evaluara si hay suficiente stock para realizar la accion, si es asi, se completa el
+                            movimiento y luego se desactivara el producto automaticamente cuando este se quede a 0, lo que
+                            hara que no pueda realizar mas acciones con el producto hasta que ingrese mas producto a traves
+                            de una compra.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelShowButton"
@@ -397,6 +405,8 @@
 
                         }).finally(() => {
 
+                            document.getElementById('SubmitForm').innerHTML = 'Guardar';
+
                             //limpiar
                             this.cleanForm();
                             //Recargar productos
@@ -456,6 +466,18 @@
                     }
 
                 },
+                validateMinStock(id) {
+                    let cantidad = document.getElementById('cantidad' + id).value;
+                    let stock = this.kardex.find(kard => kard.id == id).item.stock;
+
+                    if (cantidad > stock) {
+                        document.getElementById('cantidad' + id).classList.add('is-invalid');
+                        this.errors.cantidad = 'La cantidad no puede ser mayor al stock';
+                    } else {
+                        document.getElementById('cantidad' + id).classList.remove('is-invalid');
+                        this.errors.cantidad = '';
+                    }
+                },
                 //Paginacion
                 pageMinus() {
                     if (this.page > 1) {
@@ -491,12 +513,8 @@
                         if (search.includes('*') || search.includes('x')) {
                             this.quantity = search.split('*')[0];
 
-                            console.log(this.quantity);
-
                             //Nombre sera el resto de la cadena despues del * o x
                             let nombre = search.split('*')[1] || search.split('x')[1];
-
-                            console.log(nombre);
 
                             //Buscar producto
                             this.filtered = productos.filter(producto => {
@@ -662,13 +680,15 @@
                 },
                 //Obtener recursos
                 async getAllProductos() {
+
+                    //Productos para lista de kardex
                     axios({
                         method: 'get',
                         url: '/allProductos',
                         params: {
                             page: this.page,
                             per_page: this.per_page,
-                            onlyActive: true,
+                            onlyActivePaginate: true,
                             search: this.searchMainProductos,
                         },
                     }).then(response => {
@@ -677,7 +697,6 @@
 
                         if (this.productoError) {
                             this.loading = false;
-                            //this.productos = [];
                             this.searchProductos = [];
                             this.mainProductos = [];
                             this.searchMainProd = [];
@@ -685,7 +704,6 @@
                         }
 
                         this.loading = false;
-                        //this.productos = response.data.data;
                         this.searchProductos = response.data.data;
                         this.mainProductos = response.data.data;
                         this.searchMainProd = response.data.data;
@@ -710,6 +728,7 @@
                         });
                     });
 
+                    //Productos para select kardex
                     axios({
                         method: 'get',
                         url: '/allProductos',
@@ -728,9 +747,7 @@
                             return;
                         }
 
-                        this.productos = response.data.data;
-
-                        console.log(this.productos);
+                        this.productos = response.data;
 
                     }).catch(error => {
                         this.loading = false;
@@ -750,8 +767,6 @@
                         let data = await response.json();
 
                         this.estados = data;
-
-                        //console.log(this.estados);
 
                     } catch (error) {
 

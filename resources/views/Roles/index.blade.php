@@ -619,15 +619,10 @@
                 //Permisos
                 getPermisos(rol) {
 
-                    //console.log('Rol', rol);
-
                     this.getAllRolPermisos(rol);
-
                     this.permisosItem.descripcion = rol.descripcion;
                     this.permisosItem.id = rol.id;
                     this.permisosItem.estado = rol.estado;
-
-                    //console.log('Permisos del rol getPermisos', this.permisosItem.permisos);
 
                     //dar click al boton de modal
                     document.getElementById('permisosModalBtn').click();
