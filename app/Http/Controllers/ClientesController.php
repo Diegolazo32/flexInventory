@@ -77,6 +77,8 @@ class ClientesController extends Controller
             'descuento' => 'required',
         ]);
 
+
+
         try {
 
             $cliente = new clientes();
@@ -112,9 +114,15 @@ class ClientesController extends Controller
             'telefono' => 'required',
             'email' => 'required',
             'DUI' => 'required',
-            'descuento' => 'required',
+            //'descuento' => 'required|nullable',
             'estado' => 'required',
         ]);
+
+        if ($request->descuento  == null) {
+            $descuento = 0;
+        } else {
+            $descuento = $request->descuento;
+        }
 
         try {
 
@@ -124,7 +132,7 @@ class ClientesController extends Controller
             $cliente->telefono = $request->telefono;
             $cliente->email = $request->email;
             $cliente->DUI = $request->DUI;
-            $cliente->descuento = $request->descuento;
+            $cliente->descuento = $descuento;
             $cliente->estado = $request->estado;
 
             $cliente->save();

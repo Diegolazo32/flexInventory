@@ -49,12 +49,24 @@ class EmpresaController extends Controller
         }
 
         $request->validate([
+            'nombre' => 'required',
+            'direccion' => 'required',
+            'telefono' => 'required',
+            'email' => 'required',
+            'NIT' => 'required',
+            'NRC' => 'required',
+            'giro' => 'required',
+            'nitRepresentante' => 'required',
+            'telefonoRepresentante' => 'required',
+            'emailRepresentante' => 'required',
+            'representante' => 'required',
+            'dui' => 'required',
             'logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         try {
 
-            if ($request->id == 0 || $request->id == null) {
+            if ($request->firstTime) {
                 $empresa = new empresa();
             } else {
                 $empresa = empresa::find($request->id);
