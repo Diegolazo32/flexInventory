@@ -14,7 +14,7 @@ class CategoriaController extends Controller
     public function getAllCategorias(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(21);
+        $permiso = $this->rolPermisoController->checkPermisos(31);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -46,7 +46,7 @@ class CategoriaController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(17);
+        $permiso = $this->rolPermisoController->checkPermisos(27);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -59,11 +59,15 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(18);
+        $permiso = $this->rolPermisoController->checkPermisos(28);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
+
+        $request->validate([
+            'descripcion' => 'required',
+        ]);
 
 
         try {
@@ -80,11 +84,16 @@ class CategoriaController extends Controller
     public function update(Request $request, $id)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(19);
+        $permiso = $this->rolPermisoController->checkPermisos(29);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
+
+        $request->validate([
+            'descripcion' => 'required',
+            'estado' => 'required',
+        ]);
 
 
         try {
@@ -101,7 +110,7 @@ class CategoriaController extends Controller
     public function delete($id)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(20);
+        $permiso = $this->rolPermisoController->checkPermisos(30);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

@@ -18,64 +18,73 @@ class GruposSeeder extends Seeder
             [
                 [
                     'id' => 1,
-                    'descripcion' => 'Usuarios',
+                    'descripcion' => 'Dashboard',
                 ],
                 [
                     'id' => 2,
-                    'descripcion' => 'Unidades'
+                    'descripcion' => 'Empresa',
                 ],
                 [
                     'id' => 3,
-                    'descripcion' => 'Roles'
+                    'descripcion' => 'Usuarios',
                 ],
                 [
                     'id' => 4,
-                    'descripcion' => 'Permisos'
+                    'descripcion' => 'Roles',
                 ],
                 [
                     'id' => 5,
-                    'descripcion' => 'Estados'
+                    'descripcion' => 'Permisos',
                 ],
                 [
                     'id' => 6,
-                    'descripcion' => 'Categorias'
+                    'descripcion' => 'Unidades',
                 ],
                 [
                     'id' => 7,
-                    'descripcion' => 'Productos'
+                    'descripcion' => 'Categorias',
                 ],
                 [
                     'id' => 8,
-                    'descripcion' => 'Proveedores'
+                    'descripcion' => 'Cajas',
                 ],
                 [
                     'id' => 9,
-                    'descripcion' => 'Clientes'
+                    'descripcion' => 'Estados',
                 ],
                 [
                     'id' => 10,
-                    'descripcion' => 'Ventas'
+                    'descripcion' => 'Inventario',
                 ],
                 [
                     'id' => 11,
-                    'descripcion' => 'Tipo de ventas'
+                    'descripcion' => 'Clientes',
                 ],
                 [
                     'id' => 12,
-                    'descripcion' => 'Dashboard'
+                    'descripcion' => 'Proveedores',
                 ],
                 [
                     'id' => 13,
-                    'descripcion' => 'Reportes'
+                    'descripcion' => 'Productos',
                 ],
                 [
                     'id' => 14,
-                    'descripcion' => 'Configuracion'
+                    'descripcion' => 'Lotes',
                 ],
                 [
                     'id' => 15,
-                    'descripcion' => 'Reestablecer contraseña'
+                    'descripcion' => 'Compras',
                 ],
+                [
+                    'id' => 16,
+                    'descripcion' => 'Kardex',
+                ],
+
+
+
+
+
 
             ];
 

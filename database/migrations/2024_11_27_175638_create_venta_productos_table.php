@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('precio');
             $table->float('descuento');
             $table->float('descuentoUsuario');
+            $table->float('total');
             $table->timestamps();
         });
     }

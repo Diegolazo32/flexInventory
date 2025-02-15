@@ -14,7 +14,7 @@ class PermisosController extends Controller
     public function getAllPermisos(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(46);
+        $permiso = $this->rolPermisoController->checkPermisos(21);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -48,7 +48,7 @@ class PermisosController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(42);
+        $permiso = $this->rolPermisoController->checkPermisos(17);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -61,7 +61,7 @@ class PermisosController extends Controller
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(43);
+        $permiso = $this->rolPermisoController->checkPermisos(18);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -90,7 +90,7 @@ class PermisosController extends Controller
     public function update(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(44);
+        $permiso = $this->rolPermisoController->checkPermisos(19);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -118,7 +118,7 @@ class PermisosController extends Controller
     public function delete($id)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(45);
+        $permiso = $this->rolPermisoController->checkPermisos(20);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

@@ -19,7 +19,7 @@ class ProductosController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(32);
+        $permiso = $this->rolPermisoController->checkPermisos(56);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -32,7 +32,7 @@ class ProductosController extends Controller
     public function getAllProductos(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(36);
+        $permiso = $this->rolPermisoController->checkPermisos(59);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -57,25 +57,33 @@ class ProductosController extends Controller
             return response()->json($productos);
         }
 
-        //Si trae un per_page, se paginan los resultados
+        if ($request->onlyActivePaginate) {
+            //Filtra los productos activos y los pagina
+            $productos = productos::where('estado', 1)->paginate($request->per_page);
+            return response()->json($productos);
+        }
+
+        //Si trae un per_page, se paginan los resultados y se ordenan por $request->sortBy
         if ($request->per_page) {
-            $productos = productos::paginate($request->per_page);
-        } else {
-            $productos = productos::all();
+            $productos = productos::orderBy($request->sortBy, 'asc')->paginate($request->per_page);
+            return response()->json($productos);
         }
 
         if ($request->onlyActive) {
-            //Filtra los productos activos
-            $productos = productos::where('estado', 1)->paginate($request->per_page);
+            //Filtra los productos activos sin paginar
+            $productos = productos::where('estado', 1)->get();
+            return response()->json($productos);
         }
 
+        //Si no trae nada, se devuelven todos los productos
+        $productos = productos::all();
         return response()->json($productos);
     }
 
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(33);
+        $permiso = $this->rolPermisoController->checkPermisos(57);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -89,8 +97,6 @@ class ProductosController extends Controller
         }
 
         $inventario = inventario::where('estado', 3)->first();
-
-        //dd($inventario);
 
         $request->validate(
             [
@@ -137,6 +143,7 @@ class ProductosController extends Controller
             $producto->stock = 0;
             $producto->stockInicial = $request->stock;
             $producto->stockMinimo = $request->stockMinimo;
+            $producto->stockMaximo = $request->stockMaximo;
             $producto->categoria = $request->categoria;
             $producto->tipoVenta = $request->tipoVenta;
             $producto->proveedor = $request->proveedor;
@@ -151,13 +158,15 @@ class ProductosController extends Controller
             $productoUpdate = productos::find($producto->id);
             $lotes = lotes::where('producto', $producto->id)->get();
 
-            //dd($productoUpdate);
-
             foreach ($lotes as $lote) {
                 $stockTotal += $lote->cantidad;
             }
 
             $productoUpdate->stock = $stockTotal;
+
+            if ($productoUpdate->stock == 0) {
+                $productoUpdate->estado = 2;
+            }
 
             $productoUpdate->save();
 
@@ -170,7 +179,7 @@ class ProductosController extends Controller
     public function update(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(34);
+        $permiso = $this->rolPermisoController->checkPermisos(58);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -223,6 +232,7 @@ class ProductosController extends Controller
             $producto->stock = $request->stock;
             $producto->stockInicial = $request->stockInicial;
             $producto->stockMinimo = $request->stockMinimo;
+            $producto->stockMaximo = $request->stockMaximo;
             $producto->categoria = $request->categoria;
             $producto->tipoVenta = $request->tipoVenta;
             $producto->proveedor = $request->proveedor;
@@ -238,7 +248,7 @@ class ProductosController extends Controller
     public function lotes(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(35);
+        $permiso = $this->rolPermisoController->checkPermisos(63);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

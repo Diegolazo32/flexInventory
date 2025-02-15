@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('accion'); //1 entrada 2 salida
             //$table->float('stockInicial');
             $table->foreignId('inventario')->references('id')->on('inventarios');
+            //$table->foreignId('lote')->references('id')->on('lotes');
             $table->string('observacion')->nullable();
             $table->timestamps();
         });

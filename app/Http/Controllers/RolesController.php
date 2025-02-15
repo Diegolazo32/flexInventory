@@ -15,7 +15,7 @@ class RolesController extends Controller
     public function getAllRoles(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(41);
+        $permiso = $this->rolPermisoController->checkPermisos(15);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -47,7 +47,7 @@ class RolesController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(37);
+        $permiso = $this->rolPermisoController->checkPermisos(11);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -60,7 +60,7 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(38);
+        $permiso = $this->rolPermisoController->checkPermisos(12);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -84,7 +84,7 @@ class RolesController extends Controller
     public function update(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(39);
+        $permiso = $this->rolPermisoController->checkPermisos(13);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -108,7 +108,7 @@ class RolesController extends Controller
     public function delete(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(40);
+        $permiso = $this->rolPermisoController->checkPermisos(14);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -126,7 +126,7 @@ class RolesController extends Controller
     public function permisos(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(50);
+        $permiso = $this->rolPermisoController->checkPermisos(16);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

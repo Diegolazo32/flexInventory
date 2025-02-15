@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('compras', function (Blueprint $table) {
-            $table->id();
-            $table->string('codigo');
-            $table->float('total');
-            $table->date('fecha');
-            $table->timestamps();
+        Schema::table('ventas', function (Blueprint $table) {
+            $table->foreignId('resolucion')->references('id')->on('resolucion_tickets')->after('cliente');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('compras');
+        Schema::table('ventas', function (Blueprint $table) {
+            //
+        });
     }
 };

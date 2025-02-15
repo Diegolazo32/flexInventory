@@ -21,7 +21,7 @@ class UserController extends Controller
     public function getAllUsers(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(6);
+        $permiso = $this->rolPermisoController->checkPermisos(9);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -93,14 +93,11 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
 
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(1);
+        $permiso = $this->rolPermisoController->checkPermisos(5);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -136,14 +133,11 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
 
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(2);
+        $permiso = $this->rolPermisoController->checkPermisos(6);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para crear un usuario']);
@@ -199,14 +193,11 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, User $user)
     {
 
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(3);
+        $permiso = $this->rolPermisoController->checkPermisos(7);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
@@ -262,7 +253,7 @@ class UserController extends Controller
     {
 
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(4);
+        $permiso = $this->rolPermisoController->checkPermisos(8);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
@@ -300,7 +291,7 @@ class UserController extends Controller
     {
 
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(5);
+        $permiso = $this->rolPermisoController->checkPermisos(10);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);

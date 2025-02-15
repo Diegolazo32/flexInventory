@@ -11,7 +11,6 @@ export default defineConfig({
 
                 //JS
                 'resources/js/app.js',
-                'resources/js/Dashboard.js',
             ],
             refresh: true,
         }),

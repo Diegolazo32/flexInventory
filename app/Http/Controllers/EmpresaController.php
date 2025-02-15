@@ -8,13 +8,32 @@ use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
 {
+
+    private $rolPermisoController;
+
     public function index()
     {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(2);
+
+        if (!$permiso) {
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
         return view('empresa.index');
     }
 
     public function getAllEmpresa()
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(4);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $empresas = empresa::all();
         return response()->json($empresas);
     }
@@ -22,13 +41,32 @@ class EmpresaController extends Controller
     public function update(Request $request)
     {
 
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(3);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
         $request->validate([
+            'nombre' => 'required',
+            'direccion' => 'required',
+            'telefono' => 'required',
+            'email' => 'required',
+            'NIT' => 'required',
+            'NRC' => 'required',
+            'giro' => 'required',
+            'nitRepresentante' => 'required',
+            'telefonoRepresentante' => 'required',
+            'emailRepresentante' => 'required',
+            'representante' => 'required',
+            'dui' => 'required',
             'logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         try {
 
-            if ($request->id == 0 || $request->id == null) {
+            if ($request->firstTime) {
                 $empresa = new empresa();
             } else {
                 $empresa = empresa::find($request->id);
@@ -81,6 +119,13 @@ class EmpresaController extends Controller
 
     public function empresaName()
     {
+
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(3);
+
+        if (!$permiso) {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
 
         try {
             $empresa = empresa::first();

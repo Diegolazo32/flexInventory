@@ -13,7 +13,7 @@ class ClientesController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(22);
+        $permiso = $this->rolPermisoController->checkPermisos(46);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -26,7 +26,7 @@ class ClientesController extends Controller
     public function getAllClientes(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(26);
+        $permiso = $this->rolPermisoController->checkPermisos(50);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -62,11 +62,22 @@ class ClientesController extends Controller
     public function store(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(23);
+        $permiso = $this->rolPermisoController->checkPermisos(47);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
+
+        $request->validate([
+            'nombre' => 'required',
+            'apellido' => 'required',
+            'telefono' => 'required',
+            'email' => 'required',
+            'DUI' => 'required',
+            'descuento' => 'required',
+        ]);
+
+
 
         try {
 
@@ -90,10 +101,27 @@ class ClientesController extends Controller
     public function update(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(24);
+        $permiso = $this->rolPermisoController->checkPermisos(48);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $request->validate([
+            'id' => 'required',
+            'nombre' => 'required',
+            'apellido' => 'required',
+            'telefono' => 'required',
+            'email' => 'required',
+            'DUI' => 'required',
+            //'descuento' => 'required|nullable',
+            'estado' => 'required',
+        ]);
+
+        if ($request->descuento  == null) {
+            $descuento = 0;
+        } else {
+            $descuento = $request->descuento;
         }
 
         try {
@@ -104,7 +132,7 @@ class ClientesController extends Controller
             $cliente->telefono = $request->telefono;
             $cliente->email = $request->email;
             $cliente->DUI = $request->DUI;
-            $cliente->descuento = $request->descuento;
+            $cliente->descuento = $descuento;
             $cliente->estado = $request->estado;
 
             $cliente->save();
@@ -118,7 +146,7 @@ class ClientesController extends Controller
     public function delete($id)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(25);
+        $permiso = $this->rolPermisoController->checkPermisos(49);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

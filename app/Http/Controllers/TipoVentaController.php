@@ -34,7 +34,8 @@ class TipoVentaController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(41);
 
         if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
         }
 
         return view('tipoventa.index');

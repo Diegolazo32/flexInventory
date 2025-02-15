@@ -215,6 +215,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/allCompras', [ComprasController::class, 'getAllCompras'])->name('allCompras');
         Route::get('/compras', [ComprasController::class, 'index'])->name('compras');
         Route::post('/compras/store', [ComprasController::class, 'store'])->name('compras.store');
-        
+        Route::get('/getCompraDetails/{id}', [ComprasController::class, 'getCompraDetails'])->name('getCompraDetails');
     });
 });

@@ -14,7 +14,7 @@ class UnidadesController extends Controller
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(7);
+        $permiso = $this->rolPermisoController->checkPermisos(22);
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
@@ -27,7 +27,7 @@ class UnidadesController extends Controller
     public function getAllUnidades(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(11);
+        $permiso = $this->rolPermisoController->checkPermisos(26);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -61,7 +61,7 @@ class UnidadesController extends Controller
     {
 
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(8);
+        $permiso = $this->rolPermisoController->checkPermisos(23);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -99,7 +99,7 @@ class UnidadesController extends Controller
     {
 
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(9);
+        $permiso = $this->rolPermisoController->checkPermisos(24);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -133,7 +133,7 @@ class UnidadesController extends Controller
     {
 
         $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(10);
+        $permiso = $this->rolPermisoController->checkPermisos(25);
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);

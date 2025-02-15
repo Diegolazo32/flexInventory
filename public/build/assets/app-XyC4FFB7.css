@@ -1,13 +1,14 @@
 .BgLogin {
-    background: rgb(33,35,37);
+    background: #212325;
     background-position-y: center;
     background-position-x: left;
     background-size: auto;
     background-repeat: no-repeat;
     height: 100%;
-
+    display: flex;
+    justify-content: end;
+    align-items: center
 }
-
 
 .empresaLogo {
     background-image: url(../../public/storage/logo_empresa.jpg);
@@ -16,32 +17,34 @@
     background-size: auto;
     background-repeat: no-repeat;
     height: 100%;
-
+    display: flex;
+    justify-content: end;
+    align-items: center
 }
 
 html,
 body {
-    height: 100vh;
+    height: 100vh
 }
 
 .loader {
     width: 48px;
     height: 48px;
     border: 5px solid #FFF;
-    border-bottom-color: #FF3D00;
+    border-bottom-color: #ff3d00;
     border-radius: 50%;
     display: inline-block;
     box-sizing: border-box;
-    animation: rotation 1s linear infinite;
+    animation: rotation 1s linear infinite
 }
 
 @keyframes rotation {
     0% {
-        transform: rotate(0deg);
+        transform: rotate(0)
     }
 
-    100% {
-        transform: rotate(360deg);
+    to {
+        transform: rotate(360deg)
     }
 }
 
@@ -49,189 +52,193 @@ body {
     display: flex;
     justify-content: end;
     align-items: center;
-    flex-direction: column;
+    flex-direction: column
 }
 
 .LoginForm {
     width: 100%;
     max-width: 400px;
     padding: 10px;
-    border-radius: 15px;
+    border-radius: 15px
 }
 
 .titleBar {
-    padding: 5px;
+    padding: 5px
 }
 
-.form-control {
-    border-radius: 10px;
-}
-
+.form-control,
 .btn {
-    border-radius: 10px;
+    border-radius: 10px
 }
 
 .customShadow {
-    box-shadow: 0px 5px 5px 0px rgb(125, 125, 125);
+    box-shadow: 0 5px 5px #7d7d7d
 }
 
 .blue1 {
     background-color: #007bff;
-    color: white;
+    color: #fff
 }
 
 .green1 {
     background-color: #0d866c;
-    color: white;
+    color: #fff
 }
 
 .red1 {
     background-color: #dc3545;
-    color: white;
+    color: #fff
 }
 
 .purple1 {
     background-color: #6f42c1;
-    color: white;
+    color: #fff
 }
 
 .purple2 {
     background-color: #3d0072;
-    color: white;
+    color: #fff
 }
 
 .orange1 {
     background-color: #fd7e14;
-    color: white;
+    color: #fff
 }
 
 .orange2 {
     background-color: #ffb300;
-    color: white;
+    color: #fff
 }
 
 .mint1 {
     background-color: #20c997;
-    color: white;
+    color: #fff
 }
 
 .hoverCardLeft {
-    transition: 0.5s;
+    transition: .5s
 }
 
 .hoverCardLeft:hover {
     width: 100%;
     height: auto;
-    box-shadow: 20px 20px 20px 0px rgb(150, 150, 150);
+    box-shadow: 20px 20px 20px #969696
 }
 
+. {
+    max-width: 1125px
+}
+
+.-lg {
+    max-width: 90%
+}
 
 .hoverCardCenter {
-    transition: 0.5s;
+    transition: .5s
 }
 
 .hoverCardCenter:hover {
     width: 100%;
     height: auto;
-    box-shadow: 0px 20px 20px 0px rgb(150, 150, 150);
+    box-shadow: 0 20px 20px #969696
 }
 
 .hoverCardRight {
-    transition: 0.5s;
+    transition: .5s
 }
 
 .hoverCardRight:hover {
     width: 100%;
     height: auto;
-    box-shadow: -20px 20px 20px 0px rgb(150, 150, 150);
+    box-shadow: -20px 20px 20px #969696
 }
 
 .hoverCard {
-    transition: 0.5s;
+    transition: .5s
 }
 
 .hoverCard:hover {
-    box-shadow: 0px 20px 20px 0px rgb(150, 150, 150);
+    box-shadow: 0 20px 20px #969696
 }
 
-
-@media(max-width: 1200px) {
+@media (max-width: 1200px) {
     .BgLogin {
-        background: rgb(33,35,37);
-
+        background: #4b6cb7;
+        background: linear-gradient(280deg, #4b6cb7, #182848 62%);
         background-position-y: center;
         background-position-x: center;
         background-size: contain;
         background-repeat: no-repeat;
-
+        justify-content: center
     }
-
 }
 
-@media(max-width: 992px) {
+@media (max-width: 992px) {
     .BgLogin {
-        background: rgb(33,35,37);
-
+        background: #4b6cb7;
+        background: linear-gradient(280deg, #4b6cb7, #182848 62%);
         background-position-y: center;
         background-position-x: center;
         background-size: auto;
         background-repeat: no-repeat;
-
+        justify-content: center
     }
 
     .LoginPosition {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: center
     }
 
     .LoginForm {
         width: 100%;
         max-width: 330px;
         padding: 15px;
-        margin-right: 0;
+        margin-right: 0
     }
 
+    .-lg {
+        max-width: 100%
+    }
 }
 
 @media (max-width: 768px) {
     .BgLogin {
-        background: rgb(33,35,37);
-
+        background: #4b6cb7;
+        background: linear-gradient(280deg, #4b6cb7, #182848 62%);
         background-position-y: center;
         background-position-x: center;
         background-size: auto;
         background-repeat: no-repeat;
-
+        justify-content: center
     }
 
     .LoginPosition {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: center
     }
 
     .LoginForm {
         width: 100%;
         max-width: 330px;
         padding: 15px;
-        margin-right: 0;
-    }
-
-}
-
-@media(max-width: 600px) {
-    .titleBar {
-        padding: 10px;
+        margin-right: 0
     }
 }
 
-@media(max-width: 425px) {
+@media (max-width: 600px) {
     .titleBar {
-        padding: 10px;
+        padding: 10px
+    }
+}
+
+@media (max-width: 425px) {
+    .titleBar {
+        padding: 10px
     }
 
     .nombreMarca {
-        display: none;
+        display: none
     }
 }

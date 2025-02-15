@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('compras', function (Blueprint $table) {
-            $table->id();
-            $table->string('codigo');
-            $table->float('total');
-            $table->date('fecha');
-            $table->timestamps();
+        Schema::table('venta_productos', function (Blueprint $table) {
+            $table->foreignId('lote')->references('id')->on('lotes')->after('producto');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('compras');
+        Schema::table('venta_productos', function (Blueprint $table) {
+            //
+        });
     }
 };

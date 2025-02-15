@@ -33,7 +33,7 @@
     <!-- container-fluid hace que el contenido se ajuste al ancho de la pantalla -->
 
     <!-- NavBar -->
-    <nav class="navbar navbar-dark bg-dark" style="padding: 10px;" id="Menu">
+    <nav class="navbar hoverCard navbar-dark bg-dark" style="padding: 10px;" id="Menu">
 
         <div class="row d-flex align-items-center titleBar" style="width: 100%;">
             <div class="col-2 d-flex justify-content-center">
@@ -50,17 +50,20 @@
                 </a>
 
                 <a class="navbar-brand nombreMarca" href="{{ route('dashboard') }}"
-                    style="margin-left:15px; font-weight: normal"><?php
-                    use App\Models\empresa;
-                    $empresaName = empresa::select('nombre')->first();
+                    style="margin-left:15px; font-weight: normal">
+                    <?php
 
+                    use App\Models\empresa;
+
+                    $empresaName = empresa::select('nombre')->first();
                     if ($empresaName == null) {
                         echo 'Flex Inventory';
                     } else {
+                        //Si el nombre es mas de 35 caracteres, recortarlo a 35 caracteres
                         echo $empresaName->nombre;
                     }
-
-                    ?></a>
+                    ?>
+                </a>
             </div>
             <div class="col-2 d-flex justify-content-center">
 
@@ -70,8 +73,6 @@
                         {{ Auth::user()->nombre }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-md-start ">
-                        <li><a class="dropdown-item" href="#">Perfil</a></li>
-                        <li><a class="dropdown-item" href="#">Configuracion</a></li>
                         <li><a class="dropdown-item" href="{{ route('logout') }}">Cerrar sesion</a></li>
                     </ul>
                 </div>
@@ -83,7 +84,7 @@
     <!--SideBar-->
     <div class="container-fluid">
 
-        <div data-bs-theme="dark" class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
+        <div data-bs-theme="dark" class=" offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
             aria-labelledby="offcanvasExampleLabel" style="max-width: 225px;">
             <ul class="navbar-nav navbar-nav-scroll" style="--bs-scroll-height: 100%">
                 <!-- Logo circular -->
@@ -220,7 +221,7 @@
                             data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false"
                             aria-controls="collapseInventario">
                             <i class="fa-solid fa-boxes-packing"></i>
-                            <span> Inventario</span>
+                            <span> Admin. Inventario</span>
                         </button>
                     </li>
 
@@ -264,7 +265,7 @@
                         <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                             <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                 onClick="window.location.href='{{ route('compras') }}'">
-                                <i class="fa-solid fa-cart-flatbed"></i>
+                                <i class="fa-solid fa-basket-shopping"></i>
                                 <span>Compras</span>
                             </button>
                         </li>
