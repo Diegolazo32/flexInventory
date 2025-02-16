@@ -278,6 +278,60 @@
                         </li>
                     </div>
 
+                    <!--  Ventas -->
+                    <!--<li class="nav-item" style="width: 100%">
+                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseVenta" aria-expanded="false"
+                            aria-controls="collapseVenta">
+                            <i class="fa-solid fa-boxes-packing"></i>
+                            <span> Ventas </span>
+                        </button>
+                    </li>-->
+
+                    <!-- Collapse venta -->
+                    <!-- <div class="collapse" id="collapseVenta" style="margin-left: 20px;">
+
+                       <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                onClick="window.location.href='{{ route('empresa') }}'">
+                                <i class="fa-regular fa-file-lines"></i>
+                                <span>Menu caja</span>
+                            </button>
+                        </li>
+
+                    </div>-->
+
+                    <!-- Reportes -->
+                    <li class="nav-item" style="width: 100%">
+                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseReportes" aria-expanded="false"
+                            aria-controls="collapseReportes">
+                            <i class="fa-solid fa-file"></i>
+                            <span> Reportes </span>
+                        </button>
+                    </li>
+
+                    <!-- Collapse reportes -->
+                    <div class="collapse" id="collapseReportes" style="margin-left: 20px;">
+
+                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                onClick="window.location.href='{{ route('reportes.productos') }}'">
+                                <i class="fa-regular fa-file-lines"></i>
+                                <span>Reporte de productos</span>
+                            </button>
+                        </li>
+
+                    </div>
+
+
+                    <li class="nav-item" style="width: 100%; margin-bottom: 10px;">
+                        <button class="btn btn-outline-light" style="width: 100%;" type="button">
+                            <i class="fa-solid fa-circle-question"></i>
+                            <span>Ayuda y manuales</span>
+                        </button>
+                    </li>
+
                 </div>
             </ul>
 

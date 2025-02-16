@@ -80,6 +80,10 @@ class GruposSeeder extends Seeder
                     'id' => 16,
                     'descripcion' => 'Kardex',
                 ],
+                [
+                    'id' => 17,
+                    'descripcion' => 'Reportes',
+                ],
 
 
 

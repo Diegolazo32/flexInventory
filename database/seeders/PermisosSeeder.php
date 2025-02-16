@@ -487,6 +487,21 @@ class PermisosSeeder extends Seeder
                 'grupo' => 16,
             ],
 
+            //Reportes
+            [
+                // 'id' => 73,
+                'nombre' => 'ver-menu-reportes',
+                'descripcion' => 'Ver menú de reportes',
+                'grupo' => 17,
+            ],
+            [
+                // 'id' => 74,
+                'nombre' => 'generar-reportes',
+                'descripcion' => 'Generar reportes',
+                'grupo' => 17,
+            ],
+
+
 
 
 

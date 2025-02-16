@@ -15,6 +15,7 @@ use App\Http\Controllers\LotesController;
 use App\Http\Controllers\PermisosController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
+use App\Http\Controllers\reportesController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\RolPermisoController;
 use App\Http\Controllers\TipoVentaController;
@@ -217,4 +218,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/compras/store', [ComprasController::class, 'store'])->name('compras.store');
         Route::get('/getCompraDetails/{id}', [ComprasController::class, 'getCompraDetails'])->name('getCompraDetails');
     });
+
+    //Reportes
+    Route::controller(reportesController::class)->group(function () {
+        Route::get('/reportes/productos', [reportesController::class, 'productosIndex'])->name('reportes.productos');
+        //Generar reporte de productos
+        Route::post('/reportes/productos/generar', [reportesController::class, 'productosGenerar'])->name('reportes.productos.generar');
+    });
+
 });
