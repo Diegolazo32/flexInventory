@@ -67,7 +67,6 @@ class KardexController extends Controller
         }
 
         $movimientos = $request->all();
-
         $inventario = inventario::where('estado', 3)->first();
 
         try {

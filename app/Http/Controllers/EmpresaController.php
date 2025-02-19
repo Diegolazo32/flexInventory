@@ -21,7 +21,9 @@ class EmpresaController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return view('empresa.index');
+        $empresa = empresa::first();
+
+        return view('empresa.index', compact('empresa'));
     }
 
     public function getAllEmpresa()
@@ -91,8 +93,20 @@ class EmpresaController extends Controller
                 // Copiar el archivo al almacenamiento público
                 $rutaPublica = 'logo/' . $nombreArchivo;
                 Storage::disk('public')->put($rutaPublica, file_get_contents(storage_path('app/' . $rutaLocal)));
+
+
+                //Generar el base64 del archivo
+                $base64 = base64_encode(file_get_contents(storage_path('app/' . $rutaLocal)));
+
             } else {
-                $rutaLocal = 'logo/logo_empresa.jpg';
+
+                //Buscar un logo existente
+                $empresa = empresa::find($request->id);
+                $rutaLocal = $empresa->logo;
+
+                //Generar el base64 del archivo
+                $base64 = base64_encode(file_get_contents(storage_path('app/' . $rutaLocal)));
+
             }
 
             $empresa->nombre = $request->nombre;
@@ -107,7 +121,7 @@ class EmpresaController extends Controller
             $empresa->email_representante = $request->emailRepresentante;
             $empresa->representante = $request->representante;
             $empresa->dui = $request->dui;
-            $empresa->logo = $rutaLocal;
+            $empresa->logo = $rutaPublica;
 
             $empresa->save();
 

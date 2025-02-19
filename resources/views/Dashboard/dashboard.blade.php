@@ -164,8 +164,8 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Producto</th>
-                                    <th scope="col">Stock actual</th>
-                                    <th scope="col">Stock minimo</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Mínimo</th>
                                 </tr>
                             </thead>
                             <tbody>

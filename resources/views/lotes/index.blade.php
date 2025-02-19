@@ -164,7 +164,7 @@
             loteError: '',
             loading: true,
             page: 1,
-            per_page: 5,
+            per_page: 10,
             totalPages: 0,
             total: 0,
             searchLotes: '',
@@ -227,7 +227,7 @@
 
                     this.loading = false;
                     //this.searchLotes = response.data;
-                    this.lotes = response.data;
+                    this.lotes = response.data.data;
 
                     //Paginacion
                     this.total = response.data.total;

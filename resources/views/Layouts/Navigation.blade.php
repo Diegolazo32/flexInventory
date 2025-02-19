@@ -30,10 +30,13 @@
 </head>
 
 <body>
+    <?php use App\Models\empresa;
+    $empresa = empresa::first();
+    ?>
     <!-- container-fluid hace que el contenido se ajuste al ancho de la pantalla -->
 
     <!-- NavBar -->
-    <nav class="navbar hoverCard navbar-dark bg-dark" style="padding: 10px;" id="Menu">
+    <nav class="navbar navbar-dark bg-dark" style="padding: 10px;" id="Menu">
 
         <div class="row d-flex align-items-center titleBar" style="width: 100%;">
             <div class="col-2 d-flex justify-content-center">
@@ -45,22 +48,18 @@
             <div class="col-8 d-flex justify-content-center">
                 <!-- Logo circular -->
                 <a href="{{ route('dashboard') }}" style="font-weight: normal" class="nombreMarca">
-                    <img src="{{ asset('storage/logo/logo_empresa.jpg') }}" alt="Logo" class="rounded-circle"
-                        style="width: 50px; height: 50px;">
+                    <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo" class="rounded-circle"
+                        style="width: 50px; height: 50px;object-fit: cover;">
                 </a>
 
                 <a class="navbar-brand nombreMarca" href="{{ route('dashboard') }}"
                     style="margin-left:15px; font-weight: normal">
                     <?php
 
-                    use App\Models\empresa;
-
-                    $empresaName = empresa::select('nombre')->first();
-                    if ($empresaName == null) {
+                    if ($empresa->nombre == null) {
                         echo 'Flex Inventory';
                     } else {
-                        //Si el nombre es mas de 35 caracteres, recortarlo a 35 caracteres
-                        echo $empresaName->nombre;
+                        echo $empresa->nombre;
                     }
                     ?>
                 </a>
@@ -93,8 +92,9 @@
                         <div class="d-flex justify-content-center align-items-center"
                             style="margin-bottom: 20px; margin-top: 20px;">
                             <a href="{{ route('dashboard') }}" style="font-weight: normal">
-                                <img src="{{ asset('storage/logo/logo_empresa.jpg') }}" alt="Logo"
-                                    class="rounded-circle" style="width: 50px; height: 50px;">
+                                <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo"
+                                    class="rounded-circle" style="width: 50px; height: 50px;object-fit: cover;">
+
                             </a>
                         </div>
                     </li>
@@ -339,7 +339,7 @@
 
         <div class="row">
             <!-- Content -->
-            <div class="container col-lg-10" style="padding-top: 15px;">
+            <div class="container col-lg-10" style="padding-top: 15px; margin-bottom: 50px;">
                 @yield('content')
             </div>
 
@@ -347,34 +347,5 @@
     </div>
 
 </body>
-
-<script>
-    new Vue({
-        el: '#Menu',
-        data: {
-            empresaName: '',
-        },
-        methods: {
-            async getEmpresaName() {
-                axios({
-                    method: 'get',
-                    url: '/empresaName',
-                }).then((response) => {
-                    this.empresaName = response.data;
-
-                    if (this.empresaName == null) {
-                        this.empresaName = 'Flex Inventory';
-                    }
-
-                }).catch((error) => {
-                    console.log(error);
-                });
-            },
-        },
-        mounted() {
-            this.getEmpresaName();
-        },
-    })
-</script>
 
 </html>

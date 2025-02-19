@@ -56,7 +56,7 @@ class LotesController extends Controller
         }
 
         //All lotes sort by producto
-        $lotes = lotes::all()->sortBy('producto');
+        $lotes = lotes::orderBy('producto', 'asc')->paginate(5);
         return response()->json($lotes);
     }
 
