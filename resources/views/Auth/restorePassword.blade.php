@@ -4,7 +4,7 @@
 
 @section('content')
 
-<body class="container BgLogin" style="display: grid; place-items: center; height: 80vh;">
+<body class="BgLogin" style="display: grid; place-items: center; height: 100vh; width: auto;">
     <div class="row" id="ResetPassword">
         <div class="col-lg-12" style="display: flex; justify-content: center; align-items: center;">
             <div class="card hoverCard LoginForm">
