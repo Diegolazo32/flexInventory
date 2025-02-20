@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('venta')->references('id')->on('ventas');
             //$table->foreignId('producto')->references('id')->on('productos');
             $table->integer('cantidad');
-            $table->float('precio');
-            $table->float('descuento');
-            $table->float('descuentoUsuario');
-            $table->float('total');
+            $table->decimal('precio');
+            $table->decimal('descuento');
+            $table->decimal('descuentoUsuario');
+            $table->decimal('total');
             $table->timestamps();
         });
     }

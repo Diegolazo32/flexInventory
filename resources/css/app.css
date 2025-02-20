@@ -2,8 +2,8 @@
     /* Color si no carga la imagen */
     background: rgb(33, 35, 37);
     background-image: url(../../public/storage/logo/logo_empresa.jpeg);
-    /*background-image: url(../../public/storage/logo/logo_empresa.png);*/
-    /*background-image: url(../../public/storage/logo/logo_empresa.jpg);*/
+    background-image: url(../../public/storage/logo/logo_empresa.png);
+    background-image: url(../../public/storage/logo/logo_empresa.jpg);
     backdrop-filter: blur(25px);
     object-fit: cover;
     background-position-y: center;
@@ -14,7 +14,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
+ 
 
 }
 
@@ -169,8 +169,8 @@ body {
     .BgLogin {
         background: rgb(33, 35, 37);
         background-image: url(../../public/storage/logo/logo_empresa.jpeg);
-        /*background-image: url(../../public/storage/logo/logo_empresa.png);*/
-        /*background-image: url(../../public/storage/logo/logo_empresa.jpg);*/
+        background-image: url(../../public/storage/logo/logo_empresa.png);
+        background-image: url(../../public/storage/logo/logo_empresa.jpg);
         backdrop-filter: blur(25px);
         object-fit: cover;
         background-position-y: center;
@@ -190,8 +190,8 @@ body {
     .BgLogin {
         background: rgb(33, 35, 37);
         background-image: url(../../public/storage/logo/logo_empresa.jpeg);
-        /*background-image: url(../../public/storage/logo/logo_empresa.png);*/
-        /*background-image: url(../../public/storage/logo/logo_empresa.jpg);*/
+        background-image: url(../../public/storage/logo/logo_empresa.png);
+        background-image: url(../../public/storage/logo/logo_empresa.jpg);
         backdrop-filter: blur(25px);
         object-fit: cover;
         background-position-y: center;
@@ -224,8 +224,8 @@ body {
     .BgLogin {
         background: rgb(33, 35, 37);
         background-image: url(../../public/storage/logo/logo_empresa.jpeg);
-        /*background-image: url(../../public/storage/logo/logo_empresa.png);*/
-        /*background-image: url(../../public/storage/logo/logo_empresa.jpg);*/
+        background-image: url(../../public/storage/logo/logo_empresa.png);
+        background-image: url(../../public/storage/logo/logo_empresa.jpg);
         backdrop-filter: blur(25px);
         object-fit: cover;
         background-position-y: center;

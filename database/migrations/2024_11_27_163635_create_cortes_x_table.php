@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('cortes_x', function (Blueprint $table) {
             $table->id();
             $table->foreignId('turno')->references('id')->on('turnos');
-            $table->float('ventas', 8, 2);
-            $table->float('devoluciones');
-            $table->float('IVA');
-            $table->float('salidas');
-            $table->float('entradas');
-            $table->float('total');
-            $table->float('diferencia');
+            $table->decimal('ventas', 8, 2);
+            $table->decimal('devoluciones');
+            $table->decimal('IVA');
+            $table->decimal('salidas');
+            $table->decimal('entradas');
+            $table->decimal('total');
+            $table->decimal('diferencia');
             $table->foreignId('estado')->references('id')->on('estados');
             //$table->foreignId('corteZ')->references('id')->on('cortes_z');
             $table->timestamps();

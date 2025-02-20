@@ -13,7 +13,7 @@ return new class extends Migration
     {
         /*Schema::create('venta_tickets', function (Blueprint $table) {
             $table->id();
-            $table->float('numero');
+            $table->decimal('numero');
             $table->foreignId('venta')->references('id')->on('ventas');
             $table->foreignId('resolucion')->references('id')->on('resolucion_tickets');
             $table->foreignId('estado')->references('id')->on('estados');

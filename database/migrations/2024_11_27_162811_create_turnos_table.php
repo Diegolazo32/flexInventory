@@ -16,12 +16,12 @@ return new class extends Migration
             $table->foreignId('vendedor')->references('id')->on('users');
             $table->foreignId('caja')->references('id')->on('cajas');
             $table->dateTime('apertura');
-            $table->float('montoInicial');
-            $table->float('totalVentas')->nullable();
-            $table->float('totalEntradas')->nullable();
-            $table->float('totalSalidas')->nullable();
+            $table->decimal('montoInicial');
+            $table->decimal('totalVentas')->nullable();
+            $table->decimal('totalEntradas')->nullable();
+            $table->decimal('totalSalidas')->nullable();
             $table->dateTime('cierre')->nullable();
-            $table->float('montoCierre')->nullable();
+            $table->decimal('montoCierre')->nullable();
             $table->timestamps();
         });
     }

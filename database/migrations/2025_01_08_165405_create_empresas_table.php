@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('nit_representante');
             $table->string('telefono_representante');
             $table->string('email_representante');
+            $table->string('cuentaContable');
+            $table->decimal('valorIVA');
             $table->timestamps();
         });
     }

@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('codigo')->unique();
             $table->string('nombre');
             $table->string('descripcion')->nullable();
-            $table->float('precioCompra');
-            $table->float('precioVenta');
-            $table->float('precioDescuento')->nullable();
-            $table->float('precioEspecial')->nullable();
+            $table->decimal('precioCompra');
+            $table->decimal('precioVenta');
+            $table->decimal('precioDescuento')->nullable();
+            $table->decimal('precioEspecial')->nullable();
             $table->date('fechaVencimiento')->nullable();
             $table->integer('stock');
             $table->integer('stockInicial');

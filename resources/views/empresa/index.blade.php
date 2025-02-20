@@ -239,9 +239,30 @@
                                     </div>
                                 </div>
 
+                                <!-- CuentaContable -->
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="cuentaContable"
+                                            name="cuentaContable" placeholder="Cuenta contable" @keyup="validateForm"
+                                            v-model="empresa.cuentaContable" maxlength="100">
+                                        <label for="floatingInput">Cuenta contable</label>
+                                        <div class="invalid-tooltip" v-if="errors.cuentaContable">
+                                            @{{ errors.cuentaContable }}</div>
+                                    </div>
+                                </div>
+
+                                <!-- valorIVA -->
+                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="valorIVA" name="valorIVA"
+                                            placeholder="Valor IVA" @keyup="validateForm" v-model="empresa.valorIVA"
+                                            max="100">
+                                        <label for="floatingInput">Valor IVA</label>
+                                        <div class="invalid-tooltip" v-if="errors.valorIVA">@{{ errors.valorIVA }}</div>
+                                    </div>
+                                </div>
+
                                 <!--Logo-->
-
-
                                 <div class="form col-lg-6" style="margin-bottom: 10px;" position-relative>
                                     <div class="invalid-tooltip" v-if="errors.logo">@{{ errors.logo }}</div>
                                     <input type="file" class="form-control" id="logo" name="logo"
@@ -285,6 +306,8 @@
                     nitRepresentante: null,
                     telefonoRepresentante: null,
                     emailRepresentante: null,
+                    cuentaContable: null,
+                    valorIVA: null,
                 },
                 errors: {},
                 firstTime: false,
@@ -457,6 +480,25 @@
                         document.getElementById('dui').setAttribute('class', 'form-control is-valid');
                     }
 
+                    //cuentaContable
+                    if (!this.empresa.cuentaContable) {
+                        this.errors.cuentaContable = 'La cuenta contable es requerida';
+                        document.getElementById('cuentaContable').setAttribute('class', 'form-control is-invalid');
+                    } else {
+                        document.getElementById('cuentaContable').setAttribute('class', 'form-control is-valid');
+                    }
+
+                    //valorIVA
+                    if (!this.empresa.valorIVA) {
+                        this.errors.valorIVA = 'El valor del IVA es requerido';
+                        document.getElementById('valorIVA').setAttribute('class', 'form-control is-invalid');
+                    } else if (this.empresa.valorIVA < 0 || this.empresa.valorIVA > 100) {
+                        this.errors.valorIVA = 'El valor del IVA debe ser un numero entre 0 y 100';
+                        document.getElementById('valorIVA').setAttribute('class', 'form-control is-invalid');
+                    } else {
+                        document.getElementById('valorIVA').setAttribute('class', 'form-control is-valid');
+                    }
+
 
                     //logo png, jpg, jpeg
                     let logoInput = document.querySelector('#logo');
@@ -465,6 +507,17 @@
                         let logoExtension = logo.name.split('.').pop().toLowerCase();
                         if (logoExtension != 'png' && logoExtension != 'jpg' && logoExtension != 'jpeg') {
                             this.errors.logo = 'El archivo debe ser una imagen en formato PNG, JPG o JPEG';
+                            document.getElementById('logo').setAttribute('class', 'form-control is-invalid');
+                        } else {
+                            document.getElementById('logo').setAttribute('class', 'form-control is-valid');
+                        }
+                    }
+
+                    //Logo no mas de 2mb
+                    if (logoInput.files.length > 0) {
+                        let logo = logoInput.files[0];
+                        if (logo.size > 2097152) {
+                            this.errors.logo = 'El archivo no debe pesar mas de 2MB';
                             document.getElementById('logo').setAttribute('class', 'form-control is-invalid');
                         } else {
                             document.getElementById('logo').setAttribute('class', 'form-control is-valid');
@@ -492,6 +545,8 @@
                     formData.append('nitRepresentante', this.empresa.nitRepresentante);
                     formData.append('telefonoRepresentante', this.empresa.telefonoRepresentante);
                     formData.append('emailRepresentante', this.empresa.emailRepresentante);
+                    formData.append('cuentaContable', this.empresa.cuentaContable);
+                    formData.append('valorIVA', this.empresa.valorIVA);
 
                     // Agregar el archivo si existe
                     const logoInput = document.querySelector('#logo');
@@ -522,7 +577,7 @@
                                             icon: 'success',
                                         });
                                         this.firstTime = false;
-                                        //window.location.reload();
+                                        window.location.reload();
                                     } else {
                                         swal.fire({
                                             title: 'Error',
@@ -580,6 +635,8 @@
                     this.empresa.telefonoRepresentante = null;
                     this.empresa.emailRepresentante = null;
                     this.empresa.logo = '';
+                    this.empresa.cuentaContable = null;
+                    this.empresa.valorIVA = null;
 
                     this.errors = {};
 
@@ -596,6 +653,8 @@
                     document.getElementById('telefonoRepresentante').setAttribute('class', 'form-control');
                     document.getElementById('emailRepresentante').setAttribute('class', 'form-control');
                     document.getElementById('logo').setAttribute('class', 'form-control');
+                    document.getElementById('cuentaContable').setAttribute('class', 'form-control');
+                    document.getElementById('valorIVA').setAttribute('class', 'form-control');
 
                 },
                 fillData() {
@@ -612,6 +671,8 @@
                     this.empresa.telefonoRepresentante = this.empresaInfo.telefono_representante;
                     this.empresa.emailRepresentante = this.empresaInfo.email_representante;
                     this.empresa.logo = '';
+                    this.empresa.cuentaContable = this.empresaInfo.cuentaContable;
+                    this.empresa.valorIVA = this.empresaInfo.valorIVA;
                 }
 
             },

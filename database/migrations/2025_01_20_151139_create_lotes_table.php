@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('lotes', function (Blueprint $table) {
             $table->id();
             $table->string('codigo')->unique();
-            $table->float('numero');
-            $table->float('cantidad');
+            $table->decimal('numero');
+            $table->decimal('cantidad');
             $table->date('fechaVencimiento')->nullable();
             $table->foreignId('producto')->references('id')->on('productos');
             $table->foreignId('estado')->references('id')->on('estados');

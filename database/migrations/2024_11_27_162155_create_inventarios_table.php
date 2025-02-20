@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('StockApertura');
             $table->integer('ProductosCierre');
             $table->integer('StockCierre');
-            $table->float('totalInventario');
+            $table->decimal('totalInventario');
             $table->foreignId('aperturadoPor')->references('id')->on('users');
             $table->foreignId('cerradoPor')->references('id')->on('users');
             $table->foreignId('estado')->references('id')->on('estados');

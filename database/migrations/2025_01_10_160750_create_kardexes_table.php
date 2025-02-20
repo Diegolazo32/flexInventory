@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('kardexes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('producto')->references('id')->on('productos');
-            $table->float('cantidad');
+            $table->decimal('cantidad');
             $table->integer('accion'); //1 entrada 2 salida
-            //$table->float('stockInicial');
+            //$table->decimal('stockInicial');
             $table->foreignId('inventario')->references('id')->on('inventarios');
             //$table->foreignId('lote')->references('id')->on('lotes');
             $table->string('observacion')->nullable();

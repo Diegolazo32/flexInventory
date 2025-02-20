@@ -23,6 +23,12 @@ class EmpresaController extends Controller
 
         $empresa = empresa::first();
 
+        if ($empresa == null) {
+            $empresa = new empresa();
+            $empresa->nombre = 'Flex Inventory';
+            $empresa->logo = 'logo/empresa_logo.jpg';
+        }
+
         return view('empresa.index', compact('empresa'));
     }
 
@@ -64,6 +70,8 @@ class EmpresaController extends Controller
             'representante' => 'required',
             'dui' => 'required',
             'logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            'cuentaContable' => 'required',
+            'valorIVA' => 'required'
         ]);
 
         try {
@@ -81,10 +89,12 @@ class EmpresaController extends Controller
                 $extension = $documento->getClientOriginalExtension(); // Obtener la extensión del archivo
                 $nombreArchivo = 'logo_empresa' . '.' . $extension; // Nombre del archivo
                 $rutaLocal = 'logo/' . $nombreArchivo;
+                $logoAnterior = $empresa->logo;
 
-                //Si el archivo ya existe, eliminarlo
-                if (Storage::disk('local')->exists($rutaLocal)) {
-                    Storage::disk('local')->delete($rutaLocal);
+                if ($logoAnterior != null) {
+                    // Eliminar el archivo anterior
+                    Storage::disk('local')->delete($logoAnterior);
+                    Storage::disk('public')->delete($logoAnterior);
                 }
 
                 // Guardar el archivo en el almacenamiento local
@@ -121,11 +131,13 @@ class EmpresaController extends Controller
             $empresa->email_representante = $request->emailRepresentante;
             $empresa->representante = $request->representante;
             $empresa->dui = $request->dui;
-            $empresa->logo = $rutaPublica;
+            $empresa->logo = $rutaPublica ?? $empresa->logo;
+            $empresa->cuentaContable = $request->cuentaContable;
+            $empresa->valorIVA = $request->valorIVA;
 
             $empresa->save();
 
-            return response()->json(['success' => 'Empresa guardada correctamente']);
+            return response()->json(['success' => 'Empresa guardada correctamente, aplicando cambios, espere...']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
