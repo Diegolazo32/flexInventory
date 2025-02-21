@@ -413,7 +413,7 @@
 
         <div class="row">
             <!-- Content -->
-            <div class="container col-lg-10" style="padding-top: 15px; margin-bottom: 50px;">
+            <div class="container col-lg-11" style="padding-top: 15px; margin-bottom: 50px;">
                 @yield('content')
             </div>
 

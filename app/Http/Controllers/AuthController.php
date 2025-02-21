@@ -11,6 +11,10 @@ use function Laravel\Prompts\password;
 
 class AuthController extends Controller
 {
+
+    private $auditoriaController;
+
+
     public function loginView()
     {
         return view('Auth.login');
@@ -37,10 +41,10 @@ class AuthController extends Controller
 
                 try {
 
-                    if($usuario->estado == 0){
+                    /*if($usuario->estado == 0){
                         flash('Usuario inactivo', 'error');
                         return back();
-                    }
+                    }*/
 
                     if($usuario->estado == 2){
                         flash('Usuario bloqueado', 'error');
@@ -51,11 +55,15 @@ class AuthController extends Controller
                         Auth::login($usuario);
                         //dd('Bienvenido ' . $usuario->nombre);
                         flash('Por favor cambie su contraseña', 'warning');
+                        $auditoriaController = new AuditoriaController();
+                        $auditoriaController->registrarEvento($usuario->usuario, 'Cambio de contraseña', 'usuarios', '-', '-');
                         return redirect()->route('password', ['id' => $usuario->id]);
                     }
 
                     if (password_verify($request->password, $usuario->password)) {
                         Auth::login($usuario);
+                        $auditoriaController = new AuditoriaController();
+                        $auditoriaController->registrarEvento($usuario->usuario, 'Inicio de sesion', 'usuarios', '-', '-');
                         flash('Bienvenido ' . $usuario->nombre, 'success');
                         return redirect()->route('dashboard');
                     } else {
@@ -86,6 +94,8 @@ class AuthController extends Controller
         try {
             if (Auth::check()) {
                 Auth::logout();
+                $auditoriaController = new AuditoriaController();
+                $auditoriaController->registrarEvento('Sistema', 'Cierre de sesion', 'usuarios', '-', '-');
                 flash('Sesion cerrada', 'success');
                 return redirect()->route('login');
             } else {
@@ -101,6 +111,8 @@ class AuthController extends Controller
 
     public function password()
     {
+        $auditoriaController = new AuditoriaController();
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Solicitud de cambio de contraseña', 'usuarios', '-', '-');
         return view('Auth.restorePassword');
     }
 
@@ -117,6 +129,8 @@ class AuthController extends Controller
 
 
         $usuario->save();
+        $auditoriaController = new AuditoriaController();
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Cambio de contraseña', 'usuarios', '-', '-');
 
         Auth::logout();
 

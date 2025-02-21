@@ -1,6 +1,6 @@
 @extends('layouts.Navigation')
 
-@section('title', 'Reporte de productos')
+@section('title', 'Reporte de movimientos de Kardex')
 
 @section('content')
     <div id="app">

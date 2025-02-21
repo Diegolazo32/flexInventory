@@ -596,6 +596,8 @@
                 let regex = /^[a-zA-Z0-9]{3,}$/;
 
                 if (!regex.test(this.item.nombre)) {
+
+                    document.getElementById('nombre').setAttribute('class', 'form-control is-invalid');
                     this.errors.nombre =
                         'La caja debe tener al menos 3 caracteres y no contener espacios o caracteres especiales';
                 }
@@ -613,6 +615,7 @@
                 let regex = /^[a-zA-Z0-9]{3,}$/;
 
                 if (!regex.test(this.editItem.nombre)) {
+                    document.getElementById('nombreEdit').setAttribute('class', 'form-control is-invalid');
                     this.editErrors.nombre =
                         'La caja debe tener al menos 3 caracteres y no contener espacios o caracteres especiales';
                 }

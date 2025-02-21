@@ -1418,14 +1418,15 @@
             },
             validateProductoname() {
 
-                //this.errors = {};
 
                 //Al menos 5 caracteres y sin espacios o caracteres especiales, !@#$%^&*()_+
                 let regex = /^[ a-zA-Z0-9.]{3,}$/;
 
-                if (!regex.test(this.item.codigo)) {
-                    this.errors.codigo =
-                        'El producto debe tener al menos 3 caracteres y no contener caracteres especiales';
+                if (!regex.test(this.item.nombre)) {
+
+                    document.getElementById('nombre').setAttribute('class', 'form-control is-invalid');
+                    this.errors.nombre =
+                    'El producto debe tener al menos 3 caracteres y no contener caracteres especiales';
                 }
 
                 for (let i = 0; i < this.productos.length; i++) {
@@ -1441,8 +1442,9 @@
 
                 let regex = /^[ a-zA-Z0-9.]{3,}$/;
 
-                if (!regex.test(this.editItem.codigo)) {
-                    this.editErrors.codigo =
+                if (!regex.test(this.editItem.nombre)) {
+                    document.getElementById('nombreEdit').setAttribute('class', 'form-control is-invalid');
+                    this.editErrors.nombre =
                         'El producto debe tener al menos 3 caracteres y no contener espacios especiales';
                 }
 

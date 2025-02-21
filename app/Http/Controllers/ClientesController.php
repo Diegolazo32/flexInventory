@@ -9,17 +9,23 @@ use Illuminate\Support\Facades\Auth;
 class ClientesController extends Controller
 {
     private $rolPermisoController;
+    private $auditoriaController;
 
     public function index()
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(46);
+        $auditoriaController = new AuditoriaController();
+
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de acceso sin permiso', 'clientes', '-', '-');
             return redirect()->route('dashboard');
         }
 
+
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a vista de clientes', 'clientes', '-', '-');
         return view('clientes.index');
     }
 
@@ -63,8 +69,11 @@ class ClientesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(47);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de crear sin permiso', 'clientes', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -92,8 +101,12 @@ class ClientesController extends Controller
 
             $cliente->save();
 
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de cliente', 'clientes', $cliente->id, $cliente->nombre . ' ' . $cliente->apellido);
             return response()->json(['success' => 'Cliente guardado correctamente']);
         } catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al crear cliente', 'clientes', '-', '-');
             return response()->json(['error' => 'Error al guardar el cliente']);
         }
     }
@@ -102,8 +115,11 @@ class ClientesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(48);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de actualizar sin permiso', 'clientes', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -126,6 +142,7 @@ class ClientesController extends Controller
 
         try {
 
+            $oldCliente = clientes::find($request->id);
             $cliente = clientes::find($request->id);
             $cliente->nombre = $request->nombre;
             $cliente->apellido = $request->apellido;
@@ -137,8 +154,12 @@ class ClientesController extends Controller
 
             $cliente->save();
 
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Actualización de cliente', 'clientes', $oldCliente, $cliente);
+
             return response()->json(['success' => 'Cliente actualizado correctamente']);
         } catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al actualizar cliente', 'clientes', '-', '-');
             return response()->json(['error' => 'Error al actualizar el cliente']);
         }
     }
@@ -147,16 +168,24 @@ class ClientesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(49);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de eliminar sin permiso', 'clientes', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         try {
+            $oldCliente = clientes::find($id);
             $cliente = clientes::find($id);
             $cliente->delete();
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Eliminación de cliente', 'clientes', $oldCliente, '-');
             return response()->json(['success' => 'Cliente eliminado correctamente']);
         } catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al eliminar cliente', 'clientes', '-', '-');
             return response()->json(['error' => 'Error al eliminar el cliente']);
         }
     }
