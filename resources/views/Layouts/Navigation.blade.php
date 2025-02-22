@@ -28,7 +28,7 @@
 
 
     <link href="{{ asset('build/assets/app.css') }}" rel="stylesheet">
-    @vite('build/assets/app.css')
+
 
 </head>
 

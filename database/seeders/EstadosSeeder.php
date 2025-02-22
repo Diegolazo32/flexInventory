@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use Database\Factories\EstadosFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\estados;
 use Illuminate\Database\Seeder;
 
 class EstadosSeeder extends Seeder
@@ -11,36 +10,20 @@ class EstadosSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void {
-
+    public function run(): void
+    {
         $estados = [
-            [
-                'descripcion' => 'Activo',
-            ],
-            [
-                'descripcion' => 'Inactivo',
-            ],
-            [
-                'descripcion' => 'Abierto',
-            ],
-            [
-                'descripcion' => 'Cerrado',
-            ],
-            [
-                'descripcion' => 'Pendiente',
-            ],
-            [
-                'descripcion' => 'Pagado',
-            ],
-            [
-                'descripcion' => 'Anulado',
-            ],
-
-
+            ['descripcion' => 'Activo'],
+            ['descripcion' => 'Inactivo'],
+            ['descripcion' => 'Abierto'],
+            ['descripcion' => 'Cerrado'],
+            ['descripcion' => 'Pendiente'],
+            ['descripcion' => 'Pagado'],
+            ['descripcion' => 'Anulado'],
         ];
 
         foreach ($estados as $estado) {
-            EstadosFactory::new()->create($estado);
+            estados::create($estado);
         }
     }
 }
