@@ -57,7 +57,7 @@ class RolesController extends Controller
         }
 
         $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a pantalla de roles', 'Roles', '-', '-');
-        return view('roles.index');
+        return view('Roles.index');
     }
 
     public function store(Request $request)

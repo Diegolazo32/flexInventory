@@ -26,7 +26,7 @@ class ClientesController extends Controller
 
 
         $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de clientes', 'clientes', '-', '-');
-        return view('clientes.index');
+        return view('Clientes.index');
     }
 
     public function getAllClientes(Request $request)
