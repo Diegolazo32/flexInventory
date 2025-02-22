@@ -99,6 +99,10 @@ class EmpresaController extends Controller
                 $rutaLocal = 'logo/' . $nombreArchivo;
                 $logoAnterior = $empresa->logo;
 
+                if($logoAnterior == null){
+                    $logoAnterior = '-';
+                }
+
                 if ($logoAnterior != null) {
                     // Eliminar el archivo anterior
                     Storage::disk('local')->delete($logoAnterior);
