@@ -61,9 +61,9 @@
         <div class="row">
             <div class="card-body">
 
-                <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
-                    <i class="fas fa-spinner fa-spin"></i> Cargando...
-                </div>
+        <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+            <i class="fas fa-spinner fa-spin"></i> Cargando...
+        </div>
 
                 <div v-if="proveedores.error" class="alert alert-danger" role="alert">
                     <h3>@{{ proveedores.error }}</h3>
