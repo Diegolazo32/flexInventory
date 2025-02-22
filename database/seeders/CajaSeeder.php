@@ -34,7 +34,7 @@ class CajaSeeder extends Seeder
         ];
 
         foreach ($cajas as $caja) {
-            CajaFactory::new()->create($caja);
+            caja::factory()->create($caja);
         }
 
     }

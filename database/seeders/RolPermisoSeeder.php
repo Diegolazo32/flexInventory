@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\permisos;
+use App\Models\rolPermiso;
 use Database\Factories\RolPermisoFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,7 +23,7 @@ class RolPermisoSeeder extends Seeder
                 'rol' => 1,
                 'permiso' => $i,
             ];
-            RolPermisoFactory::new()->create($rolPermiso);
+            rolPermiso::create($rolPermiso);
         }
     }
 }

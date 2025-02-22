@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\unidades;
 use Database\Factories\UnidadesFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -108,7 +109,7 @@ class UnidadesSeeder extends Seeder
         ];
 
         foreach ($unidades as $unidad) {
-            UnidadesFactory::new()->create($unidad);
+            unidades::create($unidad);
         }
     }
 }

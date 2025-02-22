@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\tipoVenta;
 use Database\Factories\TipoVentaFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,7 +27,7 @@ class TipoVentaSeeder extends Seeder
         ];
 
         foreach ($tipoVentas as $tipoVenta) {
-            TipoVentaFactory::new()->create($tipoVenta);
+            tipoVenta::create($tipoVenta);
         }
     }
 }

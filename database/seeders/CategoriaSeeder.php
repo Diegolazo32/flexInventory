@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\categoria;
 use Database\Factories\CategoriaFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -36,12 +37,12 @@ class CategoriaSeeder extends Seeder
                 'descripcion' => 'Deportes',
                 'estado' => 1,
             ],
-            
+
 
         ];
 
         foreach ($categorias as $categoria) {
-            CategoriaFactory::new()->create($categoria);
+            categoria::create($categoria);
         }
     }
 }
