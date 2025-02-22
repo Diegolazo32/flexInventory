@@ -29,7 +29,7 @@ class ProductosController extends Controller
         }
 
         $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a pantalla de productos', 'Productos', '-', '-');
-        return view('productos.index');
+        return view('Productos.index');
     }
 
     public function getAllProductos(Request $request)

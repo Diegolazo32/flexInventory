@@ -58,7 +58,7 @@ class PermisosController extends Controller
         }
 
         $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a la pantalla de permisos', 'Permisos', '-', '-');
-        return view('permisos.index');
+        return view('Permisos.index');
     }
 
     public function store()
