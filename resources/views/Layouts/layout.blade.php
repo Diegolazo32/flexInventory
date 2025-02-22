@@ -34,8 +34,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @vite('build/assets/app.css')
-
 
 </head>
 @yield('content')
