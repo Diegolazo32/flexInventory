@@ -1,11 +1,23 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-XyC4FFB7.css",
+    "file": "assets/app-CBgtW0bI.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
+  "resources/images/logo_empresa.jpeg": {
+    "file": "assets/logo_empresa-eBYWtVo2.jpeg",
+    "src": "resources/images/logo_empresa.jpeg"
+  },
+  "resources/images/logo_empresa.jpg": {
+    "file": "assets/logo_empresa-D2CGu1qJ.jpg",
+    "src": "resources/images/logo_empresa.jpg"
+  },
+  "resources/images/logo_empresa.png": {
+    "file": "assets/logo_empresa-CdeaXZHO.png",
+    "src": "resources/images/logo_empresa.png"
+  },
   "resources/js/app.js": {
-    "file": "assets/app-CqflisoM.js",
+    "file": "assets/app-Xaw6OIO1.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
