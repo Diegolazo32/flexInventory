@@ -139,7 +139,7 @@ class EmpresaController extends Controller
             $empresa->valorIVA = $request->valorIVA;
             $empresa->save();
 
-            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de empresa', 'Empresa', $oldEmpresa, $empresa);
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de empresa', 'Empresa', '-', $empresa);
             return response()->json(['success' => 'Empresa guardada correctamente, aplicando cambios, espere...']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
