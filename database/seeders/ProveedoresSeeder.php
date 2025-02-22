@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\proveedores;
 use Database\Factories\ProveedoresFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -25,21 +26,10 @@ class ProveedoresSeeder extends Seeder
                 'emailRepresentante' => 'representante@representante.com',
                 'estado' => 1,
             ],
-            [
-                'nombre' => 'Proveedor 2',
-                'direccion' => 'Dirección del proveedor 2',
-                'telefonoPrincipal' => '123456789',
-                'emailPrincipal' => 'proveedor2@correo.com',
-                'NIT' => '123456-7',
-                'representante' => 'Representante 2',
-                'telefonoRepresentante' => '987654321',
-                'emailRepresentante' => 'repre2@repre.com',
-                'estado' => 1,
-            ],
         ];
 
         foreach ($proveedores as $proveedor) {
-            ProveedoresFactory::new()->create($proveedor);
+            proveedores::create($proveedor);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\roles;
 use Database\Factories\RolesFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -29,7 +30,7 @@ class RolesSeeder extends Seeder
         ];
 
         foreach ($roles as $rol) {
-            RolesFactory::new()->create($rol);
+            roles::create($rol);
         }
     }
 }

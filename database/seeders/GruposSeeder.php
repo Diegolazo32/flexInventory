@@ -93,7 +93,7 @@ class GruposSeeder extends Seeder
             ];
 
         foreach ($grupos as $grupo) {
-            GruposFactory::new()->create($grupo);
+            Grupos::create($grupo);
         }
     }
 }

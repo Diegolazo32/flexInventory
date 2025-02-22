@@ -57,7 +57,7 @@ class UsersSeeder extends Seeder
         ];
 
         foreach ($usuario as $user) {
-            UserFactory::new()->create($user);
+            User::create($user);
         }
     }
 }

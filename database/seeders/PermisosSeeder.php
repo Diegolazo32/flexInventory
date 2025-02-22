@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\permisos;
 use Database\Factories\PermisosFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -508,7 +509,8 @@ class PermisosSeeder extends Seeder
         ];
 
         foreach ($permisos as $permiso) {
-            PermisosFactory::new()->create($permiso);
+            permisos::create($permiso);
+
         }
     }
 }
