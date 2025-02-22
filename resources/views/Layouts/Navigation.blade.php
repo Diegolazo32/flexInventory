@@ -28,6 +28,8 @@
 
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @vite('resources/css/app.css')
+
 
 
 </head>
