@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('cortes_z', function (Blueprint $table) {
             $table->id();
-            $table->float('ventas');
-            $table->float('devoluciones');
-            $table->float('IVA');
-            $table->float('salidas');
-            $table->float('entradas');
-            $table->float('total');
+            $table->decimal('ventas');
+            $table->decimal('devoluciones');
+            $table->decimal('IVA');
+            $table->decimal('salidas');
+            $table->decimal('entradas');
+            $table->decimal('total');
             $table->timestamps();
         });
     }

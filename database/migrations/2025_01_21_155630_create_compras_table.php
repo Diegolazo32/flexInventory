@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('producto')->references('id')->on('productos');
             $table->integer('cantidad');
             $table->foreignId('proveedor')->references('id')->on('proveedores');
-            $table->float('precioCompra');
-            $table->float('totalCompra');
+            $table->decimal('precioCompra');
+            $table->decimal('totalCompra');
             $table->foreignId('inventario')->references('id')->on('inventarios');
             $table->foreignId('compra')->references('id')->on('compras');
             $table->timestamps();

@@ -56,9 +56,9 @@
         <div class="row">
             <div class="card-body">
 
-                <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
-                    <i class="fas fa-spinner fa-spin"></i> Cargando...
-                </div>
+        <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+            <i class="fas fa-spinner fa-spin"></i> Cargando...
+        </div>
 
                 <div v-if="cajas.error" class="alert alert-danger" role="alert">
                     <h3>@{{ cajas.error }}</h3>
@@ -316,7 +316,7 @@
             loading: true,
             searchError: '',
             page: 1,
-            per_page: 5,
+            per_page: 10,
             total: 0,
             totalPages: 0,
             nextPageUrl: '',
@@ -596,6 +596,8 @@
                 let regex = /^[a-zA-Z0-9]{3,}$/;
 
                 if (!regex.test(this.item.nombre)) {
+
+                    document.getElementById('nombre').setAttribute('class', 'form-control is-invalid');
                     this.errors.nombre =
                         'La caja debe tener al menos 3 caracteres y no contener espacios o caracteres especiales';
                 }
@@ -613,6 +615,7 @@
                 let regex = /^[a-zA-Z0-9]{3,}$/;
 
                 if (!regex.test(this.editItem.nombre)) {
+                    document.getElementById('nombreEdit').setAttribute('class', 'form-control is-invalid');
                     this.editErrors.nombre =
                         'La caja debe tener al menos 3 caracteres y no contener espacios o caracteres especiales';
                 }

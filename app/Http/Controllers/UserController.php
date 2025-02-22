@@ -98,8 +98,11 @@ class UserController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(5);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso a pantalla de usuarios sin permiso', 'Usuarios', '-', '-');
+
             flash('No tiene permisos para acceder a esta sección', 'error');
             return redirect()->route('dashboard');
         }
@@ -128,6 +131,8 @@ class UserController extends Controller
             return redirect()->route('users');
         }
 
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a la pantalla de usuarios', 'Usuarios', '-', '-');
+
         return view('Users.index')->with([
             'users' => $users
         ]);
@@ -138,8 +143,11 @@ class UserController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(6);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intenno de crear usuario sin permiss', 'Usuarios', '-', '-');
+
             return response()->json(['error' => 'No tienes permisos para crear un usuario']);
         }
 
@@ -164,6 +172,8 @@ class UserController extends Controller
         $usuario = User::where('usuario', $request->usuario)->first();
 
         if ($usuario) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al crear usuario - Usuario repetido', 'Usuarios', '-', '-');
+
             return response()->json(['error' => 'El usuario ya existe']);
         }
 
@@ -187,8 +197,12 @@ class UserController extends Controller
 
             $user->save();
 
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Crear usuario', 'Usuarios', '-', $usuario);
+
             return response()->json(['success' => 'Usuario guardado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al crear usuario', 'Usuarios', '-', '-');
+
             return response()->json(['error' => 'Error al guardar el usuario']);
         }
     }
@@ -198,13 +212,17 @@ class UserController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(7);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizar usuario sin permiso', 'Usuarios', '-', '-');
+
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
         //dd($request->all());
 
+        $oldUser = User::find($request->id);
         $user = User::find($request->id);
 
         $request->validate(
@@ -243,8 +261,11 @@ class UserController extends Controller
 
             $user->save();
 
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Actualizacion de usuario', 'Usuarios', $oldUser, $user);
+
             return response()->json(['success' => 'Usuario actualizado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al actualizar usuario', 'Usuarios', '-', '-');
             return response()->json(['error' => 'Error al actualizar el usuario']);
         }
     }
@@ -254,8 +275,11 @@ class UserController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(8);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar usuario sin permiso', 'Usuarios', '-', '-');
+
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
@@ -264,6 +288,7 @@ class UserController extends Controller
         //Verificar que el usuario no sea el mismo que esta autenticado
         if ($user->id == auth()->user()->id) {
             //flash('No puedes eliminar tu propio usuario', 'error');
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar su mismo usuario', 'Usuarios', '-', '-');
             return response()->json(['error' => 'No puedes eliminar tu propio usuario']);
         }
 
@@ -273,6 +298,7 @@ class UserController extends Controller
 
             if ($admins == 2) {
                 //flash('Debe de haber al menos dos administradores', 'error');
+                $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar administrador sin dejar al menos dos en sistema', 'Usuarios', '-', '-');
                 return response()->json(['error' => 'Debe de haber al menos dos administradores']);
             }
         }
@@ -280,9 +306,13 @@ class UserController extends Controller
         try {
             $user->delete();
             //flash('Usuario eliminado correctamente', 'success');
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Usuario eliminado', 'Usuarios', $user, '-');
+
             return response()->json(['success' => 'Usuario eliminado correctamente']);
         } catch (\Exception $e) {
             //flash('Error al eliminar el usuario', 'error');
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al eliminar usuario', 'Usuarios', $user, '-');
+
             return response()->json(['error' => 'Error al eliminar el usuario']);
         }
     }
@@ -292,8 +322,11 @@ class UserController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(10);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de reestablecer password de usuario sin permiso', 'Usuarios', '-', '-');
+
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
@@ -302,10 +335,14 @@ class UserController extends Controller
         try {
             $user->password = Hash::make("0000");
             $user->save();
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Reestablecer passsword de usuario', 'Usuarios', '-', $user);
+
             //flash('Contraseña restaurada correctamente', 'success');
             return response()->json(['success' => 'Contraseña restaurada correctamente']);
         } catch (\Exception $e) {
             //flash('Error al restaurar la contraseña', 'error');
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error  al reestablecer password', 'Usuarios', '-', $user);
+
             return response()->json(['error' => 'Error al restaurar la contraseña']);
         }
     }

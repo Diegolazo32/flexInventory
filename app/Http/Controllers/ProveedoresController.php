@@ -16,12 +16,16 @@ class ProveedoresController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(51);
+        $auditoria = new AuditoriaController();
+
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso a pantalla de proveedores sin permiso', 'Proveedores', '-', '-');
             flash('No tiene permisos para acceder a esta sección', 'error');
             return redirect()->route('dashboard');
         }
 
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a la pantalla de proveedores', 'Proveedores', '-', '-');
         return view('proveedores.index');
     }
 
@@ -67,8 +71,10 @@ class ProveedoresController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(52);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de crear proveedor sin permiso', 'Proveedores', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -95,8 +101,13 @@ class ProveedoresController extends Controller
             $proveedor->emailRepresentante = $request->emailRepresentante;
             $proveedor->estado = 1;
             $proveedor->save();
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Creacion de proveedor', 'Proveedores', '-', $proveedor);
+
             return response()->json(['success' => 'Proveedor guardado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error en la creacion de proveedor', 'Proveedores', '-', '-');
+
             return response()->json(['error' => 'Error al guardar el proveedor']);
         }
     }
@@ -105,8 +116,10 @@ class ProveedoresController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(53);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizar proveedor sin permiso', 'Proveedores', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -124,6 +137,7 @@ class ProveedoresController extends Controller
         ]);
 
         try {
+            $oldProveedor = proveedores::find($request->id);
             $proveedor = proveedores::find($request->id);
             $proveedor->nombre = $request->nombre;
             $proveedor->direccion = $request->direccion;
@@ -135,8 +149,11 @@ class ProveedoresController extends Controller
             $proveedor->emailRepresentante = $request->emailRepresentante;
             $proveedor->estado = $request->estado;
             $proveedor->save();
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Actualizacion de proveedor', 'Proveedores', $oldProveedor, $proveedor);
             return response()->json(['success' => 'Proveedor actualizado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al actualizar proveedor', 'Proveedores', '-', '-');
             return response()->json(['error' => 'Error al actualizar el proveedor']);
         }
     }
@@ -145,16 +162,21 @@ class ProveedoresController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(54);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar sin permiso', 'Proveedores', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         try {
             $proveedor = proveedores::find($request->id);
             $proveedor->delete();
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Eliminacion de proveedor', 'Proveedores', $proveedor, '-');
             return response()->json(['success' => 'Proveedor eliminado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al eliminar proveedor', 'Proveedores', '-', '-');
             return response()->json(['error' => 'Error al eliminar el proveedor']);
         }
     }

@@ -20,12 +20,15 @@ class ProductosController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(56);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso sin permiso a pantalla de productos', 'Productos', '-', '-');
             return redirect()->route('dashboard');
         }
 
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a pantalla de productos', 'Productos', '-', '-');
         return view('productos.index');
     }
 
@@ -33,6 +36,7 @@ class ProductosController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(59);
+
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -84,8 +88,11 @@ class ProductosController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(57);
+        $auditoria = new AuditoriaController();
+
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de crear producto sin permiso', 'Productos', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -93,6 +100,8 @@ class ProductosController extends Controller
         $activo = $this->inventarioActivo->checkInventarioStatus();
 
         if (!$activo) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de crear producto sin inventario activo', 'Productos', '-', '-');
+
             return response()->json(['error' => 'No hay un inventario activo']);
         }
 
@@ -169,6 +178,8 @@ class ProductosController extends Controller
             }
 
             $productoUpdate->save();
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Creacion de producto', 'Productos', '-', $productoUpdate);
+
 
             return response()->json(['success' => 'Producto guardado correctamente']);
         } catch (\Exception $e) {
@@ -180,8 +191,11 @@ class ProductosController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(58);
+        $auditoria = new AuditoriaController();
+
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizacion de producto sin permiso', 'Productos', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -189,6 +203,7 @@ class ProductosController extends Controller
         $activo = $this->inventarioActivo->checkInventarioStatus();
 
         if (!$activo) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizacion de producto sin inventario activo', 'Productos', '-', '-');
             return response()->json(['error' => 'No hay un inventario activo']);
         }
 
@@ -221,6 +236,7 @@ class ProductosController extends Controller
         );
 
         try {
+            $oldProducto =  productos::find($request->id);
             $producto = productos::find($request->id);
             $producto->codigo = $request->codigo;
             $producto->nombre = $request->nombre;
@@ -239,22 +255,12 @@ class ProductosController extends Controller
             $producto->unidad = $request->unidad;
             $producto->estado = $request->estado;
             $producto->save();
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Actualizacion de producto', 'Productos', $oldProducto, $producto);
             return response()->json(['success' => 'Producto actualizado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al actualizar producto', 'Productos', $oldProducto, $producto);
             return response()->json(['error' => 'Error al actualizar el producto']);
         }
-    }
-
-    public function lotes(Request $request)
-    {
-        $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(63);
-
-        if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
-        }
-
-        $lotes = lotes::all();
-        return response()->json($lotes);
     }
 }

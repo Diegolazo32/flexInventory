@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\lotes;
 use App\Models\productos;
+use Auth;
 use Illuminate\Http\Request;
 
 class LotesController extends Controller
@@ -15,17 +16,23 @@ class LotesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(60);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso a pantalla de lotes sin permiso', 'Lotes', '-', '-');
             return redirect()->route('dashboard');
         }
 
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Ingreso a la pantalla de lotes', 'Lotes', '-', '-');
         return view('lotes.index');
     }
 
     public function storeWithProduct($producto, $request, $inventario)
     {
+        $auditoria = new AuditoriaController();
+
+
         //Crer lote
         $lote = new lotes();
         $lote->codigo = 'L' . $producto->codigo . $producto->id . '-' . date('Y-m-d') . date('H:i:s');
@@ -36,6 +43,10 @@ class LotesController extends Controller
         $lote->estado = 1;
         $lote->inventario = $inventario->id;
         $lote->save();
+
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Creacion de nuevo lote', 'Lotes', '-', $lote);
+
+
     }
 
     public function getAllLotes()
@@ -43,6 +54,7 @@ class LotesController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(63);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
@@ -56,7 +68,7 @@ class LotesController extends Controller
         }
 
         //All lotes sort by producto
-        $lotes = lotes::all()->sortBy('producto');
+        $lotes = lotes::orderBy('producto', 'asc')->paginate(5);
         return response()->json($lotes);
     }
 
@@ -91,8 +103,10 @@ class LotesController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(62);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizar lotes sin permiso', 'Lotes', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -124,8 +138,11 @@ class LotesController extends Controller
                 $producto->save();
             }
 
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Actualizacion de lote', 'Lotes', $lotes, '-');
             return response()->json(['success' => 'Lotes actualizados correctamente']);
         } catch (\Exception $e) {
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al actualizar lotes', '', '-', '-');
             return response()->json(['error' => 'Error al actualizar los lotes']);
         }
     }

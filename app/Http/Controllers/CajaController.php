@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\caja;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CajaController extends Controller
 {
     private $rolPermisoController;
+    private $auditoriaController;
 
     public function getAllCajas(Request $request)
     {
@@ -23,7 +25,6 @@ class CajaController extends Controller
             $cajas = caja::where('nombre', 'like', '%' . $request->search . '%')
                 ->orWhere('ubicacion', 'like', '%' . $request->search . '%')
                 ->paginate($request->per_page);
-
             return response()->json($cajas);
         }
 
@@ -46,12 +47,16 @@ class CajaController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(32);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de acceso sin permiso', 'cajas', '-', '-');
             return redirect()->route('dashboard');
         }
 
+
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de cajas', 'cajas', '-', '-');
         return view('cajas.index');
     }
 
@@ -59,8 +64,10 @@ class CajaController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(33);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de crear sin permiso', 'cajas', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -76,8 +83,12 @@ class CajaController extends Controller
             $caja->estado = 1;
             $caja->save();
 
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creacion de caja', 'cajas', '-', $caja);
+
             return response()->json(['success' => 'Caja creada correctamente']);
         } catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al crear caja', 'cajas', '-', '-');
             return response()->json($e->getMessage());
         }
     }
@@ -86,8 +97,10 @@ class CajaController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(34);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de actualizar sin permiso', 'cajas', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -98,14 +111,19 @@ class CajaController extends Controller
         ]);
 
         try {
+
+            $lastCaja = caja::find($request->id);
             $caja = caja::find($request->id);
             $caja->nombre = $request->nombre;
             $caja->ubicacion = $request->ubicacion;
             $caja->estado = $request->estado;
             $caja->update();
 
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Actualizacion de caja', 'cajas', $lastCaja, $caja);
             return response()->json(['success' => 'Caja actualizada correctamente']);
         } catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al actualizar caja', 'cajas', '-', '-');
             return response()->json($e->getMessage());
         }
     }
@@ -114,17 +132,23 @@ class CajaController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(35);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de eliminar sin permiso', 'cajas', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         try {
             $caja = caja::find($id);
+            $deleteCaja = $caja;
             $caja->delete();
 
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Eliminacion de caja', 'cajas', $deleteCaja, '-');
             return response()->json(['success' => 'Caja eliminada correctamente']);
         } catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al eliminar caja', 'cajas', '-', '-');
             return response()->json($e->getMessage());
         }
     }

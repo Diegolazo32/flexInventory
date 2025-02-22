@@ -6,6 +6,7 @@ use App\Models\inventario;
 use App\Models\kardex;
 use App\Models\lotes;
 use App\Models\productos;
+use Auth;
 use Illuminate\Http\Request;
 
 class KardexController extends Controller
@@ -18,12 +19,15 @@ class KardexController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(70);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso a la pantalla de kardex sin permiso', 'Kardex', '-', '-');
             flash('No tiene permisos para acceder a esta sección', 'error');
             return redirect()->route('dashboard');
         }
 
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a la pantalla de kardex', 'Kardex', '-', '-');
         return view('kardex.index');
     }
 
@@ -54,8 +58,10 @@ class KardexController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(71);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de guardar movimientos de kardex sin permiso', 'Kardex', '-', '-');
             return response()->json(['error' => 'No tiene permisos para realizar esta acción'], 403);
         }
 
@@ -63,11 +69,11 @@ class KardexController extends Controller
         $activo = $this->inventarioActivo->checkInventarioStatus();
 
         if (!$activo) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de guardar movimientos de kardex sin inventario activo', 'Kardex', '-', '-');
             return response()->json(['error' => 'No hay un inventario activo']);
         }
 
         $movimientos = $request->all();
-
         $inventario = inventario::where('estado', 3)->first();
 
         try {
@@ -87,6 +93,7 @@ class KardexController extends Controller
 
                 $kardex->save();
 
+
                 //Actualizar stock
                 $producto = productos::find($movimiento['id']);
 
@@ -104,6 +111,8 @@ class KardexController extends Controller
 
                     //Actualizar el stock del producto sumando todos los lotes que tengan stock
                     $producto->stock = lotes::where('producto', $producto->id)->where('estado', 1)->sum('cantidad');
+                    $auditoria->registrarEvento(Auth::user()->nombre, 'Registro de movimiento de entrada de kardex - Ingreso', 'Kardex', '-', $kardex);
+
                 } else {
                     //Descontarle al lote mas antiguo hasta agotarlo, y luego seguir con el siguiente lote
                     $cantidad = $movimiento['cantidad'];
@@ -128,6 +137,8 @@ class KardexController extends Controller
 
                     //Actualizar el stock del producto sumando todos los lotes que tengan stock
                     $producto->stock = lotes::where('producto', $producto->id)->where('estado', 1)->sum('cantidad');
+
+                    $auditoria->registrarEvento(Auth::user()->nombre, 'Registro de movimiento de salida de kardex - Salida', 'Kardex', '-', $kardex);
                 }
 
                 //Si el stock es menor al stock minimo, enviar notificación
@@ -146,18 +157,9 @@ class KardexController extends Controller
 
             return response()->json(['success' => 'Movimientos guardados correctamente'], 200);
         } catch (\Exception $e) {
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al registrar los movimientos del kardex', '', '-', '-');
             return response()->json(['error' => 'Error al guardar los movimientos'], 500);
         }
-    }
-
-    public function storeWithProduct($producto, $request, $inventario)
-    {
-        $kardex = new Kardex();
-        $kardex->producto = $producto->id;
-        $kardex->cantidad = $request->stock;
-        $kardex->accion = 1;
-        $kardex->inventario = $inventario->id;
-        $kardex->observacion = 'Inventario inicial';
-        $kardex->save();
     }
 }

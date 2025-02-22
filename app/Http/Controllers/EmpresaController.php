@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
@@ -15,13 +16,24 @@ class EmpresaController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(2);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de acceso a la pantalla de empresa', 'Empresa', '-', '-');
             return redirect()->route('dashboard');
         }
 
-        return view('empresa.index');
+        $empresa = empresa::first();
+
+        if ($empresa == null) {
+            $empresa = new empresa();
+            $empresa->nombre = 'Flex Inventory';
+            $empresa->logo = 'logo/empresa_logo.jpg';
+        }
+
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Ingreso a la pantalla de empresa', 'Empresa', '-', '-');
+        return view('empresa.index', compact('empresa'));
     }
 
     public function getAllEmpresa()
@@ -43,8 +55,10 @@ class EmpresaController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(3);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de modificar empresa sin permiso', 'Empresa', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -62,13 +76,17 @@ class EmpresaController extends Controller
             'representante' => 'required',
             'dui' => 'required',
             'logo' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            'cuentaContable' => 'required',
+            'valorIVA' => 'required'
         ]);
 
         try {
 
             if ($request->firstTime) {
+                $oldEmpresa = '-';
                 $empresa = new empresa();
             } else {
+                $oldEmpresa = empresa::find($request->id);
                 $empresa = empresa::find($request->id);
             }
 
@@ -79,10 +97,12 @@ class EmpresaController extends Controller
                 $extension = $documento->getClientOriginalExtension(); // Obtener la extensión del archivo
                 $nombreArchivo = 'logo_empresa' . '.' . $extension; // Nombre del archivo
                 $rutaLocal = 'logo/' . $nombreArchivo;
+                $logoAnterior = $empresa->logo;
 
-                //Si el archivo ya existe, eliminarlo
-                if (Storage::disk('local')->exists($rutaLocal)) {
-                    Storage::disk('local')->delete($rutaLocal);
+                if ($logoAnterior != null) {
+                    // Eliminar el archivo anterior
+                    Storage::disk('local')->delete($logoAnterior);
+                    Storage::disk('public')->delete($logoAnterior);
                 }
 
                 // Guardar el archivo en el almacenamiento local
@@ -91,8 +111,15 @@ class EmpresaController extends Controller
                 // Copiar el archivo al almacenamiento público
                 $rutaPublica = 'logo/' . $nombreArchivo;
                 Storage::disk('public')->put($rutaPublica, file_get_contents(storage_path('app/' . $rutaLocal)));
+
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de logo', 'Empresa', $logoAnterior, $rutaPublica);
+
+
             } else {
-                $rutaLocal = 'logo/logo_empresa.jpg';
+
+                //Buscar un logo existente
+                $empresa = empresa::find($request->id);
+                $rutaLocal = $empresa->logo;
             }
 
             $empresa->nombre = $request->nombre;
@@ -107,11 +134,13 @@ class EmpresaController extends Controller
             $empresa->email_representante = $request->emailRepresentante;
             $empresa->representante = $request->representante;
             $empresa->dui = $request->dui;
-            $empresa->logo = $rutaLocal;
-
+            $empresa->logo = $rutaPublica ?? $empresa->logo;
+            $empresa->cuentaContable = $request->cuentaContable;
+            $empresa->valorIVA = $request->valorIVA;
             $empresa->save();
 
-            return response()->json(['success' => 'Empresa guardada correctamente']);
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de empresa', 'Empresa', $oldEmpresa, $empresa);
+            return response()->json(['success' => 'Empresa guardada correctamente, aplicando cambios, espere...']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }

@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        /*Schema::create('venta_tickets', function (Blueprint $table) {
+        Schema::create('auditorias', function (Blueprint $table) {
             $table->id();
-            $table->decimal('numero');
-            $table->foreignId('venta')->references('id')->on('ventas');
-            $table->foreignId('resolucion')->references('id')->on('resolucion_tickets');
-            $table->foreignId('estado')->references('id')->on('estados');
+            $table->string('usuario');
+            $table->string('evento');
+            $table->string('tabla');
+            $table->text('registroAnterior');
+            $table->text('registroNuevo');
             $table->timestamps();
-        });*/
+        });
     }
 
     /**
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('venta_tickets');
+        Schema::dropIfExists('auditorias');
     }
 };

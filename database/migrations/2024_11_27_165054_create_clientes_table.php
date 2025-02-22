@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('DUI');
             //Descuento propio del cliente
-            $table->float('descuento');
+            $table->decimal('descuento');
             $table->foreignId('estado')->references('id')->on('estados');
             $table->timestamps();
         });

@@ -10,6 +10,7 @@ use App\Models\lotes;
 use App\Models\productos;
 use App\Models\proveedores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ComprasController extends Controller
 {
@@ -21,12 +22,16 @@ class ComprasController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(64);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de acceso sin permiso', 'compras', '-', '-');
             return redirect()->route('dashboard');
         }
 
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de compras', 'compras', '-', '-');
         return view('compras.index');
     }
 
@@ -76,14 +81,18 @@ class ComprasController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(69);
+        $auditoriaController = new AuditoriaController();
+
 
         if (!$permiso) {
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de ver detalles de compra sin permiso', 'compras', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         $compra = compras::find($id);
 
         if (!$compra) {
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de ver detalles de compra inexistente', 'compras', '-', '-');
             return response()->json(['error' => 'Compra no encontrada']);
         }
 
@@ -106,6 +115,7 @@ class ComprasController extends Controller
             ];
         }
 
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a detalles de compra', 'compras', '-', $compra);
         return response()->json(['compra' => $compra, 'productos' => $productos]);
     }
 
@@ -114,8 +124,12 @@ class ComprasController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(65);
+        $auditoriaController = new AuditoriaController();
+
 
         if (!$permiso) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de crear sin permiso', 'compras', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -139,6 +153,8 @@ class ComprasController extends Controller
             $activo = inventario::where('estado', 3)->first();
 
             if (!$activo) {
+
+                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de crear compra sin inventario activo', 'compras', '-', '-');
                 return response()->json(['error' => 'No hay un inventario activo']);
             }
 
@@ -149,6 +165,8 @@ class ComprasController extends Controller
             $compra->fecha = $request->fecha;
             $compra->total = $request->total;
             $compra->save();
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de compra', 'compras', '-', $compra);
 
             $productos = $request->productos;
 
@@ -164,6 +182,8 @@ class ComprasController extends Controller
                 $compraProducto->totalCompra = $producto['cantidad'] * $producto['precio'];
                 $compraProducto->inventario = $activo->id;
                 $compraProducto->save();
+
+                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de detalle de compra', 'compras', '-', $compraProducto);
 
                 //Obetener detalles del producto
                 $product = productos::find($producto['id']);
@@ -183,6 +203,8 @@ class ComprasController extends Controller
                 $lote->inventario = $activo->id;
                 $lote->save();
 
+                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de lote', 'lotes', '-', $lote);
+
                 //Actualizar stock
                 //Obtener todos los lotes del producto
                 $lotes = lotes::where('producto', $product->id)->get();
@@ -200,6 +222,8 @@ class ComprasController extends Controller
                 }
 
                 $product->save();
+
+                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Actualización de producto', 'productos', '-', $product);
 
                 //Actualizar fecha de vencimiento
                 $lotes = lotes::where('producto', $product->id)->get();
@@ -226,10 +250,14 @@ class ComprasController extends Controller
                 $kardex->inventario = $activo->id;
                 $kardex->observacion = 'Inventario inicial';
                 $kardex->save();
+
+                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de movimiento de kardex', 'kardex', '-', $kardex);
             }
 
             return response()->json(['success' => 'Compra realizada con éxito']);
         } catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al crear compra', 'compras', '-', '-');
             return response()->json(['error' => $e->getMessage()]);
         }
     }
