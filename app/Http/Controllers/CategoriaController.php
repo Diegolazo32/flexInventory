@@ -55,7 +55,7 @@ class CategoriaController extends Controller
             return redirect()->route('dashboard');
         }
 
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a vista de categorias', 'categorias', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de categorias', 'categorias', '-', '-');
         return view('categorias.index');
     }
 

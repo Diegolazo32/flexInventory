@@ -31,7 +31,7 @@ class ComprasController extends Controller
             return redirect()->route('dashboard');
         }
 
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a vista de compras', 'compras', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de compras', 'compras', '-', '-');
         return view('compras.index');
     }
 
@@ -85,12 +85,14 @@ class ComprasController extends Controller
 
 
         if (!$permiso) {
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de ver detalles de compra sin permiso', 'compras', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         $compra = compras::find($id);
 
         if (!$compra) {
+            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de ver detalles de compra inexistente', 'compras', '-', '-');
             return response()->json(['error' => 'Compra no encontrada']);
         }
 
@@ -113,6 +115,7 @@ class ComprasController extends Controller
             ];
         }
 
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a detalles de compra', 'compras', '-', $compra);
         return response()->json(['compra' => $compra, 'productos' => $productos]);
     }
 

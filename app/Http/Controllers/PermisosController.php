@@ -49,30 +49,31 @@ class PermisosController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(17);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso a pantalla de permisos sin permiso', 'Permisos', '-', '-');
             flash('No tiene permisos para acceder a esta sección', 'error');
             return redirect()->route('dashboard');
         }
 
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a la pantalla de permisos', 'Permisos', '-', '-');
         return view('permisos.index');
     }
 
-    public function store(Request $request)
+    public function store()
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(18);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de crear permiso sin permiso', 'Permisos', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
-        $request->validate([
-            'descripcion' => 'required|string|max:255',
-        ]);
-
         try {
-            $permiso = new permisos();
+            /*$permiso = new permisos();
             $permiso->nombre = $request->nombre;
             //$permiso->ruta = $request->ruta;
             $permiso->descripcion = $request->descripcion;
@@ -80,28 +81,28 @@ class PermisosController extends Controller
             //$permiso->endpoint = $request->endpoint;
             //$permiso->metodo = $request->metodo;
 
-            $permiso->save();
-            return response()->json(['success' => 'Permiso creado correctamente']);
+            //$permiso->save();
+            return response()->json(['success' => 'Permiso creado correctamente']);*/
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de crear permiso fallido', 'Permisos', '-', '-');
             return response()->json(['error' => 'Error al crear el permiso']);
         }
     }
 
-    public function update(Request $request)
+    public function update()
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(19);
+        $auditoria = new AuditoriaController();
+
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizar permiso fallido', 'Permisos', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
-        $request->validate([
-            'descripcion' => 'required|string|max:255',
-        ]);
-
         try {
-            $permiso = permisos::find($request->id);
+            /*$permiso = permisos::find($request->id);
             $permiso->nombre = $request->nombre;
             //$permiso->ruta = $request->ruta;
             $permiso->descripcion = $request->descripcion;
@@ -109,26 +110,31 @@ class PermisosController extends Controller
             //$permiso->endpoint = $request->endpoint;
             //$permiso->metodo = $request->metodo;
             $permiso->save();
-            return response()->json(['success' => 'Permiso actualizado correctamente']);
+            return response()->json(['success' => 'Permiso actualizado correctamente']);*/
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizar permiso fallido', 'Permisos', '-', '-');
             return response()->json(['error' => 'Error al actualizar el permiso']);
         }
     }
 
-    public function delete($id)
+    public function delete()
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(20);
+        $auditoria = new AuditoriaController();
+
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar permiso fallido', 'Permisos', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         try {
-            $permiso = permisos::find($id);
-            $permiso->delete();
-            return response()->json(['success' => 'Permiso eliminado correctamente']);
+            /* $permiso = permisos::find($id);
+             $permiso->delete();
+             return response()->json(['success' => 'Permiso eliminado correctamente']);*/
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar permiso fallido', 'Permisos', '-', '-');
             return response()->json(['error' => 'Error al eliminar el permiso']);
         }
     }

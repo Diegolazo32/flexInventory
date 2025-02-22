@@ -15,11 +15,15 @@ class DashboardController extends Controller
     public function index()
     {
 
+        $auditoriaController = new AuditoriaController();
+
         $clientes = clientes::all();
         $productos = productos::all();
         $categorias = categoria::all();
         $proveedores = proveedores::all();
 
+
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Ingreso al dashboard', 'Dashboard', '-', '-');
         return view('Dashboard.dashboard')->with([
             'clientes' => $clientes,
             'productos' => $productos,

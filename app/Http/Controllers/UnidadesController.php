@@ -15,12 +15,15 @@ class UnidadesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(22);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso a pantalla de unidades sin permiso', 'Unidades', '-', '-');
             flash('No tiene permisos para acceder a esta sección', 'error');
             return redirect()->route('dashboard');
         }
 
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a pantalla de unidades', 'Unidades', '-', '-');
         return view('unidades.index');
     }
 
@@ -62,8 +65,10 @@ class UnidadesController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(23);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de crear unidad sin permiso', 'Unidades', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -88,9 +93,10 @@ class UnidadesController extends Controller
             $unidades->abreviatura = $request->abreviatura;
             $unidades->estado = 1;
             $unidades->save();
-
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Creacion de unidad', 'Unidades', '-', $unidades);
             return response()->json(['success' => 'Unidad creada correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al crear unidad', 'Unidades', '-', '-');
             return response()->json(['error' => 'Error al crear la unidad']);
         }
     }
@@ -100,8 +106,10 @@ class UnidadesController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(24);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizar unidad sin permiso', 'Unidades', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -117,14 +125,17 @@ class UnidadesController extends Controller
         );
 
         try {
+            $oldUnidad = unidades::find($request->id);
             $unidades = unidades::find($request->id);
             $unidades->descripcion = $request->descripcion;
             $unidades->abreviatura = $request->abreviatura;
             $unidades->estado = $request->estado;
             $unidades->save();
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Actualizacion de unidad', 'Unidades', $oldUnidad, $unidades);
 
             return response()->json(['success' => 'Unidad actualizada correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al actualizar unidad', 'Unidades', '-', '-');
             return response()->json(['error' => 'Error al actualizar la unidad']);
         }
     }
@@ -134,17 +145,20 @@ class UnidadesController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(25);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar unidad sin permiso', 'Unidades', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         try {
             $unidades = unidades::find($request->id);
             $unidades->delete();
-
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Eliminar unidad', 'Unidades', $unidades, '-');
             return response()->json(['success' => 'Unidad eliminada correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al eliminar unidad', 'Unidades', '-', '-');
             return response()->json(['error' => 'Error al eliminar la unidad']);
         }
     }

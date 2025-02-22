@@ -25,7 +25,7 @@ class ClientesController extends Controller
         }
 
 
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a vista de clientes', 'clientes', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de clientes', 'clientes', '-', '-');
         return view('clientes.index');
     }
 

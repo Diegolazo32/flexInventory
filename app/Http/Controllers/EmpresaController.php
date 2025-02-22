@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
@@ -15,9 +16,11 @@ class EmpresaController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(2);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de acceso a la pantalla de empresa', 'Empresa', '-', '-');
             return redirect()->route('dashboard');
         }
 
@@ -29,6 +32,7 @@ class EmpresaController extends Controller
             $empresa->logo = 'logo/empresa_logo.jpg';
         }
 
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Ingreso a la pantalla de empresa', 'Empresa', '-', '-');
         return view('empresa.index', compact('empresa'));
     }
 
@@ -51,8 +55,10 @@ class EmpresaController extends Controller
 
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(3);
+        $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de modificar empresa sin permiso', 'Empresa', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -77,8 +83,10 @@ class EmpresaController extends Controller
         try {
 
             if ($request->firstTime) {
+                $oldEmpresa = '-';
                 $empresa = new empresa();
             } else {
+                $oldEmpresa = empresa::find($request->id);
                 $empresa = empresa::find($request->id);
             }
 
@@ -104,19 +112,14 @@ class EmpresaController extends Controller
                 $rutaPublica = 'logo/' . $nombreArchivo;
                 Storage::disk('public')->put($rutaPublica, file_get_contents(storage_path('app/' . $rutaLocal)));
 
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de logo', 'Empresa', $logoAnterior, $rutaPublica);
 
-                //Generar el base64 del archivo
-                $base64 = base64_encode(file_get_contents(storage_path('app/' . $rutaLocal)));
 
             } else {
 
                 //Buscar un logo existente
                 $empresa = empresa::find($request->id);
                 $rutaLocal = $empresa->logo;
-
-                //Generar el base64 del archivo
-                $base64 = base64_encode(file_get_contents(storage_path('app/' . $rutaLocal)));
-
             }
 
             $empresa->nombre = $request->nombre;
@@ -134,9 +137,9 @@ class EmpresaController extends Controller
             $empresa->logo = $rutaPublica ?? $empresa->logo;
             $empresa->cuentaContable = $request->cuentaContable;
             $empresa->valorIVA = $request->valorIVA;
-
             $empresa->save();
 
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de empresa', 'Empresa', $oldEmpresa, $empresa);
             return response()->json(['success' => 'Empresa guardada correctamente, aplicando cambios, espere...']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);

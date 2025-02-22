@@ -48,12 +48,15 @@ class RolesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(11);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso a pantalla de roles sin permiso', 'Roles', '-', '-');
             flash('No tiene permisos para acceder a esta sección', 'error');
             return redirect()->route('dashboard');
         }
 
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a pantalla de roles', 'Roles', '-', '-');
         return view('roles.index');
     }
 
@@ -61,8 +64,11 @@ class RolesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(12);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de creacion de roles sin permiso', 'Roles', '-', '-');
+
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -75,8 +81,12 @@ class RolesController extends Controller
             $rol->descripcion = $request->descripcion;
             $rol->estado = 1;
             $rol->save();
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Creacion de rol', 'Roles', '-', $rol);
             return response()->json(['success' => 'Rol creado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al crear rol', 'Roles', '-', '-');
+
             return response()->json(['error' => 'Error al crear el rol']);
         }
     }
@@ -85,8 +95,11 @@ class RolesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(13);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizacion de roles sin permiso', 'Roles', '-', '-');
+
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -95,12 +108,18 @@ class RolesController extends Controller
         ]);
 
         try {
+            $oldRole = roles::find($request->id);
             $rol = roles::find($request->id);
             $rol->descripcion = $request->descripcion;
             $rol->estado = $request->estado;
             $rol->save();
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Actualizacion de rol', 'Roles', $oldRole, $rol);
+
             return response()->json(['success' => 'Rol actualizado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al actualizar rol', 'Roles', '-', '-');
+
             return response()->json(['error' => 'Error al actualizar el rol']);
         }
     }
@@ -109,16 +128,23 @@ class RolesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(14);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar rol sin permiso', 'Roles', '-', '-');
+
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         try {
             $rol = roles::find($request->id);
             $rol->delete();
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Eliminar rol', 'Roles', '-', $rol);
+
             return response()->json(['success' => 'Rol eliminado correctamente']);
         } catch (\Exception $e) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al eliminar rol', 'Roles', '-', '-');
+
             return response()->json(['error' => 'Error al eliminar el rol']);
         }
     }
@@ -127,8 +153,10 @@ class RolesController extends Controller
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(16);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de asignar permiso al rol sin permiso', 'Roles', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -160,8 +188,11 @@ class RolesController extends Controller
             }
 
             //Retorna un mensaje de éxito
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Asignacion de permisos al rol', 'Roles', $rolpermiso, $permisosDelRol);
             return response()->json(['success' => 'Permisos asignados correctamente'], 200);
         } catch (\Exception $e) {
+
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Error al asignar permisos al rol', 'Roles', '-', '-');
             return response()->json(['error' => 'Error al asignar permisos'], 400);
         }
     }

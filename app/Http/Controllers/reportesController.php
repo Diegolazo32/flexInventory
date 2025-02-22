@@ -9,6 +9,7 @@ use App\Models\estados;
 use App\Models\productos;
 use App\Models\proveedores;
 use App\Models\unidades;
+use Auth;
 use Mpdf\Mpdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -21,9 +22,12 @@ class reportesController extends Controller
     {
         /*$this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(73);
+        $auditoria = new AuditoriaController();
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
+                        $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceder a pantalla de reportes sin permisos', 'Reportes', '-', '-');
+
             return redirect()->route('dashboard');
         }*/
 
@@ -33,8 +37,7 @@ class reportesController extends Controller
     public function productosGenerar(Request $request)
     {
 
-        // Depurar si los datos llegan correctamente
-        //dd($request->all());
+        $auditoria = new AuditoriaController();
 
         $filtros = [
             'estado' => $request->estado,
@@ -91,6 +94,9 @@ class reportesController extends Controller
 
         // Configurar mPDF
         $mpdf = new Mpdf();
+
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Generacion de reporte de productos', 'Reportes', '-', '-');
+
 
         // Generar el PDF
         $mpdf->WriteHTML($html);

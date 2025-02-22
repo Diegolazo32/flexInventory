@@ -56,7 +56,7 @@ class CajaController extends Controller
         }
 
 
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a vista de cajas', 'cajas', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de cajas', 'cajas', '-', '-');
         return view('cajas.index');
     }
 

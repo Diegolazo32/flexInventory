@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CategoriaController;
@@ -224,6 +225,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/reportes/productos', [reportesController::class, 'productosIndex'])->name('reportes.productos');
         //Generar reporte de productos
         Route::post('/reportes/productos/generar', [reportesController::class, 'productosGenerar'])->name('reportes.productos.generar');
+    });
+
+    //Auditorias
+    Route::controller(AuditoriaController::class)->group(function () {
+        Route::get('/auditoria', [AuditoriaController::class, 'index'])->name('auditoria');
+        Route::get('/allAuditorias', [AuditoriaController::class, 'getAllAudits'])->name('allAudits');
     });
 
 });

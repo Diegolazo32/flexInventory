@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('usuario');
             $table->string('evento');
             $table->string('tabla');
-            $table->string('registroAnterior');
-            $table->string('registroNuevo');
+            $table->text('registroAnterior');
+            $table->text('registroNuevo');
             $table->timestamps();
         });
     }
