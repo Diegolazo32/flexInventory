@@ -34,7 +34,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!--@vite('/resources/css/app.css')-->
+    @vite('build/assets/app.css')
 
 
 </head>
