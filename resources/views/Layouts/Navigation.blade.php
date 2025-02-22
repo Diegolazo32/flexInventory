@@ -26,7 +26,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @vite(['/resources/css/app.css'])
+
+    <link href="{{ asset('build/assets/app.css') }}" rel="stylesheet">
+    <!--@vite(['/resources/css/app.css'])-->
 </head>
 
 <body>
