@@ -201,15 +201,15 @@
                             </li>
                         @endif
 
-                        @if ($permisos->contains(17))
-                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                        <!--@if ($permisos->contains(17))
+<li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                                 <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                     onClick="window.location.href='{{ route('auditoria') }}'">
                                     <i class="fa-solid fa-key"></i>
                                     <span>Auditoria</span>
                                 </button>
                             </li>
-                        @endif
+@endif-->
 
                     </div>
 
