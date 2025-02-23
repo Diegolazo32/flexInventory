@@ -4,8 +4,6 @@
     background-image: url(../../public/storage/logo/logo_empresa.jpeg);
     background-image: url(../../public/storage/logo/logo_empresa.jpg);
     background-image: url(../../public/storage/logo/logo_empresa.png);
-    /*background-image: url(../../public/storage/logo/logo_empresa.png);
-    background-image: url(../../public/storage/logo/logo_empresa.jpg);*/
     backdrop-filter: blur(25px);
     object-fit: cover;
     background-position-y: center;
