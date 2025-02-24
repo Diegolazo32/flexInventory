@@ -100,13 +100,16 @@
                                         <span class="badge bg-danger" v-else>@{{ estados.find(estado => estado.id == rol.estado).descripcion }}</span>
                                     </td>
                                     <td>
-                                        <button id="editBTN" class="btn btn-primary" @click="editRol(rol)">
+                                        <button id="editBTN" class="btn btn-primary" @click="editRol(rol)"
+                                            :disabled="rol.estado == 2 || loading">
                                             <i class="fas fa-pencil"></i>
                                         </button>
-                                        <button id="permisosBtn" class="btn btn-warning" @click="getPermisos(rol)">
+                                        <button id="permisosBtn" class="btn btn-warning" @click="getPermisos(rol)"
+                                            :disabled="rol.estado == 2 || loading">
                                             <i class="fas fa-key"></i>
                                         </button>
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteRol(rol)">
+                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteRol(rol)"
+                                            :disabled="rol.estado == 2 || loading">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -407,8 +410,6 @@
                             document.getElementById('SubmitForm').disabled = false;
                             document.getElementById('cancelButton').disabled = false;
 
-
-
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
 
@@ -447,12 +448,27 @@
 
                         }).finally(() => {
 
+                            //Cambiar icono de boton
+                            document.getElementById('SubmitForm').innerHTML =
+                                'Guardar';
+
+                            //Habilitar boton
+                            document.getElementById('SubmitForm').disabled = false;
+                            document.getElementById('cancelButton').disabled = false;
+
                             //limpiar
                             this.cleanForm();
                             //Recargar roles
                             this.getAllRoles();
                         })
 
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
                     }
                 },
                 //Editar
@@ -477,9 +493,6 @@
                             //Habilitar boton
                             document.getElementById('SubmitFormEdit').disabled = false;
                             document.getElementById('cancelButtonEdit').disabled = false;
-
-                            //Quitar icono de boton
-                            document.getElementById('SubmitFormEdit').innerHTML = 'Guardar';
 
                             //Cerrar modal
                             document.getElementById('cancelButtonEdit').click();
@@ -512,6 +525,13 @@
 
                         }).finally(() => {
 
+                            //Quitar icono de boton
+                            document.getElementById('SubmitFormEdit').innerHTML = 'Guardar';
+
+                            //Habilitar boton
+                            document.getElementById('SubmitFormEdit').disabled = false;
+                            document.getElementById('cancelButtonEdit').disabled = false;
+
                             //limpiar
                             this.cleanForm();
                             //Recargar roles
@@ -519,6 +539,13 @@
 
                         })
 
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
                     }
                 },
                 editRol(rol) {
@@ -661,8 +688,7 @@
                             document.getElementById('cancelPermisosButton').disabled = false;
 
                             //Quitar icono de boton
-                            document.getElementById('SubmitPermisos').innerHTML =
-                                '<i class="fas fa-save"></i>';
+                            document.getElementById('SubmitPermisos').innerHTML = 'Guardar';
 
                             //Cerrar modal
                             document.getElementById('cancelPermisosButton').click();
@@ -678,6 +704,7 @@
                         }
 
                     }).catch(error => {
+
                         swal.fire({
                             title: 'Error',
                             text: 'Ha ocurrido un error al actualizar los permisos',
@@ -687,6 +714,15 @@
 
                     }).finally(() => {
 
+                        //Habilitar boton
+                        document.getElementById('SubmitPermisos').disabled = false;
+                        document.getElementById('cancelPermisosButton').disabled = false;
+
+                        //Cerrar modal
+                        document.getElementById('cancelPermisosButton').click();
+
+                        //Quitar icono de boton
+                        document.getElementById('SubmitPermisos').innerHTML = 'Guardar';
                         //limpiar
                         this.cleanForm();
                         //Recargar roles
@@ -839,6 +875,11 @@
                 },
                 //Obtener recursos
                 async getAllRoles() {
+
+                    this.loading = true;
+                    this.errors = {};
+                    this.editErrors = {};
+
                     try {
                         axios({
                             method: 'get',

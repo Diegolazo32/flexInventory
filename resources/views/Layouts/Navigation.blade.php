@@ -231,7 +231,7 @@
                             <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                                 <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                     onClick="window.location.href='{{ route('unidades') }}'">
-                                    <i class="fa-solid fa-list"></i>
+                                    <i class="fa-solid fa-ruler-horizontal"></i>
                                     <span>Unidades</span>
                                 </button>
                             </li>
@@ -413,7 +413,8 @@
 
 
                     <li class="nav-item" style="width: 100%; margin-bottom: 10px;">
-                        <button class="btn btn-outline-light" style="width: 100%;" type="button">
+                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                            onclick="window.location.href='{{ route('ayuda') }}'">
                             <i class="fa-solid fa-circle-question"></i>
                             <span>Ayuda y manuales</span>
                         </button>

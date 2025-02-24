@@ -166,6 +166,15 @@ class RolesController extends Controller
             //Permisos del rol entrantes
             $permisosDelRol = $request->permisos;
 
+
+            $oldRoles = [];
+
+            //Recorre los permisos del rol
+            foreach ($rolpermiso as $rol) {
+                //Guarda los permisos del rol en un array
+                array_push($oldRoles, $rol->permiso);
+            }
+
             //Si el rol tiene permisos
             if ($rolpermiso->count() > 0) {
                 //Elimina los permisos del rol
@@ -188,7 +197,7 @@ class RolesController extends Controller
             }
 
             //Retorna un mensaje de éxito
-            $auditoria->registrarEvento(Auth::user()->nombre, 'Asignacion de permisos al rol', 'Roles', $rolpermiso, $permisosDelRol);
+            //$auditoria->registrarEvento(Auth::user()->nombre, 'Asignacion de permisos al rol', 'Roles', $oldRoles, $permisosDelRol);
             return response()->json(['success' => 'Permisos asignados correctamente'], 200);
         } catch (\Exception $e) {
 

@@ -1067,7 +1067,14 @@
                         this.getAllProductos();
                     })
 
-                }
+                } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
+                    }
             },
             //Editar
             sendFormEdit() {
@@ -1143,7 +1150,14 @@
 
                     })
 
-                }
+                } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
+                    }
             },
             editProducto(producto) {
 

@@ -13,10 +13,10 @@
                 </div>
                 <!-- Botones de accion -->
                 <div class="col-lg-2 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal"
                         data-bs-target="#crearEstadoModal" style="height: 40px;">
                         <i class="fas fa-plus"></i>
-                    </button>
+                    </button>-->
 
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editEstadoModalBtn"
                         data-bs-target="#editEstadoModal" style="height: 40px;" hidden>
@@ -69,7 +69,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Descripcion</th>
-                                <th scope="col">Acciones</th>
+                                <!--<th scope="col">Acciones</th>-->
                             </tr>
                         </thead>
                         <tbody>
@@ -82,9 +82,9 @@
                                     @{{ estado.descripcion }}
                                 </td>
                                 <td>
-                                    <button id="editBTN" class="btn btn-primary" @click="editEstado(estado)">
+                                    <!--<button id="editBTN" class="btn btn-primary" @click="editEstado(estado)">
                                         <i class="fas fa-pencil"></i>
-                                    </button>
+                                    </button>-->
 
                                     <!--<button class="btn btn-danger" id="dltBTN" @click="DeleteEstado(estado)">
                                             <i class="fas fa-trash"></i>
@@ -332,7 +332,14 @@
                         this.getAllEstados();
                     })
 
-                }
+                } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
+                    }
             },
             //Editar
             sendFormEdit() {
@@ -398,7 +405,14 @@
 
                     })
 
-                }
+                } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
+                    }
             },
             editEstado(estado) {
                 this.editItem.descripcion = estado.descripcion;

@@ -425,6 +425,13 @@
                             this.getAllPermisos();
                         })
 
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
                     }
                 },
                 //Editar
@@ -491,6 +498,13 @@
 
                         })
 
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
                     }
                 },
                 editPermiso(permiso) {

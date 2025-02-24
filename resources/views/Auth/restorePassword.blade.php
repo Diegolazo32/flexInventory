@@ -11,16 +11,11 @@
                 <div class="card-body" style="display: flex; justify-content: center; flex-direction: column;">
                     <div class="card-title">
                         <h2 class="text-center"> Reestablecer contraseña </h2>
-                        <small class="text-center"> {{ Auth::user()->nombre }} </small>
-                        <small class="text-center"> {{ Auth::user()->usuario }} </small>
                     </div>
-                    <form action="{{ route('updatePassword', ['id' => Auth::user()->id]) }}" method="post"
+                    <form action="{{ route('updatePassword', ['id' => $usuario->id]) }}" method="post"
                         ref="loginForm">
                         @csrf
                         <div class="form-floating  mb-3" style=" display: flex; flex-direction: column;">
-
-                            <input type="hidden" name="id" value="{{ Auth::user()->id }}">
-                            <input type="hidden" name="usuario" value="{{ Auth::user()->usuario }}">
 
                             <input type="password" name="password" class="form-control" id="floatingPassword"
                                 placeholder="Contraseña" v-model="password" required @keyup="validarPassword" autocomplete="current-password">

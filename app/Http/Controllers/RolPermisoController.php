@@ -24,7 +24,7 @@ class RolPermisoController extends Controller
     {
         try {
             //Verificar que este autenticado
-            if (!Auth::check()) {
+            if (!Auth::check() || Auth::user()->estado == 8 || Auth::user()->estado == 2) {
                 return false;
             }
 
@@ -37,9 +37,8 @@ class RolPermisoController extends Controller
             }
 
             return true;
-
         } catch (\Exception $e) {
-            
+
             return false;
         }
     }
