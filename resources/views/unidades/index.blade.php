@@ -54,8 +54,11 @@
             <div class="row">
                 <div class="card-body">
 
+
                     <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
-                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
 
                     <div v-if="unidades.error" class="alert alert-danger" role="alert">
@@ -319,13 +322,6 @@
                 totalPages: 0,
                 nextPageUrl: '',
                 prevPageUrl: '',
-                mensaje: '',
-                posiblesMensajes: [
-                    'Bienvenido a la sección de unidades',
-                    'Aqui puedes crear, editar y eliminar unidades',
-                    'Recuerda que los campos marcados con * son obligatorios',
-                    'Puedes buscar una unidad por su descripcion o abreviatura'
-                ]
             },
             methods: {
                 //Crear
@@ -830,18 +826,12 @@
 
 
                 },
-                //Misc
-                randomMessage() {
-                    let random = Math.floor(Math.random() * this.posiblesMensajes.length);
-                    this.mensaje = this.posiblesMensajes[random];
-                },
+
 
             },
             mounted() {
                 this.getAllEstados();
                 this.getAllUnidades();
-                this.randomMessage();
-
             }
         });
     </script>

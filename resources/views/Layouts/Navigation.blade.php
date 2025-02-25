@@ -416,7 +416,7 @@
                         <button class="btn btn-outline-light" style="width: 100%;" type="button"
                             onclick="window.location.href='{{ route('ayuda') }}'">
                             <i class="fa-solid fa-circle-question"></i>
-                            <span>Ayuda y manuales</span>
+                            <span>Información</span>
                         </button>
                     </li>
 

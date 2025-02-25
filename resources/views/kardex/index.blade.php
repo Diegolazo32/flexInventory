@@ -50,10 +50,6 @@
             <div class="row">
                 <div class="card-body">
 
-                    <div v-if="productoError" class="alert alert-danger" role="alert">
-                        <h3>@{{ productoError }}</h3>
-                    </div>
-
                     <div class="table-responsive">
                         <table ref="table" class="table table-hover" style="text-align: center;">
                             <thead>
@@ -68,7 +64,14 @@
                             </thead>
                             <tbody>
                                 <tr v-if="loading" role="alert" id="loading">
-                                    <td colspan="6"><i class="fas fa-spinner fa-spin"></i> Cargando productos...</td>
+                                    <td colspan="6">
+                                        <div v-if="loading" role="alert"
+                                            style="display: flex; justify-content: center; align-items: center;">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <!-- vue foreach -->
                                 <tr v-else v-for="producto in mainProductos" :key="producto.id">
@@ -185,10 +188,12 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-if="loading" role="alert" id="loading">
-                                                    <td colspan="6"><i class="fas fa-spinner fa-spin"></i> Cargando
-                                                        productos...</td>
-                                                </tr>
+                                                <div v-if="loading" role="alert"
+                                                    style="display: flex; justify-content: center; align-items: center;">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
                                                 <!-- vue foreach -->
                                                 <tr v-else v-for="kard in kardex" :key="kard.id">
                                                     <td>
@@ -340,6 +345,18 @@
             methods: {
                 //Crear
                 sendForm() {
+
+
+                    if(this.kardex.length == 0){
+                        swal.fire({
+                            title: 'Error',
+                            text: 'No se ha seleccionado ningun producto',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
+                        return;
+                    }
+
                     this.validateForm(this.kardex);
 
                     if (Object.keys(this.errors).length === 0) {
@@ -401,7 +418,12 @@
 
                         }).finally(() => {
 
-                            document.getElementById('SubmitForm').innerHTML = 'Guardar';
+                            document.getElementById('SubmitForm').disabled = false;
+                            document.getElementById('cancelButton').disabled = false;
+
+                            //Quitar icono de boton
+                            document.getElementById('SubmitForm').innerHTML =
+                                'Guardar';
 
                             //limpiar
                             this.cleanForm();
@@ -693,6 +715,9 @@
                 //Obtener recursos
                 async getAllProductos() {
 
+                    this.loading = true;
+                    this.errors = {};
+
                     //Productos para lista de kardex
                     axios({
                         method: 'get',
@@ -784,27 +809,11 @@
 
                     }
 
-
-                },
-                async getAllCategorias() {
-                    let response = await fetch('/allCategorias');
-                    let data = await response.json();
-                    this.categorias = data;
-                },
-                async getAllTipoVentas() {
-                    let response = await fetch('/allTipoVenta');
-                    let data = await response.json();
-                    this.tipoVentas = data;
                 },
                 async getAllProveedores() {
                     let response = await fetch('/allProveedores');
                     let data = await response.json();
                     this.proveedores = data;
-                },
-                async getAllUnidades() {
-                    let response = await fetch('/allUnidades');
-                    let data = await response.json();
-                    this.unidades = data;
                 },
                 async getAllKardex() {
                     let response = await fetch('/allKardex');
@@ -814,10 +823,7 @@
             },
             mounted() {
                 this.getAllKardex();
-                this.getAllCategorias();
-                this.getAllTipoVentas();
                 this.getAllProveedores();
-                this.getAllUnidades();
                 this.getAllEstados();
                 this.getAllProductos();
             }

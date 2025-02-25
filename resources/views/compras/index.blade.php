@@ -36,7 +36,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <input type="text" class="form-control" name="search" placeholder="Buscar por codigo"
-                                    v-model="searchCompra">
+                                    v-model="searchCompra" id="searchCompra" @keyup.enter="searchCompraFn">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
@@ -54,8 +54,10 @@
             <div class="row">
                 <div class="card-body">
 
-                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
-                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
 
                     <div v-if="comprasError" class="alert alert-danger" role="alert">
@@ -426,6 +428,7 @@
                     if (this.searchCompra) {
                         this.getAllCompras();
                     } else {
+                        document.getElementById('searchCompra').setAttribute('class', 'form-control is-invalid');
                         this.searchError = 'El campo de busqueda esta vacio';
                     }
                 },
