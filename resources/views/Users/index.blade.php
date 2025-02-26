@@ -600,6 +600,11 @@
                         }).catch(error => {
                             this.loading = false;
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener los usuarios',
                                 icon: 'error',
@@ -918,6 +923,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                     title: 'Usuario creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -925,6 +935,11 @@
                                 });
                             } else {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -935,6 +950,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: error,
                                 icon: 'error',
@@ -954,6 +974,11 @@
 
                     } else {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -991,13 +1016,23 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                    title: 'Usuario editado',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
+                                    title: 'Usuario actualizado',
                                     text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -1008,6 +1043,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: error,
                                 icon: 'error',
@@ -1029,6 +1069,11 @@
 
                     }else {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -1063,6 +1108,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -1083,6 +1133,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Usuario eliminado',
                                 text: response.data.success,
                                 icon: 'success',
@@ -1093,6 +1148,11 @@
                     }).catch(error => {
 
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: error,
                             icon: 'error',
@@ -1140,6 +1200,11 @@
 
                         if (response.data.success) {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Contraseña restablecida',
                                 text: response.data.success,
                                 icon: 'success',
@@ -1147,6 +1212,11 @@
                             });
                         } else {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -1163,6 +1233,11 @@
                         document.getElementById('cancelRevertButton').click();
 
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: error,
                             icon: 'error',

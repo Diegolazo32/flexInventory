@@ -354,6 +354,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                     title: 'Unidad creada',
                                     text: response.data.success,
                                     icon: 'success',
@@ -361,6 +366,11 @@
                                 });
                             } else {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -379,6 +389,11 @@
                                 'Guardar';
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear la unidad',
                                 icon: 'error',
@@ -403,6 +418,11 @@
 
                     } else {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -441,13 +461,23 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                    title: 'Unidad editada',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
+                                    title: 'Unidad actualizada',
                                     text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -459,6 +489,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar la unidad',
                                 icon: 'error',
@@ -483,6 +518,11 @@
 
                     } else {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -527,6 +567,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -547,6 +592,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Unidad eliminado',
                                 text: response.data.success,
                                 icon: 'success',
@@ -557,6 +607,11 @@
                     }).catch(error => {
 
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar la unidad',
                             icon: 'error',
@@ -803,6 +858,11 @@
                         }).catch(error => {
                             this.loading = false;
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener las unidades',
                                 icon: 'error',

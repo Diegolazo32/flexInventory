@@ -155,7 +155,7 @@
                                                 @click="selectResult(result)" style="cursor: pointer;"
                                                 @keyup.enter="selectResult(result)" tabindex="0">@{{ result.codigo }}
                                                 -
-                                                @{{ result.nombre }}</li>
+                                                @{{ result.nombre }} - @{{ result.proveedor }} - @{{ result.unidad }}</li>
                                         </ul>
                                     </div>
                                     <div class="col-6" v-if="compras.length > 0"
@@ -191,12 +191,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-if="loading" role="alert" id="loading">
-                                            <td colspan="6"><i class="fas fa-spinner fa-spin"></i> Cargando
-                                                productos...</td>
-                                        </tr>
                                         <!-- vue foreach -->
-                                        <tr v-else v-for="producto in productosCompra" :key="producto.id">
+                                        <tr v-for="(producto, index) in productosCompra" :key="producto.id">
                                             <td>@{{ producto.codigo }}</td>
                                             <td>@{{ producto.nombre }}</td>
                                             <td>
@@ -221,7 +217,7 @@
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-danger"
-                                                    @click="deleteProduct(producto)">
+                                                    @click="deleteProduct(index)">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -310,13 +306,22 @@
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-fullscreen-lg-down ">
                 <div class="modal-content">
+
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="compraDetallesModalLabel">Codigo: @{{ compraDetalles.codigo ?? '-' }}</h1>
                         <h1 class="modal-title fs-5" id="compraDetallesModalLabel">Fecha: @{{ compraDetalles.fecha ? parseDate(compraDetalles.fecha) : '-' }}</h1>
                         <h2 class="modal-title fs-5" id="compraDetallesModalLabel">Total: $@{{ parseDouble(compraDetalles.total) ?? '-' }}</h2>
                     </div>
                     <div class="modal-body">
-                        <div class="table-responsive">
+
+                        <div v-if="loadingDetails" role="alert"
+                            style="display: flex; justify-content: center; align-items: center;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive" v-else-if="productosDetalles.length > 0 && !loading">
                             <table ref="table" class="table table-hover table-striped" style="text-align: center;">
                                 <thead>
                                     <tr>
@@ -363,6 +368,10 @@
                 prevPageUrl: '',
                 total: 0,
 
+                //loading
+                loading: true,
+                loadingDetails: true,
+
                 //compras
                 compras: [],
                 comprasError: '',
@@ -397,7 +406,7 @@
                 productosDetalles: [],
 
                 //overstock
-                maxStockError: false,
+                overstock: [],
 
             },
             methods: {
@@ -460,6 +469,11 @@
                                 });
                             } catch (error) {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 5000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: error,
                                     icon: 'error',
@@ -488,6 +502,11 @@
                                 });
                             } catch (error) {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 5000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: error,
                                     icon: 'error',
@@ -505,6 +524,18 @@
                                 this.results = this.filtered;
                             }
                         }
+
+                        //Cambiar el proveedor id por el nombre
+                        this.results.forEach(result => {
+                            let proveedor = this.proveedores.find(proveedor => {
+                                return proveedor.id == result.proveedor;
+                            });
+
+                            result.proveedor = proveedor.nombre;
+                        });
+
+                        
+
                     } else {
                         this.results = [];
                     }
@@ -544,10 +575,8 @@
 
                     this.calcularTotal();
                 },
-                deleteProduct(producto) {
-                    let index = this.productosCompra.indexOf(producto);
+                deleteProduct(index) {
                     this.productosCompra.splice(index, 1);
-
                     this.calcularTotal();
                 },
                 calcularTotal() {
@@ -560,9 +589,15 @@
                 validateCompra() {
 
                     this.nuevaCompraErrors = [];
+                    this.overstock = [];
 
                     if (this.productosCompra.length < 1) {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'No se han agregado productos a la compra',
                             icon: 'error',
@@ -576,6 +611,11 @@
 
                     if (this.totalCompra < 1) {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'El total de la compra no puede ser 0',
                             icon: 'error',
@@ -589,6 +629,11 @@
 
                     if (this.codigoCompra == '') {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'El codigo de la compra no puede estar vacio',
                             icon: 'error',
@@ -605,26 +650,14 @@
 
                         let cantidad = 0;
                         cantidad = parseInt(producto.cantidad);
+                        stockMax = parseInt(producto.stockMaximo);
 
-                        console.log(producto.stockMaximo);
+                        //console.log(producto.stockMaximo);
 
-                        if (producto.stockMaximo === null) {
-                            return;
-                        }
+                        if (cantidad > stockMax) {
 
-                        if (cantidad + producto.stock > producto.stockMaximo) {
+                            this.overstock.push(producto);
 
-                            document.getElementById('cantidad' + producto.id).setAttribute('class',
-                                'form-control is-invalid');
-
-                            this.nuevaCompraErrors.push('La cantidad de ' + producto.nombre +
-                                ' supera el stock maximo permitido');
-
-
-                            return;
-                        } else {
-                            document.getElementById('cantidad' + producto.id).setAttribute('class',
-                                'form-control');
                         }
 
 
@@ -667,6 +700,11 @@
                 },
                 parseDate(date) {
 
+
+                    if (date == null) {
+                        return '-';
+                    }
+
                     let dateObj = new Date(date);
                     let month = dateObj.getUTCMonth() + 1;
                     let day = dateObj.getUTCDate();
@@ -695,7 +733,6 @@
                         }
 
                         this.compras = response.data.data;
-                        this.loading = false;
 
                         //Paginacion
                         this.total = response.data.total;
@@ -711,8 +748,12 @@
                         this.prevPageUrl = response.data.prev_page_url;
 
                     }).catch(error => {
-                        this.loading = false;
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las compras',
                             icon: 'error',
@@ -741,16 +782,21 @@
 
                         this.productos = response.data;
                         this.searchProductos = response.data;
-                        this.loading = false;
 
                     }).catch(error => {
-                        this.loading = false;
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los productos',
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }).finally(() => {
+                        this.loading = false;
                     });
                 },
                 async getAllProveedores() {
@@ -774,11 +820,14 @@
 
                         this.proveedores = response.data;
                         this.searchProveedores = response.data;
-                        this.loading = false;
 
                     }).catch(error => {
-                        this.loading = false;
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los proveedores',
                             icon: 'error',
@@ -788,6 +837,8 @@
                 },
                 async getCompraDetails(id) {
 
+                    this.loadingDetails = true;
+
                     axios({
                         method: 'get',
                         url: '/getCompraDetails/' + id,
@@ -795,6 +846,11 @@
 
                         if (response.data.error) {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -810,11 +866,18 @@
 
                     }).catch(error => {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los detalles de la compra',
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }).finally(() => {
+                        this.loadingDetails = false;
                     });
 
                 },
@@ -838,61 +901,194 @@
                         return;
                     }
 
-                    let data = {
-                        productos: this.productosCompra,
-                        total: this.totalCompra,
-                        codigo: this.codigoCompra,
-                        fecha: this.fechaCompra,
-                    };
+                    if (this.overstock.length > 0) {
+                        let overstock = '';
+                        this.overstock.forEach(producto => {
+                            overstock += producto.nombre + ', ';
+                        });
 
-                    axios({
-                        method: 'post',
-                        url: '/compras/store',
-                        data: data,
-                    }).then(response => {
-                        if (response.data.error) {
-                            swal.fire({
-                                title: 'Error',
-                                text: response.data.error,
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
+                        swal.fire({
+                            title: 'Overstock',
+                            text: 'Algunos productos estan siendo comprados en cantidades mayores a su stock maximo: ' +
+                                overstock + ' ¿Desea continuar?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Si',
+                            cancelButtonText: 'No',
+                        }).then((result) => {
 
-                            this.cleanForm();
-                            this.getAllCompras();
+                            //If yes, continue with the rest of the function
+                            if (result.isConfirmed) {
+
+                                if (this.nuevaCompraErrors.length > 0) {
+
+                                    document.getElementById('SubmitForm').disabled = false;
+                                    document.getElementById('SubmitForm').innerHTML = 'Guardar';
+                                    document.getElementById('cancelButton').disabled = false;
+
+                                    return;
+                                }
+
+                                let data = {
+                                    productos: this.productosCompra,
+                                    total: this.totalCompra,
+                                    codigo: this.codigoCompra,
+                                    fecha: this.fechaCompra,
+                                };
+
+                                axios({
+                                    method: 'post',
+                                    url: '/compras/store',
+                                    data: data,
+                                }).then(response => {
+                                    if (response.data.error) {
+                                        swal.fire({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 5000,
+                                            timerProgressBar: true,
+                                            title: 'Error',
+                                            text: response.data.error,
+                                            icon: 'error',
+                                            confirmButtonText: 'Aceptar'
+                                        });
+
+                                        this.cleanForm();
+                                        this.getAllCompras();
+
+                                        return;
+                                    }
+
+                                    swal.fire({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 5000,
+                                        timerProgressBar: true,
+                                        title: 'Compra registrada',
+                                        text: response.data.success,
+                                        icon: 'success',
+                                        confirmButtonText: 'Aceptar'
+                                    });
+
+                                    this.comprasError = '';
+
+                                }).catch(error => {
+                                    swal.fire({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 5000,
+                                        timerProgressBar: true,
+                                        title: 'Error',
+                                        text: 'Ha ocurrido un error al registrar la compra',
+                                        icon: 'error',
+                                        confirmButtonText: 'Aceptar'
+                                    });
+
+                                }).finally(() => {
+
+                                    document.getElementById('SubmitForm').disabled = false;
+                                    document.getElementById('SubmitForm').innerHTML = 'Guardar';
+
+                                    document.getElementById('cancelButton').disabled = false;
+
+                                    document.getElementById('cancelButton').click();
+
+                                    this.cleanForm();
+                                    this.getAllCompras();
+                                });
+                            }
+
+                        });
+
+
+                    } else {
+
+                        if (this.nuevaCompraErrors.length > 0) {
+
+                            document.getElementById('SubmitForm').disabled = false;
+                            document.getElementById('SubmitForm').innerHTML = 'Guardar';
+                            document.getElementById('cancelButton').disabled = false;
 
                             return;
                         }
 
-                        swal.fire({
-                            title: 'Compra registrada',
-                            text: response.data.success,
-                            icon: 'success',
-                            confirmButtonText: 'Aceptar'
+                        let data = {
+                            productos: this.productosCompra,
+                            total: this.totalCompra,
+                            codigo: this.codigoCompra,
+                            fecha: this.fechaCompra,
+                        };
+
+                        axios({
+                            method: 'post',
+                            url: '/compras/store',
+                            data: data,
+                        }).then(response => {
+                            if (response.data.error) {
+                                swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 5000,
+                                    timerProgressBar: true,
+                                    title: 'Error',
+                                    text: response.data.error,
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                });
+
+                                this.cleanForm();
+                                this.getAllCompras();
+
+                                return;
+                            }
+
+                            swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
+                                title: 'Compra registrada',
+                                text: response.data.success,
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar'
+                            });
+
+                            this.comprasError = '';
+
+                        }).catch(error => {
+                            swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
+                                title: 'Error',
+                                text: 'Ha ocurrido un error al registrar la compra',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+
+                        }).finally(() => {
+
+                            document.getElementById('SubmitForm').disabled = false;
+                            document.getElementById('SubmitForm').innerHTML = 'Guardar';
+
+                            document.getElementById('cancelButton').disabled = false;
+
+                            document.getElementById('cancelButton').click();
+
+                            this.cleanForm();
+                            this.getAllCompras();
                         });
+                    }
 
-                        this.comprasError = '';
 
-                    }).catch(error => {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al registrar la compra',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
 
-                    }).finally(() => {
-
-                        document.getElementById('SubmitForm').disabled = false;
-                        document.getElementById('SubmitForm').innerHTML = 'Guardar';
-
-                        document.getElementById('cancelButton').disabled = false;
-
-                        document.getElementById('cancelButton').click();
-
-                        this.cleanForm();
-                        this.getAllCompras();
-                    });
                 },
             },
             mounted() {

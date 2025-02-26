@@ -79,7 +79,14 @@ class InventarioController extends Controller
                 return response()->json(['error' => 'Ya existe un inventario abierto']);
             }
 
+            $totalInventario = 0;
+
             $productos = productos::where('estado', 1)->get();
+
+            foreach ($productos as $producto) {
+
+                $totalInventario += $producto->precioCompra * $producto->stock;
+            }
 
             $inventario = new inventario();
             $inventario->fechaApertura = date('Y-m-d');
@@ -88,7 +95,7 @@ class InventarioController extends Controller
             $inventario->StockApertura = $productos->sum('stock');
             $inventario->ProductosCierre = 0;
             $inventario->StockCierre = 0;
-            $inventario->totalInventario = 0;
+            $inventario->totalInventario = $totalInventario;
             $inventario->aperturadoPor = auth()->user()->id;
             $inventario->cerradoPor = auth()->user()->id;
             $inventario->estado = 3;
@@ -183,5 +190,12 @@ class InventarioController extends Controller
             $auditoria->registrarEvento(Auth::user()->nombre, 'Error al cerrar inventario', 'Inventario', '-', '-');
             return response()->json(['error' => 'Error al cerrar el inventario']);
         }
+    }
+
+    public function getAllInventarios()
+    {
+        $inventarios = inventario::orderBy('fechaApertura', 'desc')->get();
+
+        return response()->json($inventarios);
     }
 }

@@ -211,6 +211,11 @@
                         }).catch(error => {
                             this.loading = false;
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener los permisos',
                                 icon: 'error',

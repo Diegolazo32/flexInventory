@@ -5,17 +5,17 @@
 @section('content')
     <div id="app">
 
-                    <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
+        <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
 
         <div class="row">
-            <div class="col-lg-1"></div>
+            <!--<div class="col-lg-1"></div>-->
 
             <!--Inventario activo-->
-            <div v-if="!loading && inventarioActivo" class="card hoverCard mb-3 col-lg-5">
+            <div v-if="!loading && inventarioActivo" class="card hoverCard mb-3 col-lg-6">
                 <div class="card-body ">
                     <div class="row">
                         <div class="col-lg-12">
@@ -23,7 +23,7 @@
                                 <div class="container-fluid">
                                     <h1 class="display-6 fw-bold">Inventario Activo n°@{{ inventarioActivo.id }}</h1>
                                     <hr>
-                                    <p class="col-lg-12 fs-4"> Fecha de apertura: @{{ inventarioActivo.fechaApertura }}</p>
+                                    <p class="col-lg-12 fs-4"> Fecha de apertura: @{{ parseDate(inventarioActivo.fechaApertura) }}</p>
                                     <p class="col-lg-12 fs-4"> Aperturado por: @{{ getName(inventarioActivo.aperturadoPor) }}</p>
                                     <p class="col-lg-12 fs-4"> Estado:
                                         <span class="badge bg-success">@{{ getEstado(inventarioActivo.estado) }}</span>
@@ -46,10 +46,10 @@
                 </div>
             </div>
 
-            <div class="col-lg-1"></div>
+            <!--<div class="col-lg-1"></div>-->
 
             <!--Inventario cerrado-->
-            <div v-if="!loading && inventarioCerrado" class="card mb-3 col-lg-5">
+            <div v-if="!loading && inventarioCerrado" class="card hoverCard mb-3 col-lg-6">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
@@ -57,7 +57,7 @@
                                 <div class="container-fluid">
                                     <h1 class="display-6 fw-bold">Inventario Cerrado n°@{{ inventarioCerrado.id }}</h1>
                                     <hr>
-                                    <p class="col-lg-12 fs-4"> Fecha de cierre: @{{ inventarioCerrado.fechaCierre }}</p>
+                                    <p class="col-lg-12 fs-4"> Fecha de cierre: @{{ parseDate(inventarioCerrado.fechaCierre) }}</p>
                                     <p class="col-lg-12 fs-4"> Cerrado por: @{{ getName(inventarioCerrado.cerradoPor) }}</p>
                                     <p class="col-lg-12 fs-4"> Estado:
                                         <span class="badge bg-danger">@{{ getEstado(inventarioCerrado.estado) }}</span>
@@ -129,6 +129,11 @@
                     }).then(response => {
                         if (response.data.success) {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Inventario abierto',
                                 text: response.data.success,
                                 icon: 'success',
@@ -136,6 +141,11 @@
                             });
                         } else {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -145,6 +155,11 @@
                     }).catch(error => {
 
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
                             icon: 'error',
@@ -173,6 +188,11 @@
 
                         if (response.data.success) {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Inventario cerrado',
                                 text: response.data.success,
                                 icon: 'success',
@@ -180,6 +200,11 @@
                             });
                         } else {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -190,6 +215,11 @@
                     }).catch(error => {
 
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
                             icon: 'error',
@@ -217,6 +247,11 @@
                     }).catch(error => {
 
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
                             icon: 'error',
@@ -257,6 +292,11 @@
                     }).catch(error => {
 
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los productos',
                             icon: 'error',
@@ -277,6 +317,11 @@
                     }).catch(error => {
 
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
                             icon: 'error',
@@ -296,6 +341,11 @@
                         this.inventarioCerrado = response.data.inventarioCerrado;
                     }).catch(error => {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
                             icon: 'error',
@@ -312,7 +362,22 @@
                 getEstado(id) {
                     let estado = this.estados.find(estado => estado.id == id);
                     return estado.descripcion;
-                }
+                },
+                parseDate(date) {
+
+
+                    if (date == null) {
+                        return '-';
+                    }
+
+                    let dateObj = new Date(date);
+                    let month = dateObj.getUTCMonth() + 1;
+                    let day = dateObj.getUTCDate();
+                    let year = dateObj.getUTCFullYear();
+
+                    return day + "/" + month + "/" + year;
+
+                },
             },
             mounted() {
                 this.getAllUsers();

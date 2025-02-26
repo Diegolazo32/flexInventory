@@ -27,11 +27,11 @@ class ComprasController extends Controller
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de acceso sin permiso', 'compras', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de acceso sin permiso', 'compras', '-', '-');
             return redirect()->route('dashboard');
         }
 
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de compras', 'compras', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Acceso a pantalla de compras', 'compras', '-', '-');
         return view('compras.index');
     }
 
@@ -85,14 +85,14 @@ class ComprasController extends Controller
 
 
         if (!$permiso) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de ver detalles de compra sin permiso', 'compras', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de ver detalles de compra sin permiso', 'compras', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
         $compra = compras::find($id);
 
         if (!$compra) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de ver detalles de compra inexistente', 'compras', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de ver detalles de compra inexistente', 'compras', '-', '-');
             return response()->json(['error' => 'Compra no encontrada']);
         }
 
@@ -115,7 +115,7 @@ class ComprasController extends Controller
             ];
         }
 
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a detalles de compra', 'compras', '-', $compra);
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Acceso a detalles de compra', 'compras', '-', $compra);
         return response()->json(['compra' => $compra, 'productos' => $productos]);
     }
 
@@ -129,7 +129,7 @@ class ComprasController extends Controller
 
         if (!$permiso) {
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de crear sin permiso', 'compras', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear sin permiso', 'compras', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -154,7 +154,7 @@ class ComprasController extends Controller
 
             if (!$activo) {
 
-                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de crear compra sin inventario activo', 'compras', '-', '-');
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear compra sin inventario activo', 'compras', '-', '-');
                 return response()->json(['error' => 'No hay un inventario activo']);
             }
 
@@ -166,7 +166,7 @@ class ComprasController extends Controller
             $compra->total = $request->total;
             $compra->save();
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de compra', 'compras', '-', $compra);
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de compra', 'compras', '-', $compra);
 
             $productos = $request->productos;
 
@@ -183,7 +183,7 @@ class ComprasController extends Controller
                 $compraProducto->inventario = $activo->id;
                 $compraProducto->save();
 
-                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de detalle de compra', 'compras', '-', $compraProducto);
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de detalle de compra', 'compras', '-', $compraProducto);
 
                 //Obetener detalles del producto
                 $product = productos::find($producto['id']);
@@ -203,7 +203,7 @@ class ComprasController extends Controller
                 $lote->inventario = $activo->id;
                 $lote->save();
 
-                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de lote', 'lotes', '-', $lote);
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de lote', 'lotes', '-', $lote);
 
                 //Actualizar stock
                 //Obtener todos los lotes del producto
@@ -224,7 +224,7 @@ class ComprasController extends Controller
 
                 $product->save();
 
-                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Actualización de producto', 'productos', '-', $product);
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Actualización de producto', 'productos', '-', $product);
 
                 //Actualizar fecha de vencimiento
                 $lotes = lotes::where('producto', $product->id)->get();
@@ -249,16 +249,16 @@ class ComprasController extends Controller
                 $kardex->cantidad = $producto['cantidad'];
                 $kardex->accion = 1;
                 $kardex->inventario = $activo->id;
-                $kardex->observacion = 'Inventario inicial';
+                $kardex->observacion = 'Compra de producto';
                 $kardex->save();
 
-                $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creación de movimiento de kardex', 'kardex', '-', $kardex);
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de movimiento de kardex', 'kardex', '-', $kardex);
             }
 
             return response()->json(['success' => 'Compra realizada con éxito']);
         } catch (\Exception $e) {
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al crear compra', 'compras', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al crear compra', 'compras', '-', '-');
             return response()->json(['error' => $e->getMessage()]);
         }
     }

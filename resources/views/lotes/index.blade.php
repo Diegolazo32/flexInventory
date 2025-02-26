@@ -76,7 +76,7 @@
                                     <td>@{{ lote.numero }}</td>
                                     <td>@{{ getProductName(lote.producto) }}</td>
                                     <td style="font-weight: bold">@{{ lote.cantidad }}</td>
-                                    <td>@{{ lote.fechaVencimiento ?? '-' }}</td>
+                                    <td>@{{ parseDate(lote.fechaVencimiento) ?? '-' }}</td>
                                     <td v-if="lote.estado == 1">
                                         <span class="badge bg-success">@{{ getEstado(lote.estado) }}</span>
                                     </td>
@@ -252,6 +252,11 @@
                     }).catch(error => {
                         this.loading = false;
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los lotes',
                             icon: 'error',
@@ -276,6 +281,20 @@
                 getProductName(id) {
                     let producto = this.productos.find(producto => producto.id == id);
                     return producto.nombre;
+                },
+                parseDate(date) {
+
+                    if (date == null) {
+                        return '-';
+                    }
+
+                    let dateObj = new Date(date);
+                    let month = dateObj.getUTCMonth() + 1;
+                    let day = dateObj.getUTCDate();
+                    let year = dateObj.getUTCFullYear();
+
+                    return day + "/" + month + "/" + year;
+
                 },
             },
             mounted() {

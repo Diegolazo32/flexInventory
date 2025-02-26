@@ -4,7 +4,7 @@
 
 @section('content')
     <div id="app">
-        
+
         <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -93,6 +93,7 @@
                                 </div>
                             </div>
 
+                            <!--Generar pdf-->
                             <div class="col-lg-12" style="display: flex; align-items: center; justify-content: center;">
                                 <button type="submit" class="btn btn-primary" @click="sendForm">
                                     <i class="fas fa-file-pdf"></i>
@@ -157,8 +158,23 @@
                     //sendForm
                     if (Object.keys(this.errors).length === 0) {
                         document.getElementById('formReporte').submit();
+                        swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
+                            title: 'Reporte',
+                            text: 'Generando reporte',
+                            icon: 'info',
+                        });
                     } else {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -186,6 +202,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener los estados',
                                 icon: 'error',
@@ -195,6 +216,11 @@
 
                     } catch (error) {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los estados',
                             icon: 'error',
@@ -221,6 +247,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener las categorias',
                                 icon: 'error',
@@ -230,6 +261,11 @@
 
                     } catch (error) {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las categorias',
                             icon: 'error',
@@ -254,6 +290,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener los proveedores',
                                 icon: 'error',
@@ -263,6 +304,11 @@
 
                     } catch (error) {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los proveedores',
                             icon: 'error',
@@ -287,6 +333,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener las unidades',
                                 icon: 'error',
@@ -298,6 +349,11 @@
 
                     } catch (error) {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las unidades',
                             icon: 'error',

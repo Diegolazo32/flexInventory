@@ -15,82 +15,73 @@
             <div class="card">
 
                 <div class="card-header">
-                    <h1>Reporte de productos</h1>
+                    <h1>Reporte de movimientos</h1>
                 </div>
 
 
                 <div class="card-body">
-                    <form action="{{ route('reportes.productos.generar') }}" method="POST" id="formReporte">
+                    <form action="{{ route('reportes.movimientos.generar') }}" method="POST" id="formReporte">
                         @csrf
                         <div class="row" style="display: flex; justify-content: space-between;">
                             <div class="col-lg-3">
-                                <!--Estado-->
+                                <!--Inventario-->
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" id="estado" name="estado" v-model="reportParams.estado"
-                                        @blur="validateParams" @change="validateParams">
+                                    <select class="form-select" id="inventario" name="inventario"
+                                        v-model="reportParams.inventario" @blur="validateParams" @change="validateParams">
                                         <option value="0">Todos</option>
 
-                                        <option v-for="estado in estados" :key="estado.id" :value="estado.id">
-                                            @{{ estado.descripcion }}
+                                        <option v-for="inventario in inventarios" :key="inventario.id"
+                                            :value="inventario.id">
+                                            @{{ inventario.id }}
                                         </option>
                                     </select>
-                                    <label for="floatingInput">Estado</label>
-                                    <div class="invalid-tooltip" v-if="errors.estado">
-                                        @{{ errors.estado }}
+                                    <label for="floatingInput">Inventario N°</label>
+                                    <div class="invalid-tooltip" v-if="errors.inventario">
+                                        @{{ errors.inventario }}
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3">
-                                <!-- Categoria -->
+                                <!--Fecha inicio-->
                                 <div class="form-floating mb-3">
-                                    <select class="form-select" id="categoria" name="categoria"
-                                        v-model="reportParams.categoria" @blur="validateParams" @change="validateParams">
-                                        <option value="0">Todos</option>
-                                        <option v-for="categoria in categorias" :key="categoria.id"
-                                            :value="categoria.id">
-                                            @{{ categoria.descripcion }}
-                                        </option>
-                                    </select>
-                                    <label for="floatingInput">Categoria</label>
-                                    <div class="invalid-tooltip" v-if="errors.categoria">
-                                        @{{ errors.categoria }}
+                                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" disabled
+                                        v-model="reportParams.fecha_inicio" @blur="validateParams">
+                                    <label for="floatingInput">Fecha inicio</label>
+                                    <div class="invalid-tooltip" v-if="errors.fecha_inicio">
+                                        @{{ errors.fecha_inicio }}
                                     </div>
                                 </div>
+
                             </div>
                             <div class="col-lg-3">
-                                <!-- Unidad -->
-                                <div class="form-floating mb-3">
-                                    <select class="form-select" id="unidad" name="unidad" v-model="reportParams.unidad"
-                                        @blur="validateParams" @change="validateParams">
-                                        <option value="0">Todos</option>
 
-                                        <option v-for="unidad in unidades" :key="unidad.id" :value="unidad.id">
-                                            @{{ unidad.descripcion }}
-                                        </option>
-                                    </select>
-                                    <label for="floatingInput">Unidad</label>
-                                    <div class="invalid-tooltip" v-if="errors.unidad">
-                                        @{{ errors.unidad }}
+                                <!--Fecha fin-->
+                                <div class="form-floating mb-3">
+                                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" disabled
+                                        v-model="reportParams.fecha_fin" @blur="validateParams">
+                                    <label for="floatingInput">Fecha fin</label>
+                                    <div class="invalid-tooltip" v-if="errors.fecha_fin">
+                                        @{{ errors.fecha_fin }}
                                     </div>
                                 </div>
+
                             </div>
                             <div class="col-lg-3">
-                                <!-- Proveedor -->
-                                <div class="form-floating mb-3">
-                                    <select class="form-select" id="proveedor" name="proveedor"
-                                        v-model="reportParams.proveedor" @blur="validateParams" @change="validateParams">
-                                        <option value="0">Todos</option>
 
-                                        <option v-for="proveedor in proveedores" :key="proveedor.id"
-                                            :value="proveedor.id">
-                                            @{{ proveedor.nombre }}
-                                        </option>
+                                <!--Accion-->
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="accion" name="accion" v-model="reportParams.accion"
+                                        @blur="validateParams">
+                                        <option value="0">Todos</option>
+                                        <option value="1">Entrada</option>
+                                        <option value="2">Salida</option>
                                     </select>
-                                    <label for="floatingInput">Proveedor</label>
-                                    <div class="invalid-tooltip" v-if="errors.proveedor">
-                                        @{{ errors.proveedor }}
+                                    <label for="floatingInput">Accion</label>
+                                    <div class="invalid-tooltip" v-if="errors.accion">
+                                        @{{ errors.accion }}
                                     </div>
                                 </div>
+
                             </div>
 
                             <div class="col-lg-12" style="display: flex; align-items: center; justify-content: center;">
@@ -114,26 +105,18 @@
 
                 //Parametros de reporte
                 reportParams: {
-                    estado: 0,
-                    categoria: 0,
-                    unidad: 0,
-                    proveedor: 0,
+                    inventario: 0,
+                    fecha_inicio: '',
+                    fecha_fin: '',
+                    accion: 0,
                 },
 
                 //Errores
                 errors: {},
 
-                //estados
-                estados: [],
+                //inventario
+                inventarios: [],
 
-                //Categorias
-                categorias: [],
-
-                //Unidades
-                unidades: [],
-
-                //Proveedores
-                proveedores: [],
 
             },
             methods: {
@@ -142,10 +125,21 @@
 
                     this.errors = {};
 
-                    document.getElementById('estado').setAttribute('class', 'form-control is-valid');
-                    document.getElementById('categoria').setAttribute('class', 'form-control is-valid');
-                    document.getElementById('unidad').setAttribute('class', 'form-control is-valid');
-                    document.getElementById('proveedor').setAttribute('class', 'form-control is-valid');
+                    //If fecha inicio es menor a fecha fin intercambiar valores
+                    if (this.reportParams.fecha_inicio && this.reportParams.fecha_fin) {
+                        if (this.reportParams.fecha_inicio > this.reportParams.fecha_fin) {
+                            let temp = this.reportParams.fecha_inicio;
+                            this.reportParams.fecha_inicio = this.reportParams.fecha_fin;
+                            this.reportParams.fecha_fin = temp;
+                        }
+                    }
+
+                    //Validar fecha inicio
+
+                    document.getElementById('inventario').setAttribute('class', 'form-control is-valid');
+                    document.getElementById('fecha_inicio').setAttribute('class', 'form-control is-valid');
+                    document.getElementById('fecha_fin').setAttribute('class', 'form-control is-valid');
+                    document.getElementById('accion').setAttribute('class', 'form-control is-valid');
 
                 },
 
@@ -157,8 +151,24 @@
                     //sendForm
                     if (Object.keys(this.errors).length === 0) {
                         document.getElementById('formReporte').submit();
+                        swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
+                            title: 'Reporte',
+                            text: 'Generando reporte',
+                            icon: 'info',
+                        });
+
                     } else {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -169,12 +179,12 @@
                 },
 
                 //Recursos
-                async getAllEstados() {
+                async getAllInventarios() {
 
                     try {
                         axios({
                             method: 'get',
-                            url: '/allEstados',
+                            url: '/allInventarios',
                             params: {
                                 //page: this.page,
                                 //per_page: this.per_page,
@@ -182,12 +192,17 @@
                             }
                         }).then(response => {
 
-                            this.estados = response.data;
+                            this.inventarios = response.data;
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
-                                text: 'Ha ocurrido un error al obtener los estados',
+                                text: 'Ha ocurrido un error al obtener los inventarios',
                                 icon: 'error',
                                 confirmButtonText: 'Aceptar'
                             });
@@ -195,128 +210,28 @@
 
                     } catch (error) {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
-                            text: 'Ha ocurrido un error al obtener los estados',
+                            text: 'Ha ocurrido un error al obtener los inventarios',
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
                     }
 
+                    this.loading = false;
+
 
                 },
-
-                async getAllCategorias() {
-                    try {
-                        axios({
-                            method: 'get',
-                            url: '/allCategorias',
-                            params: {
-                                //page: this.page,
-                                //per_page: this.per_page,
-                                //search: this.search
-                            }
-                        }).then(response => {
-
-                            this.categorias = response.data;
-                        }).catch(error => {
-
-                            swal.fire({
-                                title: 'Error',
-                                text: 'Ha ocurrido un error al obtener las categorias',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-                        })
-
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al obtener las categorias',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-                },
-
-                async getAllProveedores() {
-                    try {
-                        axios({
-                            method: 'get',
-                            url: '/allProveedores',
-                            params: {
-                                //page: this.page,
-                                //per_page: this.per_page,
-                                //search: this.search
-                            }
-                        }).then(response => {
-
-                            this.proveedores = response.data;
-                        }).catch(error => {
-
-                            swal.fire({
-                                title: 'Error',
-                                text: 'Ha ocurrido un error al obtener los proveedores',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-                        })
-
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al obtener los proveedores',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                    }
-                },
-
-                async getAllUnidades() {
-                    try {
-                        axios({
-                            method: 'get',
-                            url: '/allUnidades',
-                            params: {
-                                //page: this.page,
-                                //per_page: this.per_page,
-                                //search: this.search
-                            }
-                        }).then(response => {
-
-                            this.unidades = response.data;
-                        }).catch(error => {
-
-                            swal.fire({
-                                title: 'Error',
-                                text: 'Ha ocurrido un error al obtener las unidades',
-                                icon: 'error',
-                                confirmButtonText: 'Aceptar'
-                            });
-                        }).finally(() => {
-                            this.loading = false;
-                        })
-
-                    } catch (error) {
-                        swal.fire({
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al obtener las unidades',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        });
-                        this.loading = false;
-                    }
-                },
-
 
 
             },
             mounted() {
 
-                this.getAllEstados();
-                this.getAllCategorias();
-                this.getAllProveedores();
-                this.getAllUnidades();
-
+                this.getAllInventarios();
 
             }
         });

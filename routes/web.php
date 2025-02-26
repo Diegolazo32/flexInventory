@@ -182,13 +182,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/kardex/store', [KardexController::class, 'store'])->name('kardex.store');
         Route::post('/kardex/edit/{id}', [KardexController::class, 'update'])->name('kardex.edit');
         Route::delete('/kardex/delete/{id}', [KardexController::class, 'delete'])->name('kardex.delete');
+        Route::get('/kardex/movimientos', [KardexController::class, 'movimientos'])->name('kardex.movimientos');
+        //Route::get('/kardex/movimientosByProduct/{id}', [KardexController::class, 'movimientosByProduct'])->name('kardex.movimientosByProduct');
     });
 
     //Inventario
     Route::controller(InventarioController::class)->group(function () {
         Route::get('/allInventario', [InventarioController::class, 'getAllInventario'])->name('allInventario');
+        Route::get('/allInventarios', [InventarioController::class, 'getAllInventarios'])->name('allInventarios');
         Route::get('/inventario', [InventarioController::class, 'index'])->name('inventario');
-
         Route::post('/inventario/open', [InventarioController::class, 'open'])->name('inventario.open');
         Route::post('/inventario/close', [InventarioController::class, 'close'])->name('inventario.close');
     });
@@ -223,8 +225,10 @@ Route::middleware(['auth'])->group(function () {
     //Reportes
     Route::controller(reportesController::class)->group(function () {
         Route::get('/reportes/productos', [reportesController::class, 'productosIndex'])->name('reportes.productos');
+        Route::get('/reportes/movimientos', [reportesController::class, 'movimientosIndex'])->name('reportes.movimientos');
         //Generar reporte de productos
         Route::post('/reportes/productos/generar', [reportesController::class, 'productosGenerar'])->name('reportes.productos.generar');
+        Route::post('/reportes/movimientos/generar', [reportesController::class, 'movimientosGenerar'])->name('reportes.movimientos.generar');
     });
 
     //Auditorias

@@ -50,12 +50,12 @@ class CategoriaController extends Controller
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de acceso sin permiso', 'categorias', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de acceso sin permiso', 'categorias', '-', '-');
 
             return redirect()->route('dashboard');
         }
 
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de categorias', 'categorias', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Acceso a pantalla de categorias', 'categorias', '-', '-');
         return view('categorias.index');
     }
 
@@ -67,7 +67,7 @@ class CategoriaController extends Controller
 
 
         if (!$permiso) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de crear sin permiso', 'categorias', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear sin permiso', 'categorias', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -82,11 +82,11 @@ class CategoriaController extends Controller
             $categoria->estado = 1;
             $categoria->save();
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creacion de categoria', 'categorias', '-', $categoria);
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creacion de categoria', 'categorias', '-', $categoria);
             return response()->json(['success' => 'Categoria creada correctamente']);
         } catch (\Exception $e) {
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al crear categoria', 'categorias', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al crear categoria', 'categorias', '-', '-');
             return response()->json(['error' => 'Error al crear la categoria']);
         }
     }
@@ -98,7 +98,7 @@ class CategoriaController extends Controller
         $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de actualizar sin permiso', 'categorias', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de actualizar sin permiso', 'categorias', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -115,10 +115,10 @@ class CategoriaController extends Controller
             $categoria->estado = $request->estado;
             $categoria->save();
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Actualizacion de categoria', 'categorias', $oldCategoria, $categoria);
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Actualizacion de categoria', 'categorias', $oldCategoria, $categoria);
             return response()->json(['success' => 'Categoria actualizada correctamente']);
         } catch (\Exception $e) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al actualizar categoria', 'categorias', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al actualizar categoria', 'categorias', '-', '-');
             return response()->json(['error' => 'Error al actualizar la categoria']);
         }
     }
@@ -130,7 +130,7 @@ class CategoriaController extends Controller
         $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de eliminar sin permiso', 'categorias', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de eliminar sin permiso', 'categorias', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -140,11 +140,11 @@ class CategoriaController extends Controller
             $categoria = categoria::find($id);
             $categoria->delete();
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Eliminacion de categoria', 'categorias', $oldDelete, '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Eliminacion de categoria', 'categorias', $oldDelete, '-');
             return response()->json(['success' => 'Categoria eliminada correctamente']);
         } catch (\Exception $e) {
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al eliminar categoria', 'categorias', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al eliminar categoria', 'categorias', '-', '-');
             return response()->json(['error' => 'Error al eliminar la categoria']);
         }
     }

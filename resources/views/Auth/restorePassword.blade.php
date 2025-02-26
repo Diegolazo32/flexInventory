@@ -55,6 +55,11 @@
 
                     if (this.errors.password) {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'La contraseña no cumple con los requisitos',
                             icon: 'error',

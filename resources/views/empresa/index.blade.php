@@ -334,7 +334,17 @@
 
                         })
                         .catch(error => {
-                            console.log(error);
+                            swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
+                                title: 'Error',
+                                text: 'Ocurrió un error al cargar la información de la empresa.',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar',
+                            });
                         });
                 },
                 validateForm() {
@@ -563,7 +573,8 @@
 
 
                     //Change icon to loading
-                    document.getElementById('SubmitForm').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                    document.getElementById('SubmitForm').innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i> Guardando...';
 
                     //Disable button
                     document.getElementById('SubmitForm').disabled = true
@@ -580,6 +591,11 @@
                                 .then(response => {
                                     if (response.data.success) {
                                         swal.fire({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 5000,
+                                            timerProgressBar: true,
                                             title: 'Cambios guardados',
                                             text: response.data.success,
                                             icon: 'success',
@@ -588,6 +604,11 @@
                                         window.location.reload();
                                     } else {
                                         swal.fire({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 5000,
+                                            timerProgressBar: true,
                                             title: 'Error',
                                             text: response.data.error,
                                             icon: 'error',
@@ -597,6 +618,11 @@
                                 })
                                 .catch(error => {
                                     swal.fire({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 5000,
+                                        timerProgressBar: true,
                                         title: 'Error',
                                         text: 'Ocurrió un error al actualizar la información de la empresa.',
                                         icon: 'error',
@@ -615,6 +641,11 @@
 
                         } catch (error) {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 5000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ocurrió un error al actualizar la información de la empresa.',
                                 icon: 'error',
@@ -623,6 +654,11 @@
                         }
                     } else {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
