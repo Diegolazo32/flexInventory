@@ -5,9 +5,11 @@
 @section('content')
     <div id="app">
 
-        <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
-            <i class="fas fa-spinner fa-spin"></i> Cargando...
-        </div>
+                    <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
 
         <div class="row">
             <div class="col-lg-1"></div>

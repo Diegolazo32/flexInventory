@@ -60,8 +60,10 @@
             <!-- Tabla de usuarios -->
             <div class="row">
                 <div class="card-body">
-                    <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
-                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
 
                     <div v-if="usuarios.error" class="alert alert-danger" role="alert">
@@ -127,14 +129,21 @@
                                         <span class="badge bg-success">Definida</span>
                                     </td>
                                     <td v-if="usuario.rol == 1">
-                                        <span class="badge bg-primary">@{{roles.find(rol => usuario.rol == rol.id).descripcion}}</span>
+                                        <span class="badge bg-primary">@{{ roles.find(rol => usuario.rol == rol.id).descripcion }}</span>
                                     </td>
+
                                     <td v-else>
-                                        <span class="badge bg-secondary">@{{roles.find(rol => usuario.rol == rol.id).descripcion}}</span>
+                                        <span class="badge bg-secondary">@{{ roles.find(rol => usuario.rol == rol.id).descripcion }}</span>
                                     </td>
                                     <td v-if="usuario.estado == 1">
                                         <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
                                         <span v-else class="badge bg-success">
+                                            @{{ estados.find(estado => estado.id == usuario.estado).descripcion }}
+                                        </span>
+                                    </td>
+                                    <td v-else-if="usuario.estado == 8">
+                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span v-else class="badge bg-warning">
                                             @{{ estados.find(estado => estado.id == usuario.estado).descripcion }}
                                         </span>
                                     </td>
@@ -143,12 +152,13 @@
                                         <span class="badge bg-danger" v-else>@{{ estados.find(estado => estado.id == usuario.estado).descripcion }}</span>
                                     </td>
                                     <td>
-                                        <button id="editBTN" class="btn btn-primary" @click="editUser(usuario)">
+                                        <button id="editBTN" class="btn btn-primary" @click="editUser(usuario)"
+                                            :disabled="loading">
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
                                         <button class="btn btn-warning" v-if="usuario.hasPassword == true" id="revertBTN"
-                                            @click="openRevertModal(usuario)">
+                                            :disabled="loading" @click="openRevertModal(usuario)">
                                             <i class="fas fa-lock"></i>
                                         </button>
 
@@ -157,7 +167,8 @@
                                             <i class="fas fa-lock"></i>
                                         </button>
 
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteUser(usuario)">
+                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteUser(usuario)"
+                                            :disabled="loading">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -224,8 +235,8 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
-                                            placeholder="Nombre" @blur="validateForm" v-model="item.nombre"
-                                            value="{{ old('nombre') }}">
+                                            maxlength="50" placeholder="Nombre" @blur="validateForm"
+                                            @keyup="validateForm" v-model="item.nombre" value="{{ old('nombre') }}">
                                         <label for="floatingInput">Nombre*</label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">@{{ errors.nombre }}</div>
                                     </div>
@@ -233,8 +244,8 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="apellido" name="apellido"
-                                            value="{{ old('apellido') }}" placeholder="Apellido" v-model="item.apellido"
-                                            @blur="validateForm">
+                                            maxlength="50" value="{{ old('apellido') }}" placeholder="Apellido"
+                                            v-model="item.apellido" @blur="validateForm" @keyup="validateForm">
                                         <label for="floatingInput">Apellido*</label>
                                         <div class="invalid-tooltip" v-if="errors.apellido">@{{ errors.apellido }}</div>
                                     </div>
@@ -243,7 +254,8 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="DUI" name="DUI"
                                             value="{{ old('DUI') }}" placeholder="DUI" @blur="validateForm"
-                                            v-model="item.DUI" maxlength="10"> <label for="floatingInput">DUI*</label>
+                                            @keyup="validateForm" v-model="item.DUI" maxlength="10"> <label
+                                            for="floatingInput">DUI*</label>
                                         <div class="invalid-tooltip" v-if="errors.DUI">@{{ errors.DUI }}</div>
                                     </div>
                                 </div>
@@ -252,7 +264,7 @@
                                         <input type="date" class="form-control" id="fechaNacimiento"
                                             name="fechaNacimiento" placeholder="Fecha de nacimiento"
                                             value="{{ old('fechaNacimiento') }}" @change="validateDate"
-                                            v-model="item.fechaNacimiento">
+                                            @blur="validateDate" v-model="item.fechaNacimiento">
                                         <label for="floatingInput">Fecha de nacimiento*</label>
                                         <div class="invalid-tooltip" v-if="errors.fechaNacimiento">@{{ errors.fechaNacimiento }}
                                         </div>
@@ -272,8 +284,9 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="usuario" name="usuario"
-                                            value="{{ old('usuario') }}" placeholder="Usuario" v-model="item.usuario"
-                                            @blur="validateForm" @keyup="validateForm">
+                                            min="5" maxlength="50" value="{{ old('usuario') }}"
+                                            placeholder="Usuario" v-model="item.usuario" @blur="validateForm"
+                                            @keyup="validateForm">
                                         <label for="floatingInput">Usuario*</label>
                                         <div class="invalid-tooltip" v-if="errors.usuario">@{{ errors.usuario }}</div>
                                     </div>
@@ -322,7 +335,8 @@
                                     <div class="form-floating mb-3">
                                         <!-- Nombre -->
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
-                                            placeholder="Nombre" @blur="validateEditForm" v-model="editItem.nombre">
+                                            maxlength="50" placeholder="Nombre" @blur="validateEditForm"
+                                            @keyup="validateEditForm" v-model="editItem.nombre">
                                         <label for="floatingInput">Nombre*</label>
                                         <div class="invalid-tooltip" v-if="editErrors.nombre">@{{ editErrors.nombre }}
                                         </div>
@@ -334,7 +348,8 @@
 
                                         <!-- Apellido -->
                                         <input type="text" class="form-control" id="apellidoEdit" name="apellido"
-                                            placeholder="Apellido" v-model="editItem.apellido" @blur="validateEditForm">
+                                            maxlength="50" placeholder="Apellido" v-model="editItem.apellido"
+                                            @blur="validateEditForm" @keyup="validateEditForm">
                                         <label for="floatingInput">Apellido*</label>
                                         <div class="invalid-tooltip" v-if="editErrors.apellido">@{{ editErrors.apellido }}
                                         </div>
@@ -345,8 +360,8 @@
 
                                         <!-- DUI -->
                                         <input type="text" class="form-control" id="DUIEdit" name="DUI"
-                                            placeholder="DUI" @blur="validateEditForm" v-model="editItem.DUI"
-                                            maxlength="10">
+                                            placeholder="DUI" @blur="validateEditForm" @keyup="validateEditForm"
+                                            v-model="editItem.DUI" maxlength="10">
                                         <label for="floatingInput">DUI*</label>
                                         <div class="invalid-tooltip" v-if="editErrors.DUI">@{{ editErrors.DUI }}</div>
                                     </div>
@@ -357,7 +372,7 @@
                                         <!-- Fecha de nacimiento -->
                                         <input type="date" class="form-control" id="fechaNacimientoEdit"
                                             name="fechaNacimiento" placeholder="Fecha de nacimiento" @blur="validateDate"
-                                            v-model="editItem.fechaNacimiento">
+                                            @change="validateDate" v-model="editItem.fechaNacimiento">
                                         <label for="floatingInput">Fecha de nacimiento*</label>
                                         <div class="invalid-tooltip" v-if="editErrors.fechaNacimiento">
                                             @{{ editErrors.fechaNacimiento }}
@@ -383,8 +398,8 @@
 
                                         <!-- Usuario -->
                                         <input type="text" class="form-control" id="usuarioEdit" name="usuario"
-                                            placeholder="Usuario" v-model="editItem.usuario" @blur="validateEditForm"
-                                            @keyup="validateEditForm">
+                                            maxlength="50" placeholder="Usuario" v-model="editItem.usuario"
+                                            @blur="validateEditForm" @keyup="validateEditForm">
                                         <label for="floatingInput">Usuario*</label>
                                         <div class="invalid-tooltip" v-if="editErrors.usuario">@{{ editErrors.usuario }}
                                         </div>
@@ -551,6 +566,10 @@
                 //Funcion para obtener recursos
                 async getAllUsers() {
 
+                    this.loading = true;
+                    this.errors = {};
+                    this.editErrors = {};
+
                     try {
                         axios({
                             method: 'get',
@@ -678,12 +697,7 @@
                     } else {
                         document.getElementById('rol').setAttribute('class', 'form-control is-valid');
                     }
-                    if (!this.item.fechaNacimiento) {
-                        this.errors.fechaNacimiento = 'Este campo es obligatorio';
-                        document.getElementById('fechaNacimiento').setAttribute('class', 'form-control is-invalid');
-                    } else {
-                        document.getElementById('fechaNacimiento').setAttribute('class', 'form-control is-valid');
-                    }
+
                     if (!this.item.apellido) {
                         this.errors.apellido = 'Este campo es obligatorio';
                         document.getElementById('apellido').setAttribute('class', 'form-control is-invalid');
@@ -703,9 +717,6 @@
                 validateEditForm() {
 
                     this.editErrors = {};
-
-                    this.validateEditDate();
-                    this.validateEditUsername();
 
                     if (!this.editItem.nombre) {
                         this.editErrors.nombre = 'Este campo es obligatorio';
@@ -732,9 +743,7 @@
                     } else {
                         document.getElementById('rolEdit').setAttribute('class', 'form-control is-valid');
                     }
-                    if (!this.editItem.fechaNacimiento) {
-                        this.editErrors.fechaNacimiento = 'Este campo es obligatorio';
-                    }
+
                     if (!this.editItem.apellido) {
                         this.editErrors.apellido = 'Este campo es obligatorio';
                         document.getElementById('apellidoEdit').setAttribute('class', 'form-control is-invalid');
@@ -764,18 +773,37 @@
                     let date = new Date(this.item.fechaNacimiento);
                     let today = new Date();
 
+                    if (!this.item.fechaNacimiento) {
+                        this.errors.fechaNacimiento = 'Este campo es obligatorio';
+                        document.getElementById('fechaNacimiento').setAttribute('class', 'form-control is-invalid');
+                        return;
+                    }
+
                     if (date > today) {
-                        this.errors.fechaNacimiento =
-                            'La fecha de nacimiento no puede ser mayor a la fecha actual';
+                        document.getElementById('fechaNacimiento').setAttribute('class', 'form-control is-invalid');
+                        this.errors.fechaNacimiento = 'La fecha de nacimiento no puede ser mayor a la fecha actual';
                     } else {
-                        if (today.getFullYear() - date.getFullYear() < 18) {
-                            this.errors.fechaNacimiento = 'El usuario debe ser mayor de edad';
-                        }
+                        document.getElementById('fechaNacimientoEdit').setAttribute('class',
+                            'form-control is-valid');
+                    }
+
+                    if (today.getFullYear() - date.getFullYear() < 18) {
+                        this.errors.fechaNacimiento = 'El usuario debe ser mayor de edad';
+                        document.getElementById('fechaNacimiento').setAttribute('class', 'form-control is-invalid');
+                    } else {
+                        document.getElementById('fechaNacimiento').setAttribute('class', 'form-control is-valid');
                     }
                 },
                 validateEditDate() {
                     let date = new Date(this.editItem.fechaNacimiento);
                     let today = new Date();
+
+                    if (!this.editItem.fechaNacimiento) {
+                        this.editErrors.fechaNacimiento = 'Este campo es obligatorio';
+                        document.getElementById('fechaNacimientoEdit').setAttribute('class',
+                            'form-control is-invalid');
+                        return;
+                    }
 
                     if (date > today) {
                         this.editErrors.fechaNacimiento =
@@ -810,6 +838,7 @@
 
                     for (let i = 0; i < this.usuarios.length; i++) {
                         if (this.usuarios[i].usuario == this.item.usuario) {
+                            document.getElementById('usuario').setAttribute('class', 'form-control is-invalid');
                             this.errors.usuario = 'El usuario ya existe';
                         }
                     }
@@ -830,6 +859,7 @@
                     //recorrer this.usuarios
                     for (let i = 0; i < this.usuarios.length; i++) {
                         if (this.usuarios[i].usuario == this.editItem.usuario) {
+                            document.getElementById('usuarioEdit').setAttribute('class', 'form-control is-invalid');
                             this.editErrors.usuario = 'El usuario ya existe';
                         }
                     }
@@ -881,7 +911,7 @@
 
                             //Quitar icono de boton
                             document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-save"></i> Guardar';
+                                'Guardar';
 
                             //Cerrar modal
                             document.getElementById('cancelButton').click();
@@ -922,6 +952,13 @@
                             this.getAllUsers();
                         })
 
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
                     }
                 },
                 sendFormEdit() {
@@ -990,6 +1027,13 @@
 
                         })
 
+                    }else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
                     }
                 },
                 sendDeleteForm() {
@@ -1033,7 +1077,7 @@
 
                             //Quitar icono de boton
                             document.getElementById('deleteButton').innerHTML =
-                                '<i class="fas fa-trash"></i>';
+                                'Eliminar';
 
                             //Cerrar modal
                             document.getElementById('canceldeleteButton').click();
@@ -1085,7 +1129,7 @@
 
                         //change icon to lock
                         document.getElementById('revertButton').innerHTML =
-                            '<i class="fas fa-lock"></i>';
+                            'Restablecer';
 
                         //enable button
                         document.getElementById('revertButton').disabled = false;
@@ -1136,13 +1180,15 @@
                 },
                 //Funciones de limpieza
                 cleanForm() {
-                    this.nombre = '';
-                    this.apellido = '';
-                    this.DUI = '';
-                    this.fechaNacimiento = '';
-                    this.genero = '';
-                    this.usuario = '';
-                    this.rol = '';
+                    this.item = {
+                        nombre: '',
+                        apellido: '',
+                        DUI: '',
+                        fechaNacimiento: '',
+                        genero: '',
+                        usuario: '',
+                        rol: '',
+                    };
                     this.errors = {};
                     this.editErrors = {};
                     this.editItem = {
@@ -1210,9 +1256,9 @@
             },
             mounted() {
                 this.getAllEstados();
-                this.getAllUsers();
                 this.getAllRoles();
                 this.randomMessage();
+                this.getAllUsers();
             }
         });
     </script>

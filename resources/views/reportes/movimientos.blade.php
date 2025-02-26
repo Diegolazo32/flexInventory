@@ -5,8 +5,10 @@
 @section('content')
     <div id="app">
 
-        <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
-            <i class="fas fa-spinner fa-spin"></i> Cargando...
+        <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
 
         <div v-if="!loading">
@@ -155,6 +157,13 @@
                     //sendForm
                     if (Object.keys(this.errors).length === 0) {
                         document.getElementById('formReporte').submit();
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
                     }
 
                 },

@@ -59,9 +59,11 @@
         <div class="row">
             <div class="card-body">
 
-        <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
-            <i class="fas fa-spinner fa-spin"></i> Cargando...
-        </div>
+                    <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
 
                 <div v-if="productoError" class="alert alert-danger" role="alert">
                     <h3>@{{ productoError }}</h3>
@@ -122,15 +124,15 @@
                                     <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == producto.estado).descripcion }}</span>
                                 </td>
                                 <td>
-                                    <button id="editBTN" class="btn btn-primary" @click="editProducto(producto)">
+                                    <button id="editBTN" class="btn btn-primary" @click="editProducto(producto)" :disabled="loading">
                                         <i class="fas fa-pencil"></i>
                                     </button>
 
-                                    <button id="showBTN" class="btn btn-warning" @click="viewProducto(producto)">
+                                    <button id="showBTN" class="btn btn-warning" @click="viewProducto(producto)" :disabled="loading">
                                         <i class="fas fa-eye"></i>
                                     </button>
 
-                                    <button id="lotesBte" class="btn btn-success" @click="getAllLotes(producto)">
+                                    <button id="lotesBte" class="btn btn-success" @click="getAllLotes(producto)" :disabled="loading">
                                         <i class="fa-solid fa-table-cells"></i>
                                     </button>
                                 </td>
@@ -1067,7 +1069,14 @@
                         this.getAllProductos();
                     })
 
-                }
+                } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
+                    }
             },
             //Editar
             sendFormEdit() {
@@ -1143,7 +1152,14 @@
 
                     })
 
-                }
+                } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
+                    }
             },
             editProducto(producto) {
 

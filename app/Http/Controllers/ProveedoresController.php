@@ -73,7 +73,7 @@ class ProveedoresController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(52);
         $auditoria = new AuditoriaController();
 
-        if (!$permiso) {
+        if ($permiso) {
             $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de crear proveedor sin permiso', 'Proveedores', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
@@ -118,7 +118,7 @@ class ProveedoresController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(53);
         $auditoria = new AuditoriaController();
 
-        if (!$permiso) {
+        if ($permiso) {
             $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de actualizar proveedor sin permiso', 'Proveedores', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
@@ -164,7 +164,7 @@ class ProveedoresController extends Controller
         $permiso = $this->rolPermisoController->checkPermisos(54);
         $auditoria = new AuditoriaController();
 
-        if (!$permiso) {
+        if ($permiso) {
             $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de eliminar sin permiso', 'Proveedores', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }

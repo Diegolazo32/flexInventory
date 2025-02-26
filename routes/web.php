@@ -233,4 +233,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/allAuditorias', [AuditoriaController::class, 'getAllAudits'])->name('allAudits');
     });
 
+    //Ayuda y manuales
+    Route::get('/ayuda', function () {
+        return view('ayuda.index');
+    })->name('ayuda');
+
 });

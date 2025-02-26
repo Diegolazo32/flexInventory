@@ -5,8 +5,10 @@
 @section('content')
     <div id="app">
 
-        <div v-if="loading" role="alert" style="display:block; margin-left: 50%;" id="loading">
-            <i class="fas fa-spinner fa-spin"></i> Cargando...
+        <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
 
 
@@ -19,7 +21,7 @@
                     </div>
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" :disable="loading"
                             data-bs-target="#editEmpresaModal" style="height: 40px;" @click="fillData">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
@@ -560,6 +562,12 @@
                     }
 
 
+                    //Change icon to loading
+                    document.getElementById('SubmitForm').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+                    //Disable button
+                    document.getElementById('SubmitForm').disabled = true
+                    document.getElementById('cancelButton').disabled = true
 
                     if (Object.keys(this.errors).length === 0) {
                         try {
@@ -595,6 +603,9 @@
                                         confirmButtonText: 'Aceptar',
                                     });
                                 }).finally(() => {
+                                    document.getElementById('SubmitForm').innerHTML = 'Guardar';
+                                    document.getElementById('SubmitForm').disabled = false;
+                                    document.getElementById('cancelButton').disabled = false;
                                     this.firstTime = false;
                                     document.getElementById('cancelButton').click();
                                     this.cleanForm();

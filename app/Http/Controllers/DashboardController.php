@@ -15,6 +15,15 @@ class DashboardController extends Controller
     public function index()
     {
 
+        if (Auth::user()->estado == 8 || Auth::user()->estado == 2) {
+            Auth::logout();
+
+            flash('Usuario bloqueado o sin credenciales', 'error');
+            return redirect()->route('login');
+        }
+
+
+
         $auditoriaController = new AuditoriaController();
 
         $clientes = clientes::all();

@@ -197,7 +197,7 @@ class UserController extends Controller
 
             $user->save();
 
-            $auditoria->registrarEvento(Auth::user()->nombre, 'Crear usuario', 'Usuarios', '-', $usuario);
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Crear usuario', 'Usuarios', '-', $user);
 
             return response()->json(['success' => 'Usuario guardado correctamente']);
         } catch (\Exception $e) {
@@ -334,8 +334,16 @@ class UserController extends Controller
 
         try {
             $user->password = Hash::make("0000");
+            $user->estado = 8;
             $user->save();
             $auditoria->registrarEvento(Auth::user()->nombre, 'Reestablecer passsword de usuario', 'Usuarios', '-', $user);
+
+
+            if ($user->id == auth()->user()->id) {
+                Auth::logout();
+                flash('Contraseña restaurada correctamente', 'success');
+                return redirect()->route('login');
+            }
 
             //flash('Contraseña restaurada correctamente', 'success');
             return response()->json(['success' => 'Contraseña restaurada correctamente']);
