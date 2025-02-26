@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\inventario;
 use App\Models\lotes;
 use App\Models\productos;
 use Auth;
@@ -61,14 +62,15 @@ class LotesController extends Controller
         }
 
         $this->inventarioActivo = new InventarioController();
-        $activo = $this->inventarioActivo->checkInventarioStatus();
+        $isActivo = $this->inventarioActivo->checkInventarioStatus();
+        $activo = inventario::where('estado', 3)->orderBy('fechaApertura', 'desc')->first();
 
-        if (!$activo) {
+        if (!$isActivo) {
             return response()->json(['error' => 'No hay un inventario activo']);
         }
 
-        //All lotes sort by producto
-        $lotes = lotes::orderBy('producto', 'asc')->paginate(5);
+        //All lotes sort by estado first, then by fechaVencimiento and finally by producto
+        $lotes = lotes::where('inventario', $activo->id)->orderBy('estado', 'asc')->orderBy('fechaVencimiento', 'asc')->orderBy('producto', 'asc')->paginate(10);
         return response()->json($lotes);
     }
 

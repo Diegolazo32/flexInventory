@@ -216,6 +216,7 @@ class ComprasController extends Controller
 
                 $product->stock = $stockTotal;
                 $product->precioCompra = $producto['precio'];
+                $product->proveedor = $producto['proveedor'];
 
                 if ($product->stock > 0) {
                     $product->estado = 1;

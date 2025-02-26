@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\inventario;
+use App\Models\lotes;
 use App\Models\productos;
 use Auth;
 use Illuminate\Http\Request;
@@ -78,11 +79,13 @@ class InventarioController extends Controller
                 return response()->json(['error' => 'Ya existe un inventario abierto']);
             }
 
+            $productos = productos::where('estado', 1)->get();
+
             $inventario = new inventario();
             $inventario->fechaApertura = date('Y-m-d');
             $inventario->fechaCierre = null;
-            $inventario->ProductosApertura = productos::all()->count();
-            $inventario->StockApertura = productos::sum('stock');
+            $inventario->ProductosApertura = $productos->count();
+            $inventario->StockApertura = $productos->sum('stock');
             $inventario->ProductosCierre = 0;
             $inventario->StockCierre = 0;
             $inventario->totalInventario = 0;
@@ -91,12 +94,27 @@ class InventarioController extends Controller
             $inventario->estado = 3;
             $inventario->save();
 
+            $activo = inventario::where('estado', 3)->orderBy('fechaApertura', 'desc')->first();
+
             $productos = productos::all();
 
             foreach ($productos as $producto) {
                 $producto->stockInicial = $producto->stock;
                 $producto->save();
             }
+
+            //Pasar los lotes activos al siguiente inventario
+            $lotes = lotes::where('estado', 1)
+                ->orWhere('inventario', null)
+                ->orWhere('estado', 4)
+                ->get();
+
+            foreach ($lotes as $lote) {
+                $lote->inventario = $activo->id;
+                $lote->estado = 1;
+                $lote->save();
+            }
+
 
             $auditoria->registrarEvento(Auth::user()->nombre, 'Apertura de inventario', 'Inventario', '-', $inventario);
             return response()->json(['success' => 'Inventario abierto correctamente']);
@@ -133,7 +151,7 @@ class InventarioController extends Controller
 
             $totalInventario = 0;
 
-            $productos = productos::all();
+            $productos = productos::where('estado', 1)->get();
 
             foreach ($productos as $producto) {
 
@@ -142,11 +160,20 @@ class InventarioController extends Controller
 
             $inventario->fechaCierre = date('Y-m-d');
             $inventario->cerradoPor = auth()->user()->id;
-            $inventario->ProductosCierre = productos::all()->count();
-            $inventario->StockCierre = productos::sum('stock');
+            $inventario->ProductosCierre = $productos->count();
+            $inventario->StockCierre = $productos->sum('stock');
             $inventario->totalInventario = $totalInventario;
             $inventario->estado = 4;
             $inventario->save();
+
+            $lotes = lotes::where('estado', 1)
+                ->orWhere('inventario', null)
+                ->get();
+
+            foreach ($lotes as $lote) {
+                $lote->estado = 4;
+                $lote->save();
+            }
 
             $auditoria->registrarEvento(Auth::user()->nombre, 'Cierre de inventario exitoso', 'Inventario', '-', $inventario);
             return response()->json(['success' => 'Inventario cerrado correctamente']);
