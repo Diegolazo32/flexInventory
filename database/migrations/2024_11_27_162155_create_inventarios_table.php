@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('inventarios', function (Blueprint $table) {
             $table->id();
-            $table->date('fechaApertura');
-            $table->date('fechaCierre')->nullable();
+            $table->dateTime('fechaApertura');
+            $table->dateTime('fechaCierre')->nullable();
             $table->integer('ProductosApertura');
             $table->integer('StockApertura');
             $table->integer('ProductosCierre');

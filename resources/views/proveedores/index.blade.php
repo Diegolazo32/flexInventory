@@ -214,7 +214,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProveedorModalLabel">Crear proveedor </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('proveedores.store') }}" method="POST">
@@ -225,7 +225,7 @@
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">@{{ errors.nombre }}</div>
                                     </div>
                                 </div>
@@ -234,7 +234,7 @@
                                         <input type="text" class="form-control" id="direccion" name="direccion"
                                             placeholder="Direccion" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.direccion">
-                                        <label for="floatingInput">Direccion*</label>
+                                        <label for="floatingInput">Direccion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.direccion">@{{ errors.direccion }}</div>
                                     </div>
                                 </div>
@@ -243,7 +243,7 @@
                                         <input type="text" class="form-control" id="NIT" name="NIT"
                                             placeholder="NIT" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.NIT">
-                                        <label for="floatingInput">NIT*</label>
+                                        <label for="floatingInput">NIT<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.NIT">@{{ errors.NIT }}</div>
                                     </div>
                                 </div>
@@ -252,7 +252,7 @@
                                         <input type="text" class="form-control" id="emailPrincipal"
                                             name="emailPrincipal" placeholder="EmailPrincipal" @blur="validateForm"
                                             @keyup="validateForm" v-model="item.emailPrincipal">
-                                        <label for="floatingInput">Email Principal*</label>
+                                        <label for="floatingInput">Email Principal<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.emailPrincipal">@{{ errors.emailPrincipal }}
                                         </div>
                                     </div>
@@ -262,7 +262,7 @@
                                         <input type="text" class="form-control" id="telefonoPrincipal"
                                             name="telefonoPrincipal" placeholder="TelefonoPrincipal" @blur="validateForm"
                                             @keyup="validateForm" v-model="item.telefonoPrincipal">
-                                        <label for="floatingInput">Telefono Principal*</label>
+                                        <label for="floatingInput">Telefono Principal<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.telefonoPrincipal">
                                             @{{ errors.telefonoPrincipal }}</div>
                                     </div>
@@ -272,7 +272,7 @@
                                         <input type="text" class="form-control" id="representante"
                                             name="representante" placeholder="Representante" @blur="validateForm"
                                             @keyup="validateForm" v-model="item.representante">
-                                        <label for="floatingInput">Representante*</label>
+                                        <label for="floatingInput">Representante<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.representante">@{{ errors.representante }}
                                         </div>
                                     </div>
@@ -282,7 +282,7 @@
                                         <input type="text" class="form-control" id="emailRepresentante"
                                             name="emailRepresentante" placeholder="Email Representante"
                                             @blur="validateForm" @keyup="validateForm" v-model="item.emailRepresentante">
-                                        <label for="floatingInput">Email Representante*</label>
+                                        <label for="floatingInput">Email Representante<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.emailRepresentante">
                                             @{{ errors.emailRepresentante }}</div>
                                     </div>
@@ -293,7 +293,7 @@
                                             name="telefonoRepresentante" placeholder="Telefono Representante"
                                             @blur="validateForm" @keyup="validateForm"
                                             v-model="item.telefonoRepresentante">
-                                        <label for="floatingInput">Telefono Representante*</label>
+                                        <label for="floatingInput">Telefono Representante<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.telefonoRepresentante">
                                             @{{ errors.telefonoRepresentante }}</div>
                                     </div>
@@ -318,7 +318,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editProveedorModalLabel">Editar proveedor</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
@@ -329,7 +329,7 @@
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             placeholder="Nombre" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.nombre">@{{ editErrors.nombre }}
                                         </div>
                                     </div>
@@ -339,7 +339,7 @@
                                         <input type="text" class="form-control" id="direccionEdit" name="direccion"
                                             placeholder="Direccion" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.direccion">
-                                        <label for="floatingInput">Direccion*</label>
+                                        <label for="floatingInput">Direccion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.direccion">@{{ editErrors.direccion }}
                                         </div>
                                     </div>
@@ -349,7 +349,7 @@
                                         <input type="text" class="form-control" id="NITEDIT" name="NIT"
                                             placeholder="Direccion" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.NIT">
-                                        <label for="floatingInput">NIT*</label>
+                                        <label for="floatingInput">NIT<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.NIT">@{{ editErrors.NIT }}</div>
                                     </div>
                                 </div>
@@ -358,7 +358,7 @@
                                         <input type="text" class="form-control" id="emailPrincipalEdit"
                                             name="emailPrincipal" placeholder="EmailPrincipal" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.emailPrincipal">
-                                        <label for="floatingInput">Email Principal*</label>
+                                        <label for="floatingInput">Email Principal<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.emailPrincipal">
                                             @{{ editErrors.emailPrincipal }}</div>
                                     </div>
@@ -369,7 +369,7 @@
                                             name="telefonoPrincipal" placeholder="TelefonoPrincipal"
                                             @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.telefonoPrincipal">
-                                        <label for="floatingInput">Telefono Principal*</label>
+                                        <label for="floatingInput">Telefono Principal<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.telefonoPrincipal">
                                             @{{ editErrors.telefonoPrincipal }}</div>
                                     </div>
@@ -379,7 +379,7 @@
                                         <input type="text" class="form-control" id="representanteEdit"
                                             name="representante" placeholder="Representante" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.representante">
-                                        <label for="floatingInput">Representante*</label>
+                                        <label for="floatingInput">Representante<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.representante">
                                             @{{ editErrors.representante }}</div>
                                     </div>
@@ -390,7 +390,7 @@
                                             name="emailRepresentante" placeholder="Email Representante"
                                             @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.emailRepresentante">
-                                        <label for="floatingInput">Email Representante*</label>
+                                        <label for="floatingInput">Email Representante<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.emailRepresentante">
                                             @{{ editErrors.emailRepresentante }}</div>
                                     </div>
@@ -401,7 +401,7 @@
                                             name="telefonoRepresentante" placeholder="Telefono Representante"
                                             @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.telefonoRepresentante">
-                                        <label for="floatingInput">Telefono Representante*</label>
+                                        <label for="floatingInput">Telefono Representante<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.telefonoRepresentante">
                                             @{{ editErrors.telefonoRepresentante }}</div>
                                     </div>
@@ -417,7 +417,7 @@
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Estado*</label>
+                                        <label for="floatingInput">Estado<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.estado">@{{ editErrors.estado }}
                                         </div>
 
@@ -592,6 +592,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                     title: 'Proveedor creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -599,6 +604,11 @@
                                 });
                             } else {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -617,6 +627,11 @@
                                 'Guardar';
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear el proveedor',
                                 icon: 'error',
@@ -641,6 +656,11 @@
 
                     } else {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -679,6 +699,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                     title: 'Proveedor creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -686,6 +711,11 @@
                                 });
                             } else {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -697,6 +727,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar el proveedor',
                                 icon: 'error',
@@ -721,6 +756,11 @@
 
                     } else {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -790,6 +830,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -810,6 +855,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Proveedor eliminado',
                                 text: response.data.success,
                                 icon: 'success',
@@ -819,6 +869,11 @@
 
                     }).catch(error => {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar el proveedor',
                             icon: 'error',
@@ -1171,6 +1226,11 @@
                     }).catch(error => {
                         this.loading = false;
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los proveedores',
                             icon: 'error',

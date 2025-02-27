@@ -6,7 +6,7 @@ use App\Models\inventario;
 use App\Models\kardex;
 use App\Models\lotes;
 use App\Models\productos;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class KardexController extends Controller
@@ -31,7 +31,7 @@ class KardexController extends Controller
         return view('kardex.index');
     }
 
-    public function getAllKardex()
+    public function getAllKardex(Request $request)
     {
         $this->rolPermisoController = new RolPermisoController();
         $permiso = $this->rolPermisoController->checkPermisos(27);
@@ -48,6 +48,12 @@ class KardexController extends Controller
         }
 
         $inventario = inventario::where('estado', 3)->first();
+
+        if ($request->has('per_page')) {
+            //Paginate all the kardex movements regardless of the inventory
+            $kardex = kardex::orderBy('created_at', 'desc')->paginate($request->per_page);
+            return response()->json($kardex);
+        }
 
         $kardex = Kardex::where('inventario', $inventario->id)->get();
 
@@ -112,7 +118,6 @@ class KardexController extends Controller
                     //Actualizar el stock del producto sumando todos los lotes que tengan stock
                     $producto->stock = lotes::where('producto', $producto->id)->where('estado', 1)->sum('cantidad');
                     $auditoria->registrarEvento(Auth::user()->nombre, 'Registro de movimiento de entrada de kardex - Ingreso', 'Kardex', '-', $kardex);
-
                 } else {
                     //Descontarle al lote mas antiguo hasta agotarlo, y luego seguir con el siguiente lote
                     $cantidad = $movimiento['cantidad'];
@@ -161,5 +166,21 @@ class KardexController extends Controller
             $auditoria->registrarEvento(Auth::user()->nombre, 'Error al registrar los movimientos del kardex', '', '-', '-');
             return response()->json(['error' => 'Error al guardar los movimientos'], 500);
         }
+    }
+
+    public function movimientos()
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(70);
+        $auditoria = new AuditoriaController();
+
+        if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceso a la pantalla de movimientos de kardex sin permiso', 'Kardex', '-', '-');
+            flash('No tiene permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a la pantalla de kardex', 'Kardex', '-', '-');
+        return view('kardex.movimientos');
     }
 }

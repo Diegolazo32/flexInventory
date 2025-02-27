@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\inventario;
 use App\Models\lotes;
 use App\Models\productos;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class LotesController extends Controller
@@ -46,8 +46,6 @@ class LotesController extends Controller
         $lote->save();
 
         $auditoria->registrarEvento(Auth::user()->nombre, 'Creacion de nuevo lote', 'Lotes', '-', $lote);
-
-
     }
 
     public function getAllLotes()
@@ -70,7 +68,12 @@ class LotesController extends Controller
         }
 
         //All lotes sort by estado first, then by fechaVencimiento and finally by producto
-        $lotes = lotes::where('inventario', $activo->id)->orderBy('estado', 'asc')->orderBy('fechaVencimiento', 'asc')->orderBy('producto', 'asc')->paginate(10);
+        $lotes = lotes::where('inventario', $activo->id)
+            ->orderBy('estado', 'asc')
+            //->orderBy('fechaVencimiento', 'asc')
+            ->orderBy('producto', 'asc')
+            ->orderBy('numero', 'asc')
+            ->paginate(10);
         return response()->json($lotes);
     }
 

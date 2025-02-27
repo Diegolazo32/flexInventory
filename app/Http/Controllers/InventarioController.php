@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\inventario;
 use App\Models\lotes;
 use App\Models\productos;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -79,16 +79,26 @@ class InventarioController extends Controller
                 return response()->json(['error' => 'Ya existe un inventario abierto']);
             }
 
+            $totalInventario = 0;
+
             $productos = productos::where('estado', 1)->get();
 
+            foreach ($productos as $producto) {
+
+                $totalInventario += $producto->precioCompra * $producto->stock;
+            }
+
+            //DateTime
+            $date = date('Y-m-d:h:i:s');
+
             $inventario = new inventario();
-            $inventario->fechaApertura = date('Y-m-d');
+            $inventario->fechaApertura = date('Y-m-d:h:i:s');
             $inventario->fechaCierre = null;
             $inventario->ProductosApertura = $productos->count();
             $inventario->StockApertura = $productos->sum('stock');
             $inventario->ProductosCierre = 0;
             $inventario->StockCierre = 0;
-            $inventario->totalInventario = 0;
+            $inventario->totalInventario = $totalInventario;
             $inventario->aperturadoPor = auth()->user()->id;
             $inventario->cerradoPor = auth()->user()->id;
             $inventario->estado = 3;
@@ -158,7 +168,7 @@ class InventarioController extends Controller
                 $totalInventario += $producto->precioCompra * $producto->stock;
             }
 
-            $inventario->fechaCierre = date('Y-m-d');
+            $inventario->fechaCierre = date('Y-m-d:h:i:s');
             $inventario->cerradoPor = auth()->user()->id;
             $inventario->ProductosCierre = $productos->count();
             $inventario->StockCierre = $productos->sum('stock');
@@ -183,5 +193,12 @@ class InventarioController extends Controller
             $auditoria->registrarEvento(Auth::user()->nombre, 'Error al cerrar inventario', 'Inventario', '-', '-');
             return response()->json(['error' => 'Error al cerrar el inventario']);
         }
+    }
+
+    public function getAllInventarios()
+    {
+        $inventarios = inventario::orderBy('fechaApertura', 'desc')->get();
+
+        return response()->json($inventarios);
     }
 }

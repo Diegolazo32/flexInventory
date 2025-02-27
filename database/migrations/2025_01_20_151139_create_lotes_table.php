@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('codigo')->unique();
             $table->integer('numero');
-            $table->decimal('cantidad');
+            $table->bigInteger('cantidad');
             $table->date('fechaVencimiento')->nullable();
             $table->foreignId('producto')->references('id')->on('productos');
             $table->foreignId('estado')->references('id')->on('estados');

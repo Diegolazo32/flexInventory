@@ -120,7 +120,7 @@ class AuthController extends Controller
 
         $usuario = User::find($id);
         $auditoriaController = new AuditoriaController();
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Solicitud de cambio de contraseña', 'usuarios', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Solicitud de cambio de contraseña', 'usuarios', '-', '-');
         return view('Auth.restorePassword', compact('usuario'));
     }
 
@@ -149,7 +149,7 @@ class AuthController extends Controller
         $usuario->estado = 1;
         $usuario->save();
         $auditoriaController = new AuditoriaController();
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Cambio de contraseña', 'usuarios', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Cambio de contraseña', 'usuarios', '-', '-');
 
         Auth::logout();
 

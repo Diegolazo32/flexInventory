@@ -46,11 +46,15 @@
                     </div>
                 </div>
             </div>
-            <!-- Tabla de productos -->
+            <!-- Tabla de kardex -->
             <div class="row">
                 <div class="card-body">
 
-                    <div class="table-responsive">
+                    <div v-if="kardexError" class="alert alert-danger" role="alert">
+                        <h3>@{{ kardexError }}</h3>
+                    </div>
+
+                    <div v-else class="table-responsive">
                         <table ref="table" class="table table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
@@ -63,6 +67,8 @@
                                 </tr>
                             </thead>
                             <tbody>
+
+
                                 <tr v-if="loading" role="alert" id="loading">
                                     <td colspan="6">
                                         <div v-if="loading" role="alert"
@@ -129,7 +135,7 @@
         <div class="modal fade" id="crearProductoModal" tabindex="-1" aria-labelledby="crearProductoModalLabel"
             aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-fullscreen-lg-down ">
-                <div class="modal-content">
+                <div class="modal-content" style="height: max-content;">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProductoModalLabel">Realizar movimiento </h1>
                         <small class="text-muted">Seleccione los productos para realizar un movimiento</small>
@@ -142,20 +148,20 @@
                         <div class="card">
                             <!-- Buscador -->
                             <div class="card-header">
-                                <div class="row">
+                                <div class="row" style="max-height: 38px;">
                                     <div class="col-6">
                                         <input :disabled="productos < 1" type="text" class="form-control"
                                             placeholder="Buscar producto" v-model="search" @keyup="searchFn">
                                         <ul v-if="results.length > 0" class="list-group">
                                             <li v-for="result in results" class="list-group-item"
                                                 @click="selectResult(result)" style="cursor: pointer;"
-                                                @keyup.enter="selectResult(result)" tabindex="0">@{{ result.codigo }}
+                                                @keyup.enter="selectResult(result[0])" tabindex="0">@{{ result.codigo }}
                                                 -
                                                 @{{ result.nombre }}</li>
                                         </ul>
                                     </div>
                                     <div class="col-6" v-if="kardex.length > 0"
-                                        style="display: flex; justify-content: flex-end;">
+                                        style="display: flex; justify-content: flex-end; max-height: 38px;">
                                         <button type="button" class="btn btn-outline-primary" @click="cleanForm">Limpiar
                                             tabla</button>
                                     </div>
@@ -188,14 +194,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <div v-if="loading" role="alert"
-                                                    style="display: flex; justify-content: center; align-items: center;">
-                                                    <div class="spinner-border text-primary" role="status">
-                                                        <span class="visually-hidden">Loading...</span>
-                                                    </div>
-                                                </div>
                                                 <!-- vue foreach -->
-                                                <tr v-else v-for="kard in kardex" :key="kard.id">
+                                                <tr v-for="(kard, index) in kardex" :key="kard.id">
                                                     <td>
                                                         <input type="text" class="form-control"
                                                             :id="'codigo' + kard.id" name="codigo" placeholder="Codigo"
@@ -234,7 +234,7 @@
                                                     </td>
                                                     <td>
                                                         <button type="button" class="btn btn-danger"
-                                                            @click="deleteKardex(kard.id)">
+                                                            @click="deleteKardex(index)">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </td>
@@ -341,14 +341,22 @@
                 nextPageUrl: '',
                 prevPageUrl: '',
                 productoError: '',
+
+                //KardexError
+                kardexError: '',
             },
             methods: {
                 //Crear
                 sendForm() {
 
 
-                    if(this.kardex.length == 0){
+                    if (this.kardex.length == 0) {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'No se ha seleccionado ningun producto',
                             icon: 'error',
@@ -385,6 +393,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Movimiento creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -392,6 +405,11 @@
                                 });
                             } else {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -410,6 +428,11 @@
                                 'Guardar';
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear el movimiento',
                                 icon: 'error',
@@ -434,6 +457,11 @@
 
                     } else {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -442,15 +470,15 @@
                     }
                 },
                 //Eliminar
-                deleteKardex(id) {
-                    this.kardex = this.kardex.filter(kard => kard.id != id);
+                deleteKardex(index) {
+                    this.kardex.splice(index, 1);
                 },
                 //Tabla
                 getEntradas(id) {
                     let entradas = 0;
                     this.movimientosKardex.forEach(movimiento => {
                         if (movimiento.producto == id && movimiento.accion == 1) {
-                            entradas += movimiento.cantidad;
+                            entradas += parseInt(movimiento.cantidad);
                         }
                     });
                     return entradas;
@@ -459,7 +487,7 @@
                     let salidas = 0;
                     this.movimientosKardex.forEach(movimiento => {
                         if (movimiento.producto == id && movimiento.accion == 2) {
-                            salidas += movimiento.cantidad;
+                            salidas += parseInt(movimiento.cantidad);
                         }
                     });
                     return salidas;
@@ -469,9 +497,9 @@
 
                     this.movimientosKardex.forEach(movimiento => {
                         if (movimiento.producto == id && movimiento.accion == 1) {
-                            total += movimiento.cantidad;
+                            total += parseInt(movimiento.cantidad);
                         } else if (movimiento.producto == id && movimiento.accion == 2) {
-                            total -= movimiento.cantidad;
+                            total -= parseInt(movimiento.cantidad);
                         }
                     });
 
@@ -562,6 +590,11 @@
                                 });
                             } catch (error) {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: error,
                                     icon: 'error',
@@ -590,6 +623,11 @@
                                 });
                             } catch (error) {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: error,
                                     icon: 'error',
@@ -700,6 +738,11 @@
 
                     }).catch(error => {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al buscar el producto',
                             icon: 'error',
@@ -710,7 +753,6 @@
                 cleanSearchMain() {
                     this.searchMainProductos = '';
                     this.searchError = '';
-                    this.getAllProductos();
                 },
                 //Obtener recursos
                 async getAllProductos() {
@@ -733,14 +775,13 @@
                         this.productoError = response.data.error;
 
                         if (this.productoError) {
-                            this.loading = false;
                             this.searchProductos = [];
                             this.mainProductos = [];
                             this.searchMainProd = [];
                             return;
                         }
 
-                        this.loading = false;
+
                         this.searchProductos = response.data.data;
                         this.mainProductos = response.data.data;
                         this.searchMainProd = response.data.data;
@@ -756,8 +797,13 @@
                         this.nextPageUrl = response.data.next_page_url;
                         this.prevPageUrl = response.data.prev_page_url;
                     }).catch(error => {
-                        this.loading = false;
+
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las unidades',
                             icon: 'error',
@@ -787,8 +833,12 @@
                         this.productos = response.data;
 
                     }).catch(error => {
-                        this.loading = false;
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las unidades',
                             icon: 'error',
@@ -816,16 +866,26 @@
                     this.proveedores = data;
                 },
                 async getAllKardex() {
+                    this.loading = true;
                     let response = await fetch('/allKardex');
                     let data = await response.json();
+
+                    if(data.error){
+                        this.kardexError = data.error;
+                        return;
+                    }
+
+                    this.loading = false;
                     this.movimientosKardex = data;
+
                 },
             },
             mounted() {
-                this.getAllKardex();
+
                 this.getAllProveedores();
                 this.getAllEstados();
                 this.getAllProductos();
+                this.getAllKardex();
             }
         });
     </script>

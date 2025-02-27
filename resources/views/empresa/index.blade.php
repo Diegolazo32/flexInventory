@@ -96,7 +96,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProductoModalLabel">Editar informacion </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('productos.store') }}" method="POST"
@@ -109,7 +109,7 @@
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @keyup="validateForm" v-model="empresa.nombre"
                                             maxlength="100">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">
                                             @{{ errors.nombre }}
                                         </div>
@@ -122,7 +122,7 @@
                                         <input type="text" class="form-control" id="direccion" name="direccion"
                                             placeholder="Direccion de la empresa" @keyup="validateForm"
                                             v-model="empresa.direccion" maxlength="200">
-                                        <label for="floatingInput">Direccion*</label>
+                                        <label for="floatingInput">Direccion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.direccion">@{{ errors.direccion }}</div>
                                     </div>
                                 </div>
@@ -133,7 +133,7 @@
                                         <input type="text" class="form-control" id="telefono" name="telefono"
                                             maxlength="14" placeholder="Telefono de la empresa" @keyup="validateForm"
                                             v-model="empresa.telefono">
-                                        <label for="floatingInput">Telefono*</label>
+                                        <label for="floatingInput">Telefono<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.telefono">@{{ errors.telefono }}</div>
                                     </div>
                                 </div>
@@ -334,7 +334,17 @@
 
                         })
                         .catch(error => {
-                            console.log(error);
+                            swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                title: 'Error',
+                                text: 'Ocurrió un error al cargar la información de la empresa.',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar',
+                            });
                         });
                 },
                 validateForm() {
@@ -563,7 +573,8 @@
 
 
                     //Change icon to loading
-                    document.getElementById('SubmitForm').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                    document.getElementById('SubmitForm').innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i> Guardando...';
 
                     //Disable button
                     document.getElementById('SubmitForm').disabled = true
@@ -580,6 +591,11 @@
                                 .then(response => {
                                     if (response.data.success) {
                                         swal.fire({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 3000,
+                                            timerProgressBar: true,
                                             title: 'Cambios guardados',
                                             text: response.data.success,
                                             icon: 'success',
@@ -588,6 +604,11 @@
                                         window.location.reload();
                                     } else {
                                         swal.fire({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 3000,
+                                            timerProgressBar: true,
                                             title: 'Error',
                                             text: response.data.error,
                                             icon: 'error',
@@ -597,6 +618,11 @@
                                 })
                                 .catch(error => {
                                     swal.fire({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        timerProgressBar: true,
                                         title: 'Error',
                                         text: 'Ocurrió un error al actualizar la información de la empresa.',
                                         icon: 'error',
@@ -615,6 +641,11 @@
 
                         } catch (error) {
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ocurrió un error al actualizar la información de la empresa.',
                                 icon: 'error',
@@ -623,6 +654,11 @@
                         }
                     } else {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',

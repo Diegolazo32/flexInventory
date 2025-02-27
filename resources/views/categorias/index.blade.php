@@ -17,16 +17,6 @@
                             data-bs-target="#crearCategoriaModal" style="height: 40px;">
                             <i class="fas fa-plus"></i>
                         </button>
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editCategoriaModalBtn"
-                            data-bs-target="#editCategoriaModal" style="height: 40px;" hidden>
-                            Editar categoria
-                        </button>
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteCategoriaModalBtn"
-                            data-bs-target="#deleteCategoriaModal" style="height: 40px;" hidden>
-                            Eliminar categoria
-                        </button>
                     </div>
                 </div>
             </div>
@@ -95,13 +85,15 @@
                                         <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == categoria.estado).descripcion }}</span>
                                     </td>
                                     <td>
-                                        <button id="editBTN" class="btn btn-primary" @click="editCategoria(categoria)"
-                                            :disabled="loading">
+                                        <button id="editBTN" class="btn btn-primary" data-bs-toggle="modal"
+                                            id="editCategoriaModalBtn" data-bs-target="#editCategoriaModal"
+                                            @click="editCategoria(categoria)" :disabled="loading">
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteCategoria(categoria)"
-                                            :disabled="loading">
+                                        <button class="btn btn-danger" id="dltBTN" data-bs-toggle="modal"
+                                            id="deleteCategoriaModalBtn" data-bs-target="#deleteCategoriaModal"
+                                            @click="DeleteCategoria(categoria)" :disabled="loading">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -156,7 +148,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearCategoriaModalLabel">Crear categoria </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('categorias.store') }}" method="POST">
@@ -166,8 +159,8 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcion" name="descripcion"
                                             placeholder="Descripcion" @blur="validateForm" @keyup="validateForm"
-                                            v-model="item.descripcion" value="{{ old('descripcion') }}">
-                                        <label for="floatingInput">Descripcion*</label>
+                                            v-model="item.descripcion">
+                                        <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descripcion">@{{ errors.descripcion }}
                                         </div>
                                     </div>
@@ -192,7 +185,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editCategoriaModalLabel">Editar categoria</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
@@ -205,7 +199,7 @@
                                         <input type="text" class="form-control" id="descripcionEdit"
                                             name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.descripcion">
-                                        <label for="floatingInput">Descripcion*</label>
+                                        <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.descripcion">@{{ editErrors.descripcion }}
                                         </div>
                                     </div>
@@ -223,7 +217,7 @@
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Estado*</label>
+                                        <label for="floatingInput">Estado<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.estado">@{{ editErrors.estado }}
                                         </div>
 
@@ -332,6 +326,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Categoria creada',
                                     text: response.data.success,
                                     icon: 'success',
@@ -339,6 +338,11 @@
                                 });
                             } else {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -356,6 +360,11 @@
                             document.getElementById('SubmitForm').innerHTML = 'Guardar';
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear la categoria',
                                 icon: 'error',
@@ -380,6 +389,11 @@
 
                     } else {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -418,13 +432,23 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                    title: 'Categoria editada',
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    title: 'Categoria actualizada',
                                     text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -436,6 +460,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar la categoria',
                                 icon: 'error',
@@ -460,6 +489,11 @@
 
                     } else {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -469,13 +503,8 @@
                 },
                 editCategoria(categoria) {
                     this.editItem.descripcion = categoria.descripcion;
-
                     this.editItem.estado = categoria.estado;
                     this.editItem.id = categoria.id;
-
-                    //dar click al boton de modal
-                    document.getElementById('editCategoriaModalBtn').click();
-
                 },
                 //Eliminar
                 sendDeleteForm() {
@@ -504,6 +533,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -524,6 +558,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Categoria eliminada',
                                 text: response.data.success,
                                 icon: 'success',
@@ -533,6 +572,11 @@
 
                     }).catch(error => {
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar la categoria',
                             icon: 'error',
@@ -551,11 +595,7 @@
                 },
                 DeleteCategoria(categoria) {
                     this.deleteItem.descripcion = categoria.descripcion;
-
                     this.deleteItem.id = categoria.id;
-
-                    //dar click al boton de modal
-                    document.getElementById('deleteCategoriaModalBtn').click();
                 },
                 //Validaciones
                 validateForm() {
@@ -724,6 +764,11 @@
                     }).catch(error => {
                         this.loading = false;
                         swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las categorias',
                             icon: 'error',

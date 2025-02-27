@@ -51,12 +51,12 @@ class CajaController extends Controller
 
         if (!$permiso) {
             flash('No tiene permisos para acceder a esta sección', 'error');
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de acceso sin permiso', 'cajas', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de acceso sin permiso', 'cajas', '-', '-');
             return redirect()->route('dashboard');
         }
 
 
-        $auditoriaController->registrarEvento(Auth::user()->usuario, 'Acceso a pantalla de cajas', 'cajas', '-', '-');
+        $auditoriaController->registrarEvento(Auth::user()->nombre, 'Acceso a pantalla de cajas', 'cajas', '-', '-');
         return view('cajas.index');
     }
 
@@ -67,7 +67,7 @@ class CajaController extends Controller
         $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de crear sin permiso', 'cajas', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear sin permiso', 'cajas', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -83,12 +83,12 @@ class CajaController extends Controller
             $caja->estado = 1;
             $caja->save();
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Creacion de caja', 'cajas', '-', $caja);
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creacion de caja', 'cajas', '-', $caja);
 
             return response()->json(['success' => 'Caja creada correctamente']);
         } catch (\Exception $e) {
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al crear caja', 'cajas', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al crear caja', 'cajas', '-', '-');
             return response()->json($e->getMessage());
         }
     }
@@ -100,7 +100,7 @@ class CajaController extends Controller
         $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de actualizar sin permiso', 'cajas', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de actualizar sin permiso', 'cajas', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -119,11 +119,11 @@ class CajaController extends Controller
             $caja->estado = $request->estado;
             $caja->update();
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Actualizacion de caja', 'cajas', $lastCaja, $caja);
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Actualizacion de caja', 'cajas', $lastCaja, $caja);
             return response()->json(['success' => 'Caja actualizada correctamente']);
         } catch (\Exception $e) {
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al actualizar caja', 'cajas', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al actualizar caja', 'cajas', '-', '-');
             return response()->json($e->getMessage());
         }
     }
@@ -135,7 +135,7 @@ class CajaController extends Controller
         $auditoriaController = new AuditoriaController();
 
         if (!$permiso) {
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Intento de eliminar sin permiso', 'cajas', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de eliminar sin permiso', 'cajas', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -144,11 +144,11 @@ class CajaController extends Controller
             $deleteCaja = $caja;
             $caja->delete();
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Eliminacion de caja', 'cajas', $deleteCaja, '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Eliminacion de caja', 'cajas', $deleteCaja, '-');
             return response()->json(['success' => 'Caja eliminada correctamente']);
         } catch (\Exception $e) {
 
-            $auditoriaController->registrarEvento(Auth::user()->usuario, 'Error al eliminar caja', 'cajas', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al eliminar caja', 'cajas', '-', '-');
             return response()->json($e->getMessage());
         }
     }

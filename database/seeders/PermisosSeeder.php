@@ -491,16 +491,30 @@ class PermisosSeeder extends Seeder
             //Reportes
             [
                 // 'id' => 73,
-                'nombre' => 'ver-menu-reportes',
-                'descripcion' => 'Ver menú de reportes',
+                'nombre' => 'ver-menu-reportes-productos',
+                'descripcion' => 'Ver menú de reporte de productos',
                 'grupo' => 17,
             ],
             [
                 // 'id' => 74,
-                'nombre' => 'generar-reportes',
-                'descripcion' => 'Generar reportes',
+                'nombre' => 'generar-reporte-productos',
+                'descripcion' => 'Generar reporte de productos',
                 'grupo' => 17,
             ],
+            [
+                // 'id' => 75,
+                'nombre' => 'ver-menu-reportes-movimientos',
+                'descripcion' => 'Ver menú de reporte de movimientos',
+                'grupo' => 17,
+            ],
+            [
+                // 'id' => 76,
+                'nombre' => 'generar-reporte-movimientos',
+                'descripcion' => 'Generar reporte de movimientos',
+                'grupo' => 17,
+            ],
+
+
 
 
 

@@ -155,7 +155,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearUnidadModalLabel">Crear unidad </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('unidades.store') }}" method="POST">
@@ -165,8 +165,8 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcion" name="descripcion"
                                             placeholder="Descripcion" @blur="validateForm" @keyup="validateForm"
-                                            v-model="item.descripcion" value="{{ old('descripcion') }}">
-                                        <label for="floatingInput">Descripcion*</label>
+                                            v-model="item.descripcion" >
+                                        <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descripcion">@{{ errors.descripcion }}
                                         </div>
                                     </div>
@@ -174,9 +174,9 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="abreviatura" name="abreviatura"
-                                            value="{{ old('abreviatura') }}" placeholder="Abreviatura"
+                                            placeholder="Abreviatura"
                                             v-model="item.abreviatura" @blur="validateForm" @keyup="validateForm">
-                                        <label for="floatingInput">Abreviatura*</label>
+                                        <label for="floatingInput">Abreviatura<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.abreviatura">@{{ errors.abreviatura }}
                                         </div>
                                     </div>
@@ -201,7 +201,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editUnidadModalLabel">Editar unidad</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
@@ -214,7 +214,7 @@
                                         <input type="text" class="form-control" id="descripcionEdit"
                                             name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.descripcion">
-                                        <label for="floatingInput">Descripcion*</label>
+                                        <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.descripcion">@{{ editErrors.descripcion }}
                                         </div>
                                     </div>
@@ -227,7 +227,7 @@
                                         <input type="text" class="form-control" id="abreviaturaEdit"
                                             name="abreviatura" placeholder="Abreviatura" v-model="editItem.abreviatura"
                                             @blur="validateEditForm" @keyup="validateEditForm">
-                                        <label for="floatingInput">Abreviatura*</label>
+                                        <label for="floatingInput">Abreviatura<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.abreviatura">@{{ editErrors.abreviatura }}
                                         </div>
                                     </div>
@@ -244,7 +244,7 @@
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Estado*</label>
+                                        <label for="floatingInput">Estado<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.estado">@{{ editErrors.estado }}
                                         </div>
 
@@ -354,6 +354,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                     title: 'Unidad creada',
                                     text: response.data.success,
                                     icon: 'success',
@@ -361,6 +366,11 @@
                                 });
                             } else {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -379,6 +389,11 @@
                                 'Guardar';
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear la unidad',
                                 icon: 'error',
@@ -403,6 +418,11 @@
 
                     } else {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -441,13 +461,23 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                    title: 'Unidad editada',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                    title: 'Unidad actualizada',
                                     text: response.data.success,
                                     icon: 'success',
                                     confirmButtonText: 'Aceptar',
                                 });
                             } else {
                                 swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -459,6 +489,11 @@
                         }).catch(error => {
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar la unidad',
                                 icon: 'error',
@@ -483,6 +518,11 @@
 
                     } else {
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -527,6 +567,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
                                 icon: 'error',
@@ -547,6 +592,11 @@
                             document.getElementById('canceldeleteButton').click();
 
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Unidad eliminado',
                                 text: response.data.success,
                                 icon: 'success',
@@ -557,6 +607,11 @@
                     }).catch(error => {
 
                         swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar la unidad',
                             icon: 'error',
@@ -803,6 +858,11 @@
                         }).catch(error => {
                             this.loading = false;
                             swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener las unidades',
                                 icon: 'error',
