@@ -10,9 +10,9 @@ use App\Models\kardex;
 use App\Models\productos;
 use App\Models\proveedores;
 use App\Models\unidades;
-use Auth;
 use Mpdf\Mpdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
 class reportesController extends Controller

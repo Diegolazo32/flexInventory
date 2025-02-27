@@ -6,7 +6,7 @@ use App\Models\inventario;
 use App\Models\kardex;
 use App\Models\lotes;
 use App\Models\productos;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class KardexController extends Controller

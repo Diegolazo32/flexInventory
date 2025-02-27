@@ -81,13 +81,13 @@
                                 <tr>
                                     <th scope="col">Codigo</th>
                                     <th scope="col">Nombre</th>
-                                    <th scope="col">Precio Compra</th>
-                                    <th scope="col">Precio Venta</th>
-                                    <th scope="col">Precio Descuento</th>
-                                    <th scope="col">Precio Especial</th>
+                                    <th scope="col">$ Compra</th>
+                                    <th scope="col">$ Venta</th>
+                                    <th scope="col">$ Descuento</th>
+                                    <th scope="col">$ Especial</th>
                                     <th scope="col">Fecha Vencimiento</th>
                                     <th scope="col">Stock</th>
-                                    <th scope="col">Stock Minimo</th>
+                                    <!--<th scope="col">Stock Minimo</th>-->
                                     <th scope="col">Categoria</th>
                                     <th scope="col">Tipo Venta</th>
                                     <th scope="col">Proveedor</th>
@@ -110,7 +110,7 @@
                                     </td>
                                     <td v-else>@{{ formatDate(producto.fechaVencimiento) ?? '-' }}</td>
                                     <td>@{{ producto.stock ?? '-' }}</td>
-                                    <td>@{{ producto.stockMinimo ?? '-' }}</td>
+                                    <!--<td>@{{ producto.stockMinimo ?? '-' }}</td>-->
                                     <td>@{{ categorias.find(categoria => categoria.id == producto.categoria).descripcion }} </td>
                                     <td>@{{ tipoVentas.find(tipoVenta => tipoVenta.id == producto.tipoVenta).descripcion }}</td>
                                     <td>@{{ proveedores.find(proveedor => proveedor.id == producto.proveedor).nombre }}</td>
@@ -124,18 +124,18 @@
                                         <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == producto.estado).descripcion }}</span>
                                     </td>
                                     <td>
-                                        <button id="editBTN" class="btn btn-primary" @click="editProducto(producto)"
-                                            :disabled="loading">
+                                        <button id="editBTN" class="btn btn-primary btn-sm"
+                                            @click="editProducto(producto)" :disabled="loading">
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
-                                        <button id="showBTN" class="btn btn-warning" @click="viewProducto(producto)"
-                                            :disabled="loading">
+                                        <button id="showBTN" class="btn btn-warning btn-sm"
+                                            @click="viewProducto(producto)" :disabled="loading">
                                             <i class="fas fa-eye"></i>
                                         </button>
 
-                                        <button id="lotesBte" class="btn btn-success" @click="getAllLotes(producto)"
-                                            :disabled="loading">
+                                        <button id="lotesBte" class="btn btn-success btn-sm"
+                                            @click="getAllLotes(producto)" :disabled="loading">
                                             <i class="fa-solid fa-table-cells"></i>
                                         </button>
                                     </td>
@@ -192,7 +192,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProductoModalLabel">Crear producto </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small><br>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small><br>
                         <small class="text-muted"> Al crear un producto, se creara un lote con la cantidad asignada en
                             'stock' y con fecha de vencimiento
                             asignada en 'fecha vencimiento'
@@ -208,7 +208,7 @@
                                         <input type="text" class="form-control" id="codigo" name="codigo"
                                             placeholder="Codigo" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.codigo">
-                                        <label for="floatingInput">Codigo*</label>
+                                        <label for="floatingInput">Codigo<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.codigo">@{{ errors.codigo }}</div>
                                     </div>
                                 </div>
@@ -218,7 +218,7 @@
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">@{{ errors.nombre }}</div>
                                     </div>
                                 </div>
@@ -239,7 +239,7 @@
                                             placeholder="Precio Compra" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.precioCompra" step="0.01" min="0" max="999999"
                                             maxlength="6">
-                                        <label for="floatingInput">Precio Compra*</label>
+                                        <label for="floatingInput">Precio Compra<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.precioCompra">@{{ errors.precioCompra }}
                                         </div>
                                     </div>
@@ -251,7 +251,7 @@
                                             placeholder="Precio Venta" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.precioVenta" step="0.01" min="0" max="999999"
                                             maxlength="6">
-                                        <label for="floatingInput">Precio Venta*</label>
+                                        <label for="floatingInput">Precio Venta<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.precioVenta">@{{ errors.precioVenta }}
                                         </div>
                                     </div>
@@ -298,7 +298,7 @@
                                             placeholder="Stock" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.stock" step="1" min="0" max="999999"
                                             maxlength="6">
-                                        <label for="floatingInput">Stock*</label>
+                                        <label for="floatingInput">Stock<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.stock">@{{ errors.stock }}</div>
                                     </div>
                                 </div>
@@ -309,7 +309,7 @@
                                             placeholder="Stock Inicial" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.stockInicial" step="1" min="0" max="999999"
                                             maxlength="6" disabled>
-                                        <label for="floatingInput">Stock Inicial*</label>
+                                        <label for="floatingInput">Stock Inicial<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.stockInicial">@{{ errors.stockInicial }}
                                         </div>
                                     </div>
@@ -348,7 +348,7 @@
                                                 @{{ categoria.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Categoria*</label>
+                                        <label for="floatingInput">Categoria<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.categoria">@{{ errors.categoria }}</div>
                                     </div>
                                 </div>
@@ -362,7 +362,7 @@
                                                 @{{ tipoVenta.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Tipo Venta*</label>
+                                        <label for="floatingInput">Tipo Venta<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.tipoVenta">@{{ errors.tipoVenta }}</div>
                                     </div>
                                 </div>
@@ -376,7 +376,7 @@
                                                 @{{ proveedor.nombre }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Proveedor*</label>
+                                        <label for="floatingInput">Proveedor<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.proveedor">@{{ errors.proveedor }}</div>
                                     </div>
                                 </div>
@@ -390,7 +390,7 @@
                                                 @{{ unidad.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Unidad*</label>
+                                        <label for="floatingInput">Unidad<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.unidad">@{{ errors.unidad }}</div>
                                     </div>
                                 </div>
@@ -434,7 +434,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editProductoModalLabel">Editar producto</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small><br>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small><br>
                         <small class="text-muted">Para modificar la fecha de vencimiento de un producto, debe
                             modificarla
                             en la seccion de lotes, y modificar la del lote entero. </small>
@@ -451,7 +451,7 @@
                                         <input type="text" class="form-control" id="codigoEdit" name="codigo"
                                             placeholder="Codigo" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.codigo">
-                                        <label for="floatingInput">Codigo*</label>
+                                        <label for="floatingInput">Codigo<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.codigo">@{{ editErrors.codigo }}
                                         </div>
                                     </div>
@@ -462,7 +462,7 @@
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             placeholder="Nombre" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.nombre">@{{ editErrors.nombre }}
                                         </div>
                                     </div>
@@ -487,7 +487,7 @@
                                             name="precioCompra" placeholder="Precio Compra" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.precioCompra" step="0.01"
                                             min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Precio Compra*</label>
+                                        <label for="floatingInput">Precio Compra<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.precioCompra">
                                             @{{ editErrors.precioCompra }}</div>
                                     </div>
@@ -499,7 +499,7 @@
                                             name="precioVenta" placeholder="Precio Venta" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.precioVenta" step="0.01"
                                             min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Precio Venta*</label>
+                                        <label for="floatingInput">Precio Venta<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.precioVenta">
                                             @{{ editErrors.precioVenta }}
                                         </div>
@@ -549,7 +549,7 @@
                                             placeholder="Stock" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.stock" step="1" min="0" max="999999"
                                             maxlength="6" disabled>
-                                        <label for="floatingInput">Stock*</label>
+                                        <label for="floatingInput">Stock<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.stock">@{{ editErrors.stock }}
                                         </div>
                                     </div>
@@ -561,7 +561,7 @@
                                             name="stockInicial" placeholder="Stock Inicial" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.stockInicial" step="1"
                                             min="0" max="999999" maxlength="6" disabled>
-                                        <label for="floatingInput">Stock Inicial*</label>
+                                        <label for="floatingInput">Stock Inicial<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.stockInicial">
                                             @{{ editErrors.stockInicial }}</div>
                                     </div>
@@ -603,7 +603,7 @@
                                                 @{{ categoria.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Categoria*</label>
+                                        <label for="floatingInput">Categoria<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.categoria">
                                             @{{ editErrors.categoria }}
                                         </div>
@@ -620,7 +620,7 @@
                                                 @{{ tipoVenta.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Tipo Venta*</label>
+                                        <label for="floatingInput">Tipo Venta<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.tipoVenta">
                                             @{{ editErrors.tipoVenta }}
                                         </div>
@@ -637,7 +637,7 @@
                                                 @{{ proveedor.nombre }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Proveedor*</label>
+                                        <label for="floatingInput">Proveedor<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.proveedor">
                                             @{{ editErrors.proveedor }}
                                         </div>
@@ -654,7 +654,7 @@
                                                 @{{ unidad.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Unidad*</label>
+                                        <label for="floatingInput">Unidad<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.unidad">@{{ editErrors.unidad }}
                                         </div>
                                     </div>
@@ -670,7 +670,7 @@
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Estado*</label>
+                                        <label for="floatingInput">Estado<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.estado">@{{ editErrors.estado }}
                                         </div>
 
@@ -706,7 +706,7 @@
                                     <div class="form-floating mb-3">
                                         <input disabled type="text" class="form-control" id="codigoEdit"
                                             name="codigo" placeholder="Codigo" v-model="showItem.codigo">
-                                        <label for="floatingInput">Codigo*</label>
+                                        <label for="floatingInput">Codigo<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <!-- Nombre -->
@@ -714,7 +714,7 @@
                                     <div class="form-floating mb-3">
                                         <input disabled type="text" class="form-control" id="nombreShow"
                                             name="nombre" placeholder="Nombre" v-model="showItem.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
 
                                     </div>
                                 </div>
@@ -734,7 +734,7 @@
                                             name="precioCompra" placeholder="Precio Compra"
                                             v-model="showItem.precioCompra" step="0.01" min="0" max="999999"
                                             maxlength="6">
-                                        <label for="floatingInput">Precio Compra*</label>
+                                        <label for="floatingInput">Precio Compra<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <!-- Precio Venta -->
@@ -743,7 +743,7 @@
                                         <input disabled type="number" class="form-control" id="precioVentaShow"
                                             name="precioVenta" placeholder="Precio Venta" v-model="showItem.precioVenta"
                                             step="0.01" min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Precio Venta*</label>
+                                        <label for="floatingInput">Precio Venta<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <!-- Precio Descuento -->
@@ -781,7 +781,7 @@
                                         <input disabled type="number" class="form-control" id="stockShow"
                                             name="stock" placeholder="Stock" v-model="showItem.stock" step="1"
                                             min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Stock*</label>
+                                        <label for="floatingInput">Stock<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <!-- Stock Inicial -->
@@ -791,7 +791,7 @@
                                             name="stockInicial" placeholder="Stock Inicial"
                                             v-model="showItem.stockInicial" step="1" min="0" max="999999"
                                             maxlength="6" disabled>
-                                        <label for="floatingInput">Stock Inicial*</label>
+                                        <label for="floatingInput">Stock Inicial<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <!-- Stock Minimo -->
@@ -822,7 +822,7 @@
                                                 @{{ categoria.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Categoria*</label>
+                                        <label for="floatingInput">Categoria<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <!-- Tipo Venta -->
@@ -835,7 +835,7 @@
                                                 @{{ tipoVenta.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Tipo Venta*</label>
+                                        <label for="floatingInput">Tipo Venta<span class="text-danger">*</span></label>
 
                                     </div>
                                 </div>
@@ -849,7 +849,7 @@
                                                 @{{ proveedor.nombre }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Proveedor*</label>
+                                        <label for="floatingInput">Proveedor<span class="text-danger">*</span></label>
 
                                     </div>
                                 </div>
@@ -863,7 +863,7 @@
                                                 @{{ unidad.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Unidad*</label>
+                                        <label for="floatingInput">Unidad<span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -1069,7 +1069,7 @@
                             document.getElementById('cancelButton').disabled = false;
                             document.getElementById('SubmitForm').innerHTML = 'Guardar';
 
-                            if(!this.multiples){
+                            if (!this.multiples) {
                                 //Cerrar modal
                                 document.getElementById('cancelButton').click();
                             }
@@ -1079,7 +1079,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Producto creado',
                                     text: response.data.success,
@@ -1091,7 +1091,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
@@ -1114,7 +1114,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear el producto',
@@ -1140,7 +1140,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -1183,7 +1183,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Producto actualizado',
                                     text: response.data.success,
@@ -1195,7 +1195,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
@@ -1221,7 +1221,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar el producto',
@@ -1250,7 +1250,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -1542,7 +1542,7 @@
 
 
                     //Al menos 5 caracteres y sin espacios o caracteres especiales, !@#$%^&*()_+
-                    let regex = /^[ a-zA-Z0-9.]{3,}$/;
+                    let regex = /^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ'0-9., -_]{3,}$/;
 
                     if (!regex.test(this.item.nombre)) {
 
@@ -1562,7 +1562,7 @@
 
                     //this.editErrors = {};
 
-                    let regex = /^[ a-zA-Z0-9.]{3,}$/;
+                    let regex = /^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ'0-9., -_]{3,}$/;
 
                     if (!regex.test(this.editItem.nombre)) {
                         document.getElementById('nombreEdit').setAttribute('class', 'form-control is-invalid');
@@ -1687,7 +1687,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Lotes actualizados',
                                 text: response.data.success,
@@ -1699,7 +1699,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -1714,7 +1714,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al actualizar los lotes',
@@ -1942,7 +1942,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los productos',

@@ -46,11 +46,15 @@
                     </div>
                 </div>
             </div>
-            <!-- Tabla de productos -->
+            <!-- Tabla de kardex -->
             <div class="row">
                 <div class="card-body">
 
-                    <div class="table-responsive">
+                    <div v-if="kardexError" class="alert alert-danger" role="alert">
+                        <h3>@{{ kardexError }}</h3>
+                    </div>
+
+                    <div v-else class="table-responsive">
                         <table ref="table" class="table table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
@@ -63,6 +67,8 @@
                                 </tr>
                             </thead>
                             <tbody>
+
+
                                 <tr v-if="loading" role="alert" id="loading">
                                     <td colspan="6">
                                         <div v-if="loading" role="alert"
@@ -149,7 +155,7 @@
                                         <ul v-if="results.length > 0" class="list-group">
                                             <li v-for="result in results" class="list-group-item"
                                                 @click="selectResult(result)" style="cursor: pointer;"
-                                                @keyup.enter="selectResult(result)" tabindex="0">@{{ result.codigo }}
+                                                @keyup.enter="selectResult(result[0])" tabindex="0">@{{ result.codigo }}
                                                 -
                                                 @{{ result.nombre }}</li>
                                         </ul>
@@ -335,6 +341,9 @@
                 nextPageUrl: '',
                 prevPageUrl: '',
                 productoError: '',
+
+                //KardexError
+                kardexError: '',
             },
             methods: {
                 //Crear
@@ -346,7 +355,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'No se ha seleccionado ningun producto',
@@ -387,7 +396,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Movimiento creado',
                                     text: response.data.success,
@@ -399,7 +408,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
@@ -422,7 +431,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear el movimiento',
@@ -451,7 +460,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -584,7 +593,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Error',
                                     text: error,
@@ -617,7 +626,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Error',
                                     text: error,
@@ -732,7 +741,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al buscar el producto',
@@ -793,7 +802,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las unidades',
@@ -828,7 +837,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las unidades',
@@ -860,8 +869,15 @@
                     this.loading = true;
                     let response = await fetch('/allKardex');
                     let data = await response.json();
-                    this.movimientosKardex = data;
+
+                    if(data.error){
+                        this.kardexError = data.error;
+                        return;
+                    }
+
                     this.loading = false;
+                    this.movimientosKardex = data;
+
                 },
             },
             mounted() {

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\inventario;
 use App\Models\lotes;
 use App\Models\productos;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -88,8 +88,11 @@ class InventarioController extends Controller
                 $totalInventario += $producto->precioCompra * $producto->stock;
             }
 
+            //DateTime
+            $date = date('Y-m-d:h:i:s');
+
             $inventario = new inventario();
-            $inventario->fechaApertura = date('Y-m-d');
+            $inventario->fechaApertura = date('Y-m-d:h:i:s');
             $inventario->fechaCierre = null;
             $inventario->ProductosApertura = $productos->count();
             $inventario->StockApertura = $productos->sum('stock');
@@ -165,7 +168,7 @@ class InventarioController extends Controller
                 $totalInventario += $producto->precioCompra * $producto->stock;
             }
 
-            $inventario->fechaCierre = date('Y-m-d');
+            $inventario->fechaCierre = date('Y-m-d:h:i:s');
             $inventario->cerradoPor = auth()->user()->id;
             $inventario->ProductosCierre = $productos->count();
             $inventario->StockCierre = $productos->sum('stock');

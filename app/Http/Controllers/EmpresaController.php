@@ -99,10 +99,6 @@ class EmpresaController extends Controller
                 $rutaLocal = 'logo/' . $nombreArchivo;
                 $logoAnterior = $empresa->logo;
 
-                if($logoAnterior == null){
-                    $logoAnterior = '-';
-                }
-
                 if ($logoAnterior != null) {
                     // Eliminar el archivo anterior
                     Storage::disk('local')->delete($logoAnterior);
@@ -119,13 +115,9 @@ class EmpresaController extends Controller
                 $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de logo', 'Empresa', $logoAnterior, $rutaPublica);
 
 
-            } else {
-
-                //Buscar un logo existente
-                $empresa = empresa::find($request->id);
-                $rutaLocal = $empresa->logo;
             }
 
+            
             $empresa->nombre = $request->nombre;
             $empresa->direccion = $request->direccion;
             $empresa->telefono = $request->telefono;

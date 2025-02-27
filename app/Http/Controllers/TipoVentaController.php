@@ -12,12 +12,6 @@ class TipoVentaController extends Controller
 
     public function getAllTipoVenta(Request $request)
     {
-        $this->rolPermisoController = new RolPermisoController();
-        $permiso = $this->rolPermisoController->checkPermisos(41);
-
-        if (!$permiso) {
-            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
-        }
 
         if ($request->onlyActive) {
             $tipoventa = tipoVenta::where('estado', 1)->get();

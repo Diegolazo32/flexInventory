@@ -354,4 +354,23 @@ class UserController extends Controller
             return response()->json(['error' => 'Error al restaurar la contraseña']);
         }
     }
+
+    public function ajustes()
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(11);
+        $auditoria = new AuditoriaController();
+
+        if (!$permiso) {
+            $auditoria->registrarEvento(Auth::user()->nombre, 'Intento de acceder a ajustes sin permiso', 'Usuarios', '-', '-');
+
+            flash('No tienes permisos para acceder a esta sección', 'error');
+            return redirect()->route('dashboard');
+        }
+
+        $auditoria->registrarEvento(Auth::user()->nombre, 'Acceso a ajustes', 'Usuarios', '-', '-');
+
+        return view('Users.ajustes');
+    }
+
 }

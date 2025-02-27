@@ -17,21 +17,6 @@
                             data-bs-target="#crearClienteModal" style="height: 40px;">
                             <i class="fas fa-plus"></i>
                         </button>
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editClienteModalBtn"
-                            data-bs-target="#editClienteModal" style="height: 40px;" hidden>
-                            Editar cliente
-                        </button>
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteClienteModalBtn"
-                            data-bs-target="#deleteClienteModal" style="height: 40px;" hidden>
-                            Eliminar cliente
-                        </button>
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="showClienteModalBtn"
-                            data-bs-target="#showClienteModal" style="height: 40px;" hidden>
-                            Ver cliente
-                        </button>
                     </div>
                 </div>
             </div>
@@ -108,17 +93,20 @@
                                         <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == cliente.estado).descripcion }}</span>
                                     </td>
                                     <td>
-                                        <button id="editBTN" class="btn btn-primary" @click="editCliente(cliente)"
-                                            :disabled="loading">
+                                        <button id="editBTN" class="btn btn-primary" data-bs-toggle="modal"
+                                            id="editClienteModalBtn" data-bs-target="#editClienteModal"
+                                            @click="editCliente(cliente)" :disabled="loading">
                                             <i class="fas fa-pencil"></i>
                                         </button>
-                                        <button id="viewBTN" class="btn btn-warning" @click="viewCliente(cliente)"
-                                            :disabled="loading">
+                                        <button id="viewBTN" class="btn btn-warning" data-bs-toggle="modal"
+                                            id="showClienteModalBtn" data-bs-target="#showClienteModal"
+                                            @click="viewCliente(cliente)" :disabled="loading">
                                             <i class="fas fa-eye"></i>
                                         </button>
 
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteCliente(cliente)"
-                                            :disabled="loading">
+                                        <button class="btn btn-danger" id="dltBTN" data-bs-toggle="modal"
+                                            id="deleteClienteModalBtn" data-bs-target="#deleteClienteModal"
+                                            @click="DeleteCliente(cliente)" :disabled="loading">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -174,7 +162,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearClienteModalLabel">Crear cliente </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('clientes.store') }}" method="POST">
@@ -185,7 +174,7 @@
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">@{{ errors.nombre }}</div>
                                     </div>
                                 </div>
@@ -194,7 +183,7 @@
                                         <input type="text" class="form-control" id="apellido" name="apellido"
                                             placeholder="Apellido" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.apellido">
-                                        <label for="floatingInput">Apellido*</label>
+                                        <label for="floatingInput">Apellido<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.apellido">@{{ errors.apellido }}</div>
                                     </div>
                                 </div>
@@ -203,7 +192,7 @@
                                         <input type="text" class="form-control" id="telefono" name="telefono"
                                             placeholder="Telefono" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.telefono">
-                                        <label for="floatingInput">Telefono*</label>
+                                        <label for="floatingInput">Telefono<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.telefono">@{{ errors.telefono }}</div>
                                     </div>
                                 </div>
@@ -212,7 +201,7 @@
                                         <input type="text" class="form-control" id="email" name="email"
                                             placeholder="Email" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.email">
-                                        <label for="floatingInput">Email*</label>
+                                        <label for="floatingInput">Email<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.email">@{{ errors.email }}</div>
                                     </div>
                                 </div>
@@ -221,7 +210,7 @@
                                         <input type="text" class="form-control" id="DUI" name="DUI"
                                             placeholder="DUI" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.DUI" maxlength="10">
-                                        <label for="floatingInput">DUI*</label>
+                                        <label for="floatingInput">DUI<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.DUI">@{{ errors.DUI }}</div>
                                     </div>
                                 </div>
@@ -230,7 +219,7 @@
                                         <input type="number" class="form-control" id="descuento" name="descuento"
                                             placeholder="Descuento" @blur="validateForm" @keyup="validateForm"
                                             v-model="item.descuento" maxlength="2" min="0" max="100">
-                                        <label for="floatingInput">Descuento*</label>
+                                        <label for="floatingInput">Descuento<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descuento">@{{ errors.descuento }}</div>
                                     </div>
                                 </div>
@@ -254,7 +243,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editClienteModalLabel">Editar cliente</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
@@ -265,7 +255,7 @@
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             placeholder="Nombre" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.nombre">@{{ editErrors.nombre }}
                                         </div>
                                     </div>
@@ -275,7 +265,7 @@
                                         <input type="text" class="form-control" id="apellidoEdit" name="apellido"
                                             placeholder="Apellido" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.apellido">
-                                        <label for="floatingInput">Apellido*</label>
+                                        <label for="floatingInput">Apellido<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.apellido">@{{ editErrors.apellido }}
                                         </div>
                                     </div>
@@ -285,7 +275,7 @@
                                         <input type="text" class="form-control" id="telefonoEdit" name="telefono"
                                             placeholder="Telefono" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.telefono">
-                                        <label for="floatingInput">Telefono*</label>
+                                        <label for="floatingInput">Telefono<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.telefono">@{{ editErrors.telefono }}
                                         </div>
                                     </div>
@@ -295,7 +285,7 @@
                                         <input type="text" class="form-control" id="emailEdit" name="email"
                                             placeholder="Email" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.email">
-                                        <label for="floatingInput">Email*</label>
+                                        <label for="floatingInput">Email<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.email">Error</div>
                                     </div>
                                 </div>
@@ -304,7 +294,7 @@
                                         <input type="text" class="form-control" id="DUIEdit" name="DUI"
                                             placeholder="DUI" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.DUI" maxlength="10">
-                                        <label for="floatingInput">DUI*</label>
+                                        <label for="floatingInput">DUI<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.DUI">@{{ editErrors.DUI }}</div>
                                     </div>
                                 </div>
@@ -313,7 +303,7 @@
                                         <input type="number" class="form-control" id="descuentoEdit" name="descuento"
                                             placeholder="Descuento" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.descuento" maxlength="2" min="0" max="100">
-                                        <label for="floatingInput">Descuento*</label>
+                                        <label for="floatingInput">Descuento<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.descuento">@{{ editErrors.descuento }}
                                         </div>
                                     </div>
@@ -329,7 +319,7 @@
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Estado*</label>
+                                        <label for="floatingInput">Estado<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.estado">@{{ editErrors.estado }}
                                         </div>
 
@@ -494,11 +484,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Cliente creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -506,11 +496,11 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -532,7 +522,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear el cliente',
@@ -558,11 +548,11 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -601,11 +591,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Cliente actualizado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -613,11 +603,11 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -642,7 +632,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar el cliente',
@@ -668,11 +658,11 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -691,9 +681,6 @@
                     this.editItem.estado = cliente.estado;
                     this.editItem.id = cliente.id;
 
-                    //dar click al boton de modal
-                    document.getElementById('editClienteModalBtn').click();
-
                 },
                 //Show
                 viewCliente(cliente) {
@@ -707,9 +694,6 @@
                     this.showItem.estado = cliente.estado;
                     this.showItem.id = cliente.id;
 
-
-                    //dar click al boton de modal
-                    document.getElementById('showClienteModalBtn').click();
 
                 },
                 //Eliminar
@@ -742,7 +726,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -767,7 +751,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Cliente eliminado',
                                 text: response.data.success,
@@ -778,11 +762,11 @@
 
                     }).catch(error => {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar el cliente',
                             icon: 'error',
@@ -801,11 +785,7 @@
                 },
                 DeleteCliente(cliente) {
                     this.deleteItem.nombre = cliente.nombre;
-
                     this.deleteItem.id = cliente.id;
-
-                    //dar click al boton de modal
-                    document.getElementById('deleteClienteModalBtn').click();
                 },
                 //Validaciones
                 validateForm() {
@@ -1110,11 +1090,11 @@
                     }).catch(error => {
                         this.loading = false;
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los clientes',
                             icon: 'error',

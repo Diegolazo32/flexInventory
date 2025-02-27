@@ -18,15 +18,15 @@
                         <i class="fas fa-plus"></i>
                     </button>-->
 
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editEstadoModalBtn"
+                    <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editEstadoModalBtn"
                         data-bs-target="#editEstadoModal" style="height: 40px;" hidden>
                         Editar estado
-                    </button>
+                    </button>-->
 
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteEstadoModalBtn"
+                    <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteEstadoModalBtn"
                         data-bs-target="#deleteEstadoModal" style="height: 40px;" hidden>
                         Eliminar estado
-                    </button>
+                    </button>-->
                 </div>
             </div>
         </div>
@@ -143,7 +143,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="display: block;">
                     <h1 class="modal-title fs-5" id="crearEstadoModalLabel">Crear estado </h1>
-                    <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                    <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                 </div>
                 <div class="modal-body" style="padding: 25px;">
                     <form ref="form" action="{{ route('estados.store') }}" method="POST">
@@ -153,8 +153,8 @@
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" id="descripcion" name="descripcion"
                                         placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
-                                        value="{{ old('descripcion') }}">
-                                    <label for="floatingInput">Descripcion*</label>
+                                       >
+                                    <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                     <div class="invalid-tooltip"
                                         v-if="errors.descripcion">@{{ errors.descripcion }}</div>
                                 </div>
@@ -179,7 +179,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="display: block;">
                     <h1 class="modal-title fs-5" id="editEstadoModalLabel">Editar estado</h1>
-                    <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                    <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                 </div>
                 <div class="modal-body" style="padding: 25px;">
                     <form ref="formEdit">
@@ -191,7 +191,7 @@
                                     <input type="text" class="form-control" id="descripcionEdit"
                                         name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
                                         v-model="editItem.descripcion">
-                                    <label for="floatingInput">Descripcion*</label>
+                                    <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                     <div class="invalid-tooltip"
                                         v-if="editErrors.descripcion">@{{ editErrors.descripcion }}</div>
                                 </div>
@@ -298,7 +298,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Estado creada',
                                 text: 'El estado ha sido creada correctamente',
@@ -310,7 +310,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear la estado',
@@ -333,7 +333,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al crear la estado',
@@ -354,7 +354,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -397,7 +397,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Estado actualizada',
                                 text: 'El estado ha sido actualizada correctamente',
@@ -409,7 +409,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar la estado',
@@ -425,7 +425,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al editar la estado',
@@ -447,7 +447,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -495,7 +495,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: response.data.error,
@@ -520,7 +520,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Estado eliminado',
                             text: response.data.success,
@@ -534,7 +534,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                         title: 'Error',
                         text: 'Ha ocurrido un error al eliminar la estado',
@@ -723,7 +723,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los estados',

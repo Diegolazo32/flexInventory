@@ -3,7 +3,7 @@
     background: rgb(33, 35, 37);
 
     background-image: url(../../public/storage/logo/logo_empresa.jpeg),
-    url(../../public/storage/logo/logo_empresa.jpg),
+    url(../../public/storage/logo/logo_empresa.jpg) ,
     url(../../public/storage/logo/logo_empresa.png);
 
     backdrop-filter: blur(25px);
@@ -72,9 +72,6 @@ body {
     border-radius: 15px;
 }
 
-.titleBar {
-    padding: 5px;
-}
 
 .form-control {
     border-radius: 10px;
@@ -258,17 +255,9 @@ body {
 }
 
 @media(max-width: 600px) {
-    .titleBar {
-        padding: 10px;
-    }
 
     .nombreMarca {
         display: none;
     }
 }
 
-@media(max-width: 425px) {
-    .titleBar {
-        padding: 10px;
-    }
-}

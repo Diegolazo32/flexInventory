@@ -11,11 +11,10 @@
             </div>
         </div>
 
-        <div class="row">
-            <!--<div class="col-lg-1"></div>-->
+        <div class="row" style="display: flex; justify-content: center; gap: 5%;">
 
             <!--Inventario activo-->
-            <div v-if="!loading && inventarioActivo" class="card hoverCard mb-3 col-lg-6">
+            <div v-if="!loading && inventarioActivo" class="card hoverCard mb-3 col-lg-5">
                 <div class="card-body ">
                     <div class="row">
                         <div class="col-lg-12">
@@ -33,7 +32,7 @@
                                     <p class="col-lg-12 fs-4"> Stock en apertura: @{{ inventarioActivo.StockApertura }}</p>
                                     <p class="col-lg-12 fs-4"> Valor en apertura: $@{{ inventarioActivo.totalInventario }}</p>
                                     <hr>
-                                    <p class="col-lg-12 fs-4"> Valor actual: $@{{ totalValueInventory }}</p>
+                                    <p class="col-lg-12 fs-4"> Valor actual: $@{{ parseFloat(totalValueInventory) }}</p>
                                     <p class="col-lg-12 fs-4"> Stock actual: @{{ totalQuantityInventory }}</p>
                                     <p class="col-lg-12 fs-4"> Productos actuales: @{{ totalUniqueProducts }}</p>
 
@@ -46,10 +45,8 @@
                 </div>
             </div>
 
-            <!--<div class="col-lg-1"></div>-->
-
             <!--Inventario cerrado-->
-            <div v-if="!loading && inventarioCerrado" class="card hoverCard mb-3 col-lg-6">
+            <div v-if="!loading && inventarioCerrado" class="card hoverCard mb-3 col-lg-5">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
@@ -79,10 +76,11 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
         <div class="row" v-if="!loading && !inventarioActivo && !inventarioCerrado">
-            <div class="card mb-3 col-lg-12">
+            <div class="card mb-3 col-lg-12 hoverCard">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
@@ -132,7 +130,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Inventario abierto',
                                 text: response.data.success,
@@ -144,7 +142,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -158,7 +156,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
@@ -191,7 +189,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Inventario cerrado',
                                 text: response.data.success,
@@ -203,7 +201,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -218,7 +216,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
@@ -250,7 +248,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
@@ -295,7 +293,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los productos',
@@ -320,7 +318,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
@@ -344,7 +342,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error',
@@ -378,6 +376,9 @@
                     return day + "/" + month + "/" + year;
 
                 },
+                parseFloat(value) {
+                    return parseFloat(value).toFixed(2);
+                }
             },
             mounted() {
                 this.getAllUsers();

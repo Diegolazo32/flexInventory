@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\categoria;
 use App\Models\clientes;
+use App\Models\inventario;
 use App\Models\productos;
 use App\Models\proveedores;
 use App\Models\User;
@@ -30,6 +31,7 @@ class DashboardController extends Controller
         $productos = productos::all();
         $categorias = categoria::all();
         $proveedores = proveedores::all();
+        $Activo = inventario::where('estado', 3)->orderBy('fechaApertura', 'desc')->first();
 
 
         $auditoriaController->registrarEvento(Auth::user()->nombre, 'Ingreso al dashboard', 'Dashboard', '-', '-');
@@ -37,7 +39,8 @@ class DashboardController extends Controller
             'clientes' => $clientes,
             'productos' => $productos,
             'categorias' => $categorias,
-            'proveedores' => $proveedores
+            'proveedores' => $proveedores,
+            'Activo' => $Activo
         ]);
     }
 }

@@ -225,7 +225,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearUserModalLabel">Crear usuario </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                         <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                     </div>
                     <div class="modal-body" style="padding: 25px;">
@@ -236,26 +237,26 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             maxlength="50" placeholder="Nombre" @blur="validateForm"
-                                            @keyup="validateForm" v-model="item.nombre" value="{{ old('nombre') }}">
-                                        <label for="floatingInput">Nombre*</label>
+                                            @keyup="validateForm" v-model="item.nombre">
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">@{{ errors.nombre }}</div>
                                     </div>
                                 </div>
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="apellido" name="apellido"
-                                            maxlength="50" value="{{ old('apellido') }}" placeholder="Apellido"
-                                            v-model="item.apellido" @blur="validateForm" @keyup="validateForm">
-                                        <label for="floatingInput">Apellido*</label>
+                                            maxlength="50" placeholder="Apellido" v-model="item.apellido"
+                                            @blur="validateForm" @keyup="validateForm">
+                                        <label for="floatingInput">Apellido<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.apellido">@{{ errors.apellido }}</div>
                                     </div>
                                 </div>
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="DUI" name="DUI"
-                                            value="{{ old('DUI') }}" placeholder="DUI" @blur="validateForm"
-                                            @keyup="validateForm" v-model="item.DUI" maxlength="10"> <label
-                                            for="floatingInput">DUI*</label>
+                                            placeholder="DUI" @blur="validateForm" @keyup="validateForm"
+                                            v-model="item.DUI" maxlength="10"> <label for="floatingInput">DUI<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.DUI">@{{ errors.DUI }}</div>
                                     </div>
                                 </div>
@@ -263,9 +264,9 @@
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="fechaNacimiento"
                                             name="fechaNacimiento" placeholder="Fecha de nacimiento"
-                                            value="{{ old('fechaNacimiento') }}" @change="validateDate"
-                                            @blur="validateDate" v-model="item.fechaNacimiento">
-                                        <label for="floatingInput">Fecha de nacimiento*</label>
+                                            @change="validateDate" @blur="validateDate" v-model="item.fechaNacimiento">
+                                        <label for="floatingInput">Fecha de nacimiento<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.fechaNacimiento">@{{ errors.fechaNacimiento }}
                                         </div>
                                     </div>
@@ -277,17 +278,16 @@
                                             <option value="1">Masculino</option>
                                             <option value="2">Femenino</option>
                                         </select>
-                                        <label for="floatingInput">Genero*</label>
+                                        <label for="floatingInput">Genero<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.genero">@{{ errors.genero }}</div>
                                     </div>
                                 </div>
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="usuario" name="usuario"
-                                            min="5" maxlength="50" value="{{ old('usuario') }}"
-                                            placeholder="Usuario" v-model="item.usuario" @blur="validateForm"
-                                            @keyup="validateForm">
-                                        <label for="floatingInput">Usuario*</label>
+                                            min="5" maxlength="50" placeholder="Usuario" v-model="item.usuario"
+                                            @blur="validateForm" @keyup="validateForm">
+                                        <label for="floatingInput">Usuario<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.usuario">@{{ errors.usuario }}</div>
                                     </div>
                                 </div>
@@ -299,7 +299,7 @@
                                                 @{{ rol.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Rol*</label>
+                                        <label for="floatingInput">Rol<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.rol">@{{ errors.rol }}</div>
                                     </div>
                                 </div>
@@ -323,7 +323,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editUserModalLabel">Editar usuario</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                         <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                     </div>
                     <div class="modal-body" style="padding: 25px;">
@@ -337,7 +338,7 @@
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             maxlength="50" placeholder="Nombre" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.nombre">@{{ editErrors.nombre }}
                                         </div>
                                     </div>
@@ -350,7 +351,7 @@
                                         <input type="text" class="form-control" id="apellidoEdit" name="apellido"
                                             maxlength="50" placeholder="Apellido" v-model="editItem.apellido"
                                             @blur="validateEditForm" @keyup="validateEditForm">
-                                        <label for="floatingInput">Apellido*</label>
+                                        <label for="floatingInput">Apellido<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.apellido">@{{ editErrors.apellido }}
                                         </div>
                                     </div>
@@ -362,7 +363,7 @@
                                         <input type="text" class="form-control" id="DUIEdit" name="DUI"
                                             placeholder="DUI" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.DUI" maxlength="10">
-                                        <label for="floatingInput">DUI*</label>
+                                        <label for="floatingInput">DUI<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.DUI">@{{ editErrors.DUI }}</div>
                                     </div>
                                 </div>
@@ -373,7 +374,8 @@
                                         <input type="date" class="form-control" id="fechaNacimientoEdit"
                                             name="fechaNacimiento" placeholder="Fecha de nacimiento" @blur="validateDate"
                                             @change="validateDate" v-model="editItem.fechaNacimiento">
-                                        <label for="floatingInput">Fecha de nacimiento*</label>
+                                        <label for="floatingInput">Fecha de nacimiento<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.fechaNacimiento">
                                             @{{ editErrors.fechaNacimiento }}
                                         </div>
@@ -388,7 +390,7 @@
                                             <option value="1">Masculino</option>
                                             <option value="2">Femenino</option>
                                         </select>
-                                        <label for="floatingInput">Genero*</label>
+                                        <label for="floatingInput">Genero<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.genero">@{{ editErrors.genero }}
                                         </div>
                                     </div>
@@ -400,7 +402,7 @@
                                         <input type="text" class="form-control" id="usuarioEdit" name="usuario"
                                             maxlength="50" placeholder="Usuario" v-model="editItem.usuario"
                                             @blur="validateEditForm" @keyup="validateEditForm">
-                                        <label for="floatingInput">Usuario*</label>
+                                        <label for="floatingInput">Usuario<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.usuario">@{{ editErrors.usuario }}
                                         </div>
                                     </div>
@@ -415,7 +417,7 @@
                                                 @{{ rol.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Rol*</label>
+                                        <label for="floatingInput">Rol<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.rol">@{{ editErrors.rol }}</div>
                                     </div>
                                 </div>
@@ -431,7 +433,7 @@
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Estado*</label>
+                                        <label for="floatingInput">Estado<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.estado">@{{ editErrors.estado }}
                                         </div>
                                     </div>
@@ -603,7 +605,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener los usuarios',
@@ -923,11 +925,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Usuario creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -935,11 +937,11 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -953,7 +955,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: error,
@@ -974,11 +976,11 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -1016,11 +1018,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Usuario actualizado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -1028,11 +1030,11 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -1046,7 +1048,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: error,
@@ -1067,13 +1069,13 @@
 
                         })
 
-                    }else {
+                    } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -1111,7 +1113,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -1136,7 +1138,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Usuario eliminado',
                                 text: response.data.success,
@@ -1148,11 +1150,11 @@
                     }).catch(error => {
 
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: error,
                             icon: 'error',
@@ -1203,7 +1205,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Contraseña restablecida',
                                 text: response.data.success,
@@ -1215,7 +1217,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -1233,11 +1235,11 @@
                         document.getElementById('cancelRevertButton').click();
 
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: error,
                             icon: 'error',

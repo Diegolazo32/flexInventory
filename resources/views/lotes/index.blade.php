@@ -255,7 +255,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los lotes',

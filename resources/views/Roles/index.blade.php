@@ -167,7 +167,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearRolModalLabel">Crear rol </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('roles.store') }}" method="POST">
@@ -177,8 +177,8 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcion" name="descripcion"
                                             placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
-                                            value="{{ old('descripcion') }}">
-                                        <label for="floatingInput">Descripcion*</label>
+                                            >
+                                        <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descripcion">@{{ errors.descripcion }}
                                         </div>
                                     </div>
@@ -203,7 +203,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editRolModalLabel">Editar rol</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
@@ -216,7 +216,7 @@
                                         <input type="text" class="form-control" id="descripcionEdit"
                                             name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
                                             v-model="editItem.descripcion">
-                                        <label for="floatingInput">Descripcion*</label>
+                                        <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.descripcion">@{{ editErrors.descripcion }}
                                         </div>
                                     </div>
@@ -234,7 +234,7 @@
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Estado*</label>
+                                        <label for="floatingInput">Estado<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.estado">@{{ editErrors.estado }}
                                         </div>
 
@@ -420,7 +420,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                     title: 'Rol creado',
                                     text: response.data.success,
@@ -432,7 +432,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
@@ -455,7 +455,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear la rol',
@@ -484,7 +484,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -524,7 +524,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                     title: 'Rol actualizado',
                                     text: response.data.success,
@@ -536,7 +536,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
@@ -552,7 +552,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar la rol',
@@ -581,7 +581,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -629,7 +629,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -654,7 +654,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Rol eliminado',
                                 text: response.data.success,
@@ -668,7 +668,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar la rol',
@@ -736,7 +736,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -759,7 +759,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Permisos actualizados',
                                 text: response.data.success +
@@ -776,7 +776,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al actualizar los permisos',
@@ -985,7 +985,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener los roles',

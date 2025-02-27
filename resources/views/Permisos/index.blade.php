@@ -146,7 +146,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearPermisoModalLabel">Crear permiso </h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('permisos.store') }}" method="POST">
@@ -157,8 +157,8 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" v-model="item.nombre"
-                                            value="{{ old('nombre') }}">
-                                        <label for="floatingInput">Nombre*</label>
+                                            >
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">@{{ errors.nombre }}</div>
                                     </div>
                                 </div>
@@ -167,8 +167,8 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcion" name="descripcion"
                                             placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
-                                            value="{{ old('descripcion') }}">
-                                        <label for="floatingInput">Descripcion*</label>
+                                            >
+                                        <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descripcion">@{{ errors.descripcion }}
                                         </div>
                                     </div>
@@ -182,7 +182,7 @@
                                                 @{{ grupo.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Grupo*</label>
+                                        <label for="floatingInput">Grupo<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.grupo">@{{ errors.grupo }}</div>
                                     </div>
                                 </div>
@@ -206,7 +206,7 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editPermisoModalLabel">Editar permiso</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
@@ -217,7 +217,7 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             placeholder="Nombre" @blur="validateEditForm" v-model="editItem.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.nombre">@{{ editErrors.nombre }}
                                         </div>
                                     </div>
@@ -228,7 +228,7 @@
                                         <input type="text" class="form-control" id="descripcionEdit"
                                             name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
                                             v-model="editItem.descripcion">
-                                        <label for="floatingInput">Descripcion*</label>
+                                        <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.descripcion">@{{ editErrors.descripcion }}
                                         </div>
                                     </div>
@@ -242,7 +242,7 @@
                                                 @{{ grupo.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Grupo*</label>
+                                        <label for="floatingInput">Grupo<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.grupo">
                                             @{{ editErrors.grupo }}</small>
                                         </div>
@@ -391,7 +391,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                     title: 'Permiso creado',
                                     text: response.data.success,
@@ -403,7 +403,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
@@ -426,7 +426,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear la permiso',
@@ -447,7 +447,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -490,7 +490,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                     title: 'Permiso actualizado',
                                     text: response.data.success,
@@ -502,7 +502,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
@@ -518,7 +518,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar la permiso',
@@ -540,7 +540,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
@@ -592,7 +592,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -617,7 +617,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Permiso eliminado',
                                 text: response.data.success,
@@ -631,7 +631,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar la permiso',
@@ -899,7 +899,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener los permisos',

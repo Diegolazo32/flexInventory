@@ -17,16 +17,6 @@
                             style="height: 40px;">
                             <i class="fas fa-plus"></i>
                         </button>
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editCajaModalBtn"
-                            data-bs-target="#editCajaModal" style="height: 40px;" hidden>
-                            Editar caja
-                        </button>
-
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteCajaModalBtn"
-                            data-bs-target="#deleteCajaModal" style="height: 40px;" hidden>
-                            Eliminar caja
-                        </button>
                     </div>
                 </div>
             </div>
@@ -99,13 +89,15 @@
                                         <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == caja.estado).descripcion }}</span>
                                     </td>
                                     <td>
-                                        <button id="editBTN" class="btn btn-primary" @click="editCaja(caja)"
+                                        <button id="editBTN" class="btn btn-primary" data-bs-toggle="modal"
+                                            id="editCajaModalBtn" data-bs-target="#editCajaModal" @click="editCaja(caja)"
                                             :disabled="loading">
                                             <i class="fas fa-pencil"></i>
                                         </button>
 
-                                        <button class="btn btn-danger" id="dltBTN" @click="DeleteCaja(caja)"
-                                            :disabled="loading">
+                                        <button class="btn btn-danger" id="dltBTN" data-bs-toggle="modal"
+                                            id="deleteCajaModalBtn" data-bs-target="#deleteCajaModal"
+                                            @click="DeleteCaja(caja)" :disabled="loading">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -172,17 +164,17 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" @blur="validateForm" @keyup="validateForm"
-                                            v-model="item.nombre" value="{{ old('nombre') }}">
-                                        <label for="floatingInput">Nombre*</label>
+                                            v-model="item.nombre">
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">@{{ errors.nombre }}</div>
                                     </div>
                                 </div>
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="ubicacion" name="ubicacion"
-                                            value="{{ old('ubicacion') }}" placeholder="Ubicacion"
-                                            v-model="item.ubicacion" @blur="validateForm" @keyup="validateForm">
-                                        <label for="floatingInput">Ubicacion*</label>
+                                            placeholder="Ubicacion" v-model="item.ubicacion" @blur="validateForm"
+                                            @keyup="validateForm">
+                                        <label for="floatingInput">Ubicacion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.ubicacion">@{{ errors.ubicacion }}</div>
                                     </div>
                                 </div>
@@ -206,7 +198,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editCajaModalLabel">Editar caja</h1>
-                        <small class="text-muted"> Los campos marcados con * son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit">
@@ -219,7 +212,7 @@
                                         <input type="text" class="form-control" id="nombreEdit" name="nombre"
                                             placeholder="Nombre" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.nombre">
-                                        <label for="floatingInput">Nombre*</label>
+                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.nombre">@{{ editErrors.nombre }}
                                         </div>
                                     </div>
@@ -232,7 +225,7 @@
                                         <input type="text" class="form-control" id="ubicacionEdit" name="ubicacion"
                                             placeholder="Ubicacion" v-model="editItem.ubicacion" @blur="validateEditForm"
                                             @keyup="validateEditForm">
-                                        <label for="floatingInput">Ubicacion*</label>
+                                        <label for="floatingInput">Ubicacion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.ubicacion">@{{ editErrors.ubicacion }}
                                         </div>
                                     </div>
@@ -249,7 +242,7 @@
                                                 @{{ estado.descripcion }}
                                             </option>
                                         </select>
-                                        <label for="floatingInput">Estado*</label>
+                                        <label for="floatingInput">Estado<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.estado">@{{ editErrors.estado }}
                                         </div>
 
@@ -359,11 +352,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Caja creada',
                                     text: response.data.success,
                                     icon: 'success',
@@ -371,11 +364,11 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -397,7 +390,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al crear la caja',
@@ -423,11 +416,11 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -466,11 +459,11 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Caja actualizada',
                                     text: response.data.success,
                                     icon: 'success',
@@ -478,11 +471,11 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -497,7 +490,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al editar la caja',
@@ -523,11 +516,11 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -540,9 +533,6 @@
                     this.editItem.ubicacion = caja.ubicacion;
                     this.editItem.estado = caja.estado;
                     this.editItem.id = caja.id;
-
-                    //dar click al boton de modal
-                    document.getElementById('editCajaModalBtn').click();
 
                 },
                 //Eliminar
@@ -575,7 +565,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -600,7 +590,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Caja eliminado',
                                 text: response.data.success,
@@ -611,11 +601,11 @@
 
                     }).catch(error => {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar la caja',
                             icon: 'error',
@@ -643,9 +633,6 @@
                     this.deleteItem.nombre = caja.nombre;
                     this.deleteItem.ubicacion = caja.ubicacion;
                     this.deleteItem.id = caja.id;
-
-                    //dar click al boton de modal
-                    document.getElementById('deleteCajaModalBtn').click();
                 },
                 //Validaciones
                 validateForm() {
@@ -833,7 +820,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al obtener las cajas',
@@ -846,11 +833,11 @@
 
                         this.loading = false;
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las cajas',
                             icon: 'error',
@@ -870,11 +857,11 @@
                     } catch (error) {
 
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 5000,
-                                timerProgressBar: true,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los estados',
                             icon: 'error',

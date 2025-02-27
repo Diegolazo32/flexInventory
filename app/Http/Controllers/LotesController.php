@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\inventario;
 use App\Models\lotes;
 use App\Models\productos;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class LotesController extends Controller

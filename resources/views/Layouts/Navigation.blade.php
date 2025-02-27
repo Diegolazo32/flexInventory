@@ -54,14 +54,14 @@
     <!-- NavBar -->
     <nav class="navbar navbar-dark bg-dark" style="padding: 10px;" id="Menu">
 
-        <div class="row d-flex align-items-center titleBar" style="width: 100%;">
+        <div class="row d-flex align-items-center titleBar justify-content-center" style="width: 100%;">
             <div class="col-2 d-flex justify-content-center">
                 <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
-            <div class="col-8 d-flex justify-content-center">
+            <div class="col-6 d-flex justify-content-center">
                 <!-- Logo circular -->
                 <a href="{{ route('dashboard') }}" style="font-weight: normal" class="nombreMarca">
                     <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo" class="rounded-circle"
@@ -87,7 +87,7 @@
                         data-bs-toggle="dropdown" aria-expanded="false">
                         {{ Auth::user()->nombre }}
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-md-start ">
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-md-end ">
                         <li><a class="dropdown-item" href="{{ route('logout') }}">Cerrar sesion</a></li>
                     </ul>
                 </div>
@@ -191,15 +191,15 @@
 
 
                         <!-- Permisos -->
-                        @if ($permisos->contains(17))
-                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                        <!--@if ($permisos->contains(17))
+<li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                                 <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                     onClick="window.location.href='{{ route('permisos') }}'">
                                     <i class="fa-solid fa-key"></i>
                                     <span>Permisos</span>
                                 </button>
                             </li>
-                        @endif
+@endif-->
 
                         <!--@if ($permisos->contains(17))
 <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
@@ -358,7 +358,7 @@
                             <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                                 <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                     onClick="window.location.href='{{ route('kardex') }}'">
-                                    <i class="fa-solid fa-warehouse"></i>
+                                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
                                     <span>Kardex</span>
                                 </button>
                             </li>
@@ -391,14 +391,14 @@
                     <!-- Reportes -->
 
                     @if ($permisos->contains(73) || $permisos->contains(75))
-                    <li class="nav-item" style="width: 100%">
-                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#collapseReportes" aria-expanded="false"
-                            aria-controls="collapseReportes">
-                            <i class="fa-solid fa-file"></i>
-                            <span> Reportes </span>
-                        </button>
-                    </li>
+                        <li class="nav-item" style="width: 100%">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseReportes" aria-expanded="false"
+                                aria-controls="collapseReportes">
+                                <i class="fa-solid fa-file"></i>
+                                <span> Reportes </span>
+                            </button>
+                        </li>
                     @endif
 
                     <!-- Collapse reportes -->

@@ -22,10 +22,6 @@
                             <i class="fas fa-plus"></i>
                         </button>
 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="compraDetallesModalBtn"
-                            data-bs-target="#compraDetallesModal" style="height: 40px;" hidden>
-                        </button>
-
                     </div>
                 </div>
             </div>
@@ -81,8 +77,8 @@
                                     <td>$@{{ parseDouble(compra.total) }}</td>
                                     <td>@{{ parseDate(compra.fecha) }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#compraDetallesModal" @click="getCompraDetails(compra.id)">
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" id="compraDetallesModalBtn"
+                                        data-bs-target="#compraDetallesModal" @click="getCompraDetails(compra.id)">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                     </td>
@@ -472,7 +468,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Error',
                                     text: error,
@@ -505,7 +501,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Error',
                                     text: error,
@@ -534,7 +530,7 @@
                             result.proveedor = proveedor.nombre;
                         });
 
-                        
+
 
                     } else {
                         this.results = [];
@@ -596,7 +592,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'No se han agregado productos a la compra',
@@ -614,7 +610,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'El total de la compra no puede ser 0',
@@ -632,7 +628,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'El codigo de la compra no puede estar vacio',
@@ -752,7 +748,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener las compras',
@@ -788,7 +784,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los productos',
@@ -826,7 +822,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los proveedores',
@@ -849,7 +845,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: response.data.error,
@@ -869,7 +865,7 @@
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 3000,
                             timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los detalles de la compra',
@@ -946,7 +942,7 @@
                                             toast: true,
                                             position: 'top-end',
                                             showConfirmButton: false,
-                                            timer: 5000,
+                                            timer: 3000,
                                             timerProgressBar: true,
                                             title: 'Error',
                                             text: response.data.error,
@@ -964,7 +960,7 @@
                                         toast: true,
                                         position: 'top-end',
                                         showConfirmButton: false,
-                                        timer: 5000,
+                                        timer: 3000,
                                         timerProgressBar: true,
                                         title: 'Compra registrada',
                                         text: response.data.success,
@@ -979,7 +975,7 @@
                                         toast: true,
                                         position: 'top-end',
                                         showConfirmButton: false,
-                                        timer: 5000,
+                                        timer: 3000,
                                         timerProgressBar: true,
                                         title: 'Error',
                                         text: 'Ha ocurrido un error al registrar la compra',
@@ -1032,7 +1028,7 @@
                                     toast: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
-                                    timer: 5000,
+                                    timer: 3000,
                                     timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
@@ -1050,7 +1046,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Compra registrada',
                                 text: response.data.success,
@@ -1065,7 +1061,7 @@
                                 toast: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
-                                timer: 5000,
+                                timer: 3000,
                                 timerProgressBar: true,
                                 title: 'Error',
                                 text: 'Ha ocurrido un error al registrar la compra',
