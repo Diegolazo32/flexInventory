@@ -263,4 +263,5 @@ class ProductosController extends Controller
             return response()->json(['error' => 'Error al actualizar el producto']);
         }
     }
+
 }

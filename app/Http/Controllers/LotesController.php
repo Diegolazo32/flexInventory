@@ -48,7 +48,7 @@ class LotesController extends Controller
         $auditoria->registrarEvento(Auth::user()->nombre, 'Creacion de nuevo lote', 'Lotes', '-', $lote);
     }
 
-    public function getAllLotes()
+    public function getAllLotes(Request $request)
     {
 
         $this->rolPermisoController = new RolPermisoController();
@@ -65,6 +65,15 @@ class LotesController extends Controller
 
         if (!$isActivo) {
             return response()->json(['error' => 'No hay un inventario activo']);
+        }
+
+        if ($request->noPaginate) {
+            $lotes = lotes::where('inventario', $activo->id)
+                ->orderBy('estado', 'asc')
+                ->orderBy('fechaVencimiento', 'asc')
+                ->orderBy('producto', 'asc')
+                ->get();
+            return response()->json($lotes);
         }
 
         //All lotes sort by estado first, then by fechaVencimiento and finally by producto
@@ -116,6 +125,7 @@ class LotesController extends Controller
         }
 
         $lotes = $request->lotes;
+        $fechaMasCercana = null;
 
         try {
             foreach ($lotes as $lote) {
@@ -126,22 +136,25 @@ class LotesController extends Controller
 
                 //Asignar fecha de vencimiento mas proxima al producto
                 $producto = productos::find($loteUpdate->producto);
-                $lotes = lotes::where('producto', $producto->id)->get();
-                $fechaVencimiento = null;
+                $lotes = lotes::where('producto', $producto->id)
+                ->where('estado', 1)
+                ->orderBy('fechaVencimiento', 'asc')
+                ->get();
 
                 foreach ($lotes as $lote) {
-                    if ($fechaVencimiento == null) {
-                        $fechaVencimiento = $lote->fechaVencimiento;
+                    if ($fechaMasCercana == null) {
+                        $fechaMasCercana = $lote->fechaVencimiento;
                     } else {
-                        if ($lote->fechaVencimiento < $fechaVencimiento) {
-                            $fechaVencimiento = $lote->fechaVencimiento;
+                        if ($lote->fechaVencimiento < $fechaMasCercana) {
+                            $fechaMasCercana = $lote->fechaVencimiento;
                         }
                     }
                 }
 
-                $producto->fechaVencimiento = $fechaVencimiento;
-                $producto->save();
             }
+
+            $producto->fechaVencimiento = $fechaMasCercana;
+            $producto->save();
 
             $auditoria->registrarEvento(Auth::user()->nombre, 'Actualizacion de lote', 'Lotes', $lotes, '-');
             return response()->json(['success' => 'Lotes actualizados correctamente']);

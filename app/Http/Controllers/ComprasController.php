@@ -158,16 +158,20 @@ class ComprasController extends Controller
                 return response()->json(['error' => 'No hay un inventario activo']);
             }
 
+
+
             //Crear compra
             $compra = new compras();
             $compra->codigo = $request->codigo;
             //Fecha de hoy
             $compra->fecha = $request->fecha;
             $compra->total = $request->total;
+            $compra->estado = $request->estado;
+            $compra->tipoPago = $request->tipoPago;
+            $compra->observaciones = $request->observaciones;
             $compra->save();
 
             $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de compra', 'compras', '-', $compra);
-
             $productos = $request->productos;
 
             foreach ($productos as $producto) {
@@ -185,20 +189,140 @@ class ComprasController extends Controller
 
                 $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de detalle de compra', 'compras', '-', $compraProducto);
 
-                //Obetener detalles del producto
-                $product = productos::find($producto['id']);
+                if ($request->estado == 6) {
 
+                    //Obetener detalles del producto
+                    $product = productos::find($producto['id']);
+                    //Obtener el ultimo lote activo del producto
+                    $loteProducto = lotes::where('producto', $product['id'])->orderBy('id', 'desc')->first();
+                    //Crear lote
+                    $lote = new lotes();
+                    //Dia mes año hora minuto segundo
+                    $lote->codigo = 'L' . $product->codigo . $product->id . '-' . date('Y-m-d') . date('H:i:s');
+                    $lote->numero = $loteProducto->numero + 1;
+                    $lote->cantidad = $producto['cantidad'];
+                    $lote->fechaVencimiento = $producto['fechaVencimiento'];
+                    $lote->producto = $producto['id'];
+                    $lote->estado = 1;
+                    $lote->inventario = $activo->id;
+                    $lote->save();
+
+                    $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de lote', 'lotes', '-', $lote);
+
+                    //Actualizar stock
+                    //Obtener todos los lotes activos del producto
+                    $lotes = lotes::where('producto', $product->id)->get();
+
+                    $stockTotal = 0;
+                    foreach ($lotes as $lote) {
+                        $stockTotal += $lote->cantidad;
+                    }
+
+                    $product->stock = $stockTotal;
+                    $product->precioCompra = $producto['precio'];
+                    $product->proveedor = $producto['proveedor'];
+
+                    if ($product->stock > 0) {
+                        $product->estado = 1;
+                    }
+
+                    $product->save();
+
+                    $auditoriaController->registrarEvento(Auth::user()->nombre, 'Actualización de producto', 'productos', '-', $product);
+
+                    //Actualizar fecha de vencimiento
+                    $lotes = lotes::where('producto', $product->id)->get();
+                    $fechaVencimiento = null;
+
+                    foreach ($lotes as $lote) {
+                        if ($fechaVencimiento == null) {
+                            $fechaVencimiento = $lote->fechaVencimiento;
+                        } else {
+                            if ($lote->fechaVencimiento < $fechaVencimiento) {
+                                $fechaVencimiento = $lote->fechaVencimiento;
+                            }
+                        }
+                    }
+
+                    $product->fechaVencimiento = $fechaVencimiento;
+                    $product->save();
+
+                    //Crear movimiento de kardex
+                    $kardex = new kardex();
+                    $kardex->producto = $product->id;
+                    $kardex->cantidad = $producto['cantidad'];
+                    $kardex->accion = 1;
+                    $kardex->inventario = $activo->id;
+                    $kardex->observacion = 'Compra de producto';
+                    $kardex->save();
+
+
+                    $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de movimiento de kardex', 'kardex', '-', $kardex);
+                }
+
+            }
+
+            return response()->json(['success' => 'Compra realizada con éxito']);
+        } catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al crear compra', 'compras', '-', '-');
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    //Aprobar compra
+    public function payCompra($id)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(66);
+        $auditoriaController = new AuditoriaController();
+
+
+        if (!$permiso) {
+
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear sin permiso', 'compras', '-', '-');
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $activo = inventario::where('estado', 3)->first();
+
+        if (!$activo) {
+
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear compra sin inventario activo', 'compras', '-', '-');
+            return response()->json(['error' => 'No hay un inventario activo']);
+        }
+
+        try {
+            $compra = compras::find($id);
+
+            if (!$compra) {
+
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de pagar compra inexistente', 'compras', '-', '-');
+                return response()->json(['error' => 'Compra no encontrada']);
+            }
+
+            $compraProductos = compraProductos::where('compra', $compra->id)->get();
+
+            if ($compraProductos->count() == 0) {
+
+                $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de pagar compra sin productos', 'compras', '-', '-');
+                return response()->json(['error' => 'La compra no tiene productos']);
+            }
+
+            foreach ($compraProductos as $compraProducto) {
+
+                //Obetener detalles del producto
+                $product = productos::find($compraProducto->producto);
                 //Obtener el ultimo lote del producto
                 $loteProducto = lotes::where('producto', $product['id'])->orderBy('id', 'desc')->first();
-
                 //Crear lote
                 $lote = new lotes();
                 //Dia mes año hora minuto segundo
                 $lote->codigo = 'L' . $product->codigo . $product->id . '-' . date('Y-m-d') . date('H:i:s');
                 $lote->numero = $loteProducto->numero + 1;
-                $lote->cantidad = $producto['cantidad'];
-                $lote->fechaVencimiento = $producto['fechaVencimiento'];
-                $lote->producto = $producto['id'];
+                $lote->cantidad = $compraProducto->cantidad;
+                $lote->fechaVencimiento = $compraProducto->fechaVencimiento;
+                $lote->producto = $compraProducto->producto;
                 $lote->estado = 1;
                 $lote->inventario = $activo->id;
                 $lote->save();
@@ -215,8 +339,8 @@ class ComprasController extends Controller
                 }
 
                 $product->stock = $stockTotal;
-                $product->precioCompra = $producto['precio'];
-                $product->proveedor = $producto['proveedor'];
+                $product->precioCompra = $compraProducto->precioCompra;
+                $product->proveedor = $compraProducto->proveedor;
 
                 if ($product->stock > 0) {
                     $product->estado = 1;
@@ -246,24 +370,70 @@ class ComprasController extends Controller
                 //Crear movimiento de kardex
                 $kardex = new kardex();
                 $kardex->producto = $product->id;
-                $kardex->cantidad = $producto['cantidad'];
+                $kardex->cantidad = $compraProducto->cantidad;
                 $kardex->accion = 1;
                 $kardex->inventario = $activo->id;
-                $kardex->observacion = 'Compra de producto';
+                $kardex->observacion = 'Aprobacion de compra de producto';
                 $kardex->save();
 
                 $auditoriaController->registrarEvento(Auth::user()->nombre, 'Creación de movimiento de kardex', 'kardex', '-', $kardex);
+
             }
 
-            return response()->json(['success' => 'Compra realizada con éxito']);
+            $compra->estado = 6;
+            $compra->save();
+
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Compra pagada', 'compras', '-', $compra);
+            return response()->json(['success' => 'Compra pagada con éxito']);
+
         } catch (\Exception $e) {
 
-            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al crear compra', 'compras', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al pagar compra', 'compras', '-', '-');
             return response()->json(['error' => $e->getMessage()]);
         }
+
     }
 
-    //Aprobar compra
-
     //Anular compra
+    public function nullifyCompra($id)
+    {
+        $this->rolPermisoController = new RolPermisoController();
+        $permiso = $this->rolPermisoController->checkPermisos(67);
+        $auditoriaController = new AuditoriaController();
+
+
+        if (!$permiso) {
+
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear sin permiso', 'compras', '-', '-');
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
+        }
+
+        $activo = inventario::where('estado', 3)->first();
+
+        if (!$activo) {
+
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear compra sin inventario activo', 'compras', '-', '-');
+            return response()->json(['error' => 'No hay un inventario activo']);
+        }
+
+        try
+        {
+
+            $compra = compras::find($id);
+            $compra->estado = 7;
+            $compra->save();
+
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Compra anulada', 'compras', '-', $compra);
+
+            return response()->json(['success' => 'Compra anulada con éxito']);
+
+        }
+        catch (\Exception $e) {
+
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Error al anular compra', 'compras', '-', '-');
+            return response()->json(['error' => $e->getMessage()]);
+        }
+
+
+    }
 }

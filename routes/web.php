@@ -16,6 +16,7 @@ use App\Http\Controllers\LotesController;
 use App\Http\Controllers\PermisosController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
+use App\Http\Controllers\QueriesController;
 use App\Http\Controllers\reportesController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\RolPermisoController;
@@ -220,6 +221,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/compras', [ComprasController::class, 'index'])->name('compras');
         Route::post('/compras/store', [ComprasController::class, 'store'])->name('compras.store');
         Route::get('/getCompraDetails/{id}', [ComprasController::class, 'getCompraDetails'])->name('getCompraDetails');
+        Route::post('/payCompra/{id}', [ComprasController::class, 'payCompra'])->name('payCompra');
+        Route::post('/nullifyCompra/{id}', [ComprasController::class, 'nullifyCompra'])->name('nullifyCompra');
     });
 
     //Reportes
@@ -241,5 +244,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ayuda', function () {
         return view('ayuda.index');
     })->name('ayuda');
+
+
+    //Queries
+    Route::controller(QueriesController::class)->group(function () {
+        Route::get('/getLotesVencimiento', [QueriesController::class, 'getLotesVencimiento'])->name('getLotesVencimiento');
+        Route::get('/getProductosStockMinimo', [QueriesController::class, 'getProductosStockMinimo'])->name('getProductosStockMinimo');
+        Route::get('/getProductosOverStock', [QueriesController::class, 'getProductosOverStock'])->name('getProductosOverStock');
+    });
 
 });

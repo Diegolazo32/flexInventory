@@ -192,7 +192,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProductoModalLabel">Crear producto </h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small><br>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small><br>
                         <small class="text-muted"> Al crear un producto, se creara un lote con la cantidad asignada en
                             'stock' y con fecha de vencimiento
                             asignada en 'fecha vencimiento'
@@ -206,8 +207,8 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="codigo" name="codigo"
-                                            placeholder="Codigo" @blur="validateForm" @keyup="validateForm"
-                                            v-model="item.codigo">
+                                            autofocus tabindex="0" placeholder="Codigo" @blur="validateForm"
+                                            @keyup="validateForm" v-model="item.codigo">
                                         <label for="floatingInput">Codigo<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.codigo">@{{ errors.codigo }}</div>
                                     </div>
@@ -434,7 +435,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editProductoModalLabel">Editar producto</h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small><br>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small><br>
                         <small class="text-muted">Para modificar la fecha de vencimiento de un producto, debe
                             modificarla
                             en la seccion de lotes, y modificar la del lote entero. </small>
@@ -922,20 +924,29 @@
                                 <tr v-for='lote in lotes' :key="lote.id">
                                     <td>@{{ lote.codigo }}</td>
                                     <td>@{{ lote.numero }}</td>
-                                    <td><input :disabled="!editMode" type="date" class="form-control"
-                                            id="fechaVencimientoLote" @blur="validateLote"
-                                            v-model="lote.fechaVencimiento">
-                                        <div class="invalid-tooltip" v-if="lotesError.fechaVencimiento">
-                                            @{{ lotesError.fechaVencimiento }}</div>
+                                    <td>
+                                        <div class="form-floating" style="margin-bottom: 10px;">
+                                            <div class="form-floating mb-3">
+                                                <input type="date" class="form-control" :disabled="!editMode"
+                                                    :id="'fechaVencimientoLote' + lote.id" @blur="validateLote(lote)"
+                                                    @keyup="validateLote(lote)" v-model="lote.fechaVencimiento">
+                                                <label for="floatingInput">Fecha Vencimiento</label>
+                                                <div class="invalid-tooltip" v-if="lotesError.fechaVencimiento">
+                                                    @{{ lotesError.fechaVencimiento }}</div>
+                                            </div>
+                                        </div>
+
                                     </td>
                                     <td>@{{ lote.cantidad }}
                                     </td>
                                     <td v-if="lote.estado == 1">
-                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span class="badge bg-danger"
+                                            v-if="estados.error">@{{ estados.error }}</span>
                                         <span v-else class="badge bg-success">@{{ estados.find(estado => estado.id == lote.estado).descripcion }}</span>
                                     </td>
                                     <td v-else>
-                                        <span class="badge bg-danger" v-if="estados.error">@{{ estados.error }}</span>
+                                        <span class="badge bg-danger"
+                                            v-if="estados.error">@{{ estados.error }}</span>
                                         <span v-else class="badge bg-danger">@{{ estados.find(estado => estado.id == lote.estado).descripcion }}</span>
                                     </td>
                                 </tr>
@@ -1668,9 +1679,32 @@
                 //Lotes
                 sendLotes(producto) {
 
-                    this.validateLote();
+                    //Animate button
+                    document.getElementById('submitLotesButton').innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+                    document.getElementById('submitLotesButton').disabled = true;
+                    document.getElementById('cancelLotesButton').disabled = true;
 
                     if (Object.keys(this.lotesError).length > 0) {
+                        swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            title: 'Error',
+                            text: 'Por favor, corrija los errores en el formulario.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar',
+                        });
+
+                        document.getElementById('submitLotesButton').innerHTML =
+                            'Guardar';
+
+                        document.getElementById('submitLotesButton').disabled = false;
+                        document.getElementById('cancelLotesButton').disabled = false;
+
                         return;
                     }
 
@@ -1723,6 +1757,12 @@
                         });
 
                     }).finally(() => {
+                        document.getElementById('submitLotesButton').innerHTML =
+                            'Guardar';
+
+                        document.getElementById('submitLotesButton').disabled = false;
+                        document.getElementById('cancelLotesButton').disabled = false;
+
                         document.getElementById('cancelLotesButton').click();
                         //limpiar
                         this.cleanForm();
@@ -1733,28 +1773,20 @@
                 toggleEdit() {
                     this.editMode = !this.editMode;
                 },
-                validateLote() {
+                validateLote(lote) {
                     this.lotesError = {};
 
-                    for (let i = 0; i < this.lotes.length; i++) {
+                    let fecha = new Date(lote.fechaVencimiento);
+                    let hoy = new Date();
 
-                        if (this.lotes[i].fechaVencimiento) {
-
-                            if (new Date(this.lotes[i].fechaVencimiento) < new Date()) {
-                                this.lotesError.fechaVencimiento =
-                                    'La fecha de vencimiento no puede ser menor o igual a la fecha actual';
-                                document.getElementById('fechaVencimientoLote').setAttribute('class',
-                                    'form-control is-invalid');
-                            } else {
-                                document.getElementById('fechaVencimientoLote').setAttribute('class',
-                                    'form-control is-valid');
-                            }
-
-                        } else {
-                            document.getElementById('fechaVencimientoLote').setAttribute('class',
-                                'form-control is-valid');
-                        }
-
+                    if (fecha < hoy) {
+                        document.getElementById('fechaVencimientoLote' + lote.id).setAttribute('class',
+                            'form-control is-invalid');
+                        this.lotesError.fechaVencimiento =
+                            'La fecha de vencimiento no puede ser menor o igual a la fecha actual';
+                    } else {
+                        document.getElementById('fechaVencimientoLote' + lote.id).setAttribute('class',
+                            'form-control is-valid');
                     }
                 },
                 //Limpiar formulario y busqueda

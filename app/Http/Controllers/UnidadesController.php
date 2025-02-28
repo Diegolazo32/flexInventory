@@ -72,8 +72,6 @@ class UnidadesController extends Controller
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
-        //dd($request->all());
-
         $request->validate(
             [
                 'descripcion' => 'required|unique:unidades',

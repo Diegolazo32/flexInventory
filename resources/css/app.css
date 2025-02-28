@@ -1,35 +1,15 @@
 .BgLogin {
     /* Color si no carga la imagen */
     background: rgb(33, 35, 37);
-
-    background-image: url(../../public/storage/logo/logo_empresa.jpeg),
-    url(../../public/storage/logo/logo_empresa.jpg) ,
-    url(../../public/storage/logo/logo_empresa.png);
-
+    background-image: var(--login-bg);
+    background-size: cover;
+    background-position: center;
     backdrop-filter: blur(25px);
     object-fit: cover;
     background-position-y: center;
     background-position-x: center;
     background-size: cover;
     background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-
-}
-
-
-.empresaLogo {
-    background-image: url(../../public/storage/logo/logo_empresa.jpeg),
-    url(../../public/storage/logo/logo_empresa.jpg),
-    url(../../public/storage/logo/logo_empresa.png);
-    background-position-y: center;
-    background-position-x: left;
-    background-size: auto;
-    background-repeat: no-repeat;
-    height: 100%;
-
 }
 
 html,
@@ -167,20 +147,17 @@ body {
 
 @media(max-width: 1200px) {
     .BgLogin {
-        background: rgb(33, 35, 37);
-        background-image: url(../../public/storage/logo/logo_empresa.jpeg),
-            url(../../public/storage/logo/logo_empresa.jpg),
-            url(../../public/storage/logo/logo_empresa.png);
-        backdrop-filter: blur(25px);
-        object-fit: cover;
-        background-position-y: center;
-        background-position-x: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    /* Color si no carga la imagen */
+    background: rgb(33, 35, 37);
+    background-image: var(--login-bg);
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(25px);
+    object-fit: cover;
+    background-position-y: center;
+    background-position-x: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 
     }
 
@@ -188,20 +165,17 @@ body {
 
 @media(max-width: 992px) {
     .BgLogin {
-        background: rgb(33, 35, 37);
-        background-image: url(../../public/storage/logo/logo_empresa.jpeg),
-            url(../../public/storage/logo/logo_empresa.jpg),
-            url(../../public/storage/logo/logo_empresa.png);
-        backdrop-filter: blur(25px);
-        object-fit: cover;
-        background-position-y: center;
-        background-position-x: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    /* Color si no carga la imagen */
+    background: rgb(33, 35, 37);
+    background-image: var(--login-bg);
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(25px);
+    object-fit: cover;
+    background-position-y: center;
+    background-position-x: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 
     }
 
@@ -222,20 +196,17 @@ body {
 
 @media (max-width: 768px) {
     .BgLogin {
-        background: rgb(33, 35, 37);
-        background-image: url(../../public/storage/logo/logo_empresa.jpeg),
-            url(../../public/storage/logo/logo_empresa.jpg),
-            url(../../public/storage/logo/logo_empresa.png);
-        backdrop-filter: blur(25px);
-        object-fit: cover;
-        background-position-y: center;
-        background-position-x: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    /* Color si no carga la imagen */
+    background: rgb(33, 35, 37);
+    background-image: var(--login-bg);
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(25px);
+    object-fit: cover;
+    background-position-y: center;
+    background-position-x: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 
     }
 
@@ -260,4 +231,3 @@ body {
         display: none;
     }
 }
-

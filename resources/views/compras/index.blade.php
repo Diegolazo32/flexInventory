@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Tabla de productos -->
+            <!-- Tabla de compras -->
             <div class="row">
                 <div class="card-body">
 
@@ -67,6 +67,7 @@
                                     <th scope="col">Codigo</th>
                                     <th scope="col">Total</th>
                                     <th scope="col">Fecha de compra</th>
+                                    <th scope="col">Estado</th>
                                     <th scope="col">Ver detalles</th>
                                 </tr>
                             </thead>
@@ -77,10 +78,24 @@
                                     <td>$@{{ parseDouble(compra.total) }}</td>
                                     <td>@{{ parseDate(compra.fecha) }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" id="compraDetallesModalBtn"
-                                        data-bs-target="#compraDetallesModal" @click="getCompraDetails(compra.id)">
+                                        <span v-if="compra.estado == 5" class="badge bg-warning">Pendiente</span>
+                                        <span v-if="compra.estado == 6" class="badge bg-success">Pagado</span>
+                                        <span v-if="compra.estado == 7" class="badge bg-danger">Anulado</span>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            v-if="compra.estado == 5" id="EditCompraModalBtn"
+                                            data-bs-target="#EditCompraModal" @click="getCompraDetails(compra.id)">
+                                            <i class="fas fa-pencil"></i>
+                                        </button>
+
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" v-else
+                                            id="compraDetallesModalBtn" data-bs-target="#compraDetallesModal"
+                                            @click="getCompraDetails(compra.id)">
                                             <i class="fas fa-eye"></i>
                                         </button>
+
+
                                     </td>
                                 </tr>
                             </tbody>
@@ -151,7 +166,8 @@
                                                 @click="selectResult(result)" style="cursor: pointer;"
                                                 @keyup.enter="selectResult(result)" tabindex="0">@{{ result.codigo }}
                                                 -
-                                                @{{ result.nombre }} - @{{ result.proveedor }} - @{{ result.unidad }}</li>
+                                                @{{ result.nombre }} - @{{ result.unidad }}
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="col-6" v-if="compras.length > 0"
@@ -250,13 +266,28 @@
 
                                     <!-- Metodo de pago -->
                                     <div class="col-12">
-                                        <label for="fechaCompra">Forma de pago</label>
-                                        <select class="form-select">
+                                        <label for="tipoPago">Forma de pago</label>
+                                        <select class="form-select" name="tipoPago" v-model="tipoPago">
                                             <option value="1">Efectivo</option>
                                             <option value="2">Tarjeta de débito o crédito</option>
                                             <option value="3">Transferencia Bancaria</option>
                                             <option value="4">Pendiente de pago</option>
                                         </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="estado">Estado</label>
+                                        <select class="form-select" name="estado" v-model="estado">
+                                            <option value="6"> Pagado </option>
+                                            <option value="5">Pendiente</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="observaciones">Observaciones</label>
+                                        <textarea class="form-control" name="observaciones" v-model="observaciones" placeholder="Observaciones"
+                                            style="margin-bottom: 10px;"></textarea>
+
                                     </div>
                                 </div>
                             </div>
@@ -303,10 +334,13 @@
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-fullscreen-lg-down ">
                 <div class="modal-content">
 
-                    <div class="modal-header" style="display: block;">
-                        <h1 class="modal-title fs-5" id="compraDetallesModalLabel">Codigo: @{{ compraDetalles.codigo ?? '-' }}</h1>
-                        <h1 class="modal-title fs-5" id="compraDetallesModalLabel">Fecha: @{{ compraDetalles.fecha ? parseDate(compraDetalles.fecha) : '-' }}</h1>
-                        <h2 class="modal-title fs-5" id="compraDetallesModalLabel">Total: $@{{ parseDouble(compraDetalles.total) ?? '-' }}</h2>
+                    <div class="modal-header" style="display: flex; justify-content: space-evenly; align-items: center;">
+                        <h3 class="modal-title">Codigo: @{{ compraDetalles.codigo ?? '-' }}</h3>
+                        <h3 class="modal-title">Fecha: @{{ compraDetalles.fecha ? parseDate(compraDetalles.fecha) : '-' }}</h3>
+                        <h3 v-if="compraDetalles.estado == 5"><span class="badge bg-warning">Pendiente</span></h3>
+                        <h3 v-if="compraDetalles.estado == 6"><span class="badge bg-success">Pagado</span></h3>
+                        <h3 v-if="compraDetalles.estado == 7"><span class="badge bg-danger">Anulado</span></h3>
+                        <h3 class="modal-title">Total: $@{{ parseDouble(compraDetalles.total) ?? '-' }}</h3>
                     </div>
                     <div class="modal-body">
 
@@ -350,6 +384,67 @@
                 </div>
             </div>
         </div>
+
+        <!-- Edit Compra modal -->
+        <div class="modal fade" id="EditCompraModal" tabindex="-1" aria-labelledby="EditCompraModalLabel"
+            aria-hidden="inert" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-fullscreen-lg-down ">
+                <div class="modal-content">
+
+                    <div class="modal-header" style="display: flex; justify-content: space-evenly; align-items: center;">
+                        <h3 class="modal-title">Codigo: @{{ compraDetalles.codigo ?? '-' }}</h3>
+                        <h3 class="modal-title">Fecha: @{{ compraDetalles.fecha ? parseDate(compraDetalles.fecha) : '-' }}</h3>
+                        <h3 v-if="compraDetalles.estado == 5"><span class="badge bg-warning">Pendiente</span></h3>
+                        <h3 v-if="compraDetalles.estado == 6"><span class="badge bg-success">Pagado</span></h3>
+                        <h3 v-if="compraDetalles.estado == 7"><span class="badge bg-danger">Anulado</span></h3>
+                        <h3 class="modal-title">Total: $@{{ parseDouble(compraDetalles.total) ?? '-' }}</h3>
+                    </div>
+                    <div class="modal-body">
+
+                        <div v-if="loadingDetails" role="alert"
+                            style="display: flex; justify-content: center; align-items: center;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive" v-else-if="productosDetalles.length > 0 && !loading">
+                            <table ref="table" class="table table-hover table-striped" style="text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Codigo</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Precio de compra</th>
+                                        <th scope="col">Proveedor</th>
+                                        <th scope="col">Fecha de vencimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr v-for="producto in productosDetalles" :key="producto.id">
+                                        <td>@{{ producto.codigo ?? '-' }}</td>
+                                        <td>@{{ producto.nombre ?? '-' }}</td>
+                                        <td>@{{ producto.cantidad ?? '-' }}</td>
+                                        <td>$@{{ producto.precio ? parseDouble(producto.precio) : '-' }}</td>
+                                        <td>@{{ producto.proveedor ?? '-' }}</td>
+                                        <td>@{{ producto.fechaVencimiento ? parseDate(producto.fechaVencimiento) : '-' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelEditButton"
+                            @click="cleanForm">Cerrar</button>
+                        <button type="button" class="btn btn-danger" id="anularButton"
+                            @click="sendNullifyForm(compraDetalles)">Anular</button>
+                        <button type="button" class="btn btn-success" @click="sendPayForm(compraDetalles)"
+                            id="pagarButton">Pagar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -384,6 +479,11 @@
                 proveedoresError: '',
                 searchProveedores: [],
 
+                //unidades
+                unidades: [],
+                searchUnidades: [],
+                unidadesError: '',
+
                 //Busqueda
                 searchError: '',
 
@@ -394,6 +494,9 @@
                 codigoCompra: '',
                 quantity: 1,
                 nuevaCompraErrors: [],
+                tipoPago: 1,
+                estado: 6,
+                observaciones: '',
                 //Today's date
                 fechaCompra: new Date().toISOString().substr(0, 10),
 
@@ -521,13 +624,13 @@
                             }
                         }
 
-                        //Cambiar el proveedor id por el nombre
+                        //Cambiar la unidad id por su nombre
                         this.results.forEach(result => {
-                            let proveedor = this.proveedores.find(proveedor => {
-                                return proveedor.id == result.proveedor;
+                            let unidad = this.unidades.find(unidad => {
+                                return unidad.id == result.unidad;
                             });
 
-                            result.proveedor = proveedor.nombre;
+                            result.unidad = unidad.descripcion;
                         });
 
 
@@ -648,8 +751,6 @@
                         cantidad = parseInt(producto.cantidad);
                         stockMax = parseInt(producto.stockMaximo);
 
-                        //console.log(producto.stockMaximo);
-
                         if (cantidad > stockMax) {
 
                             this.overstock.push(producto);
@@ -681,6 +782,11 @@
                     this.codigoCompra = ''
                     this.quantity = 1
                     this.nuevaCompraErrors = []
+                    this.tipoPago = 1
+                    this.estado = 6
+                    this.observaciones = ''
+                    //Today's date
+                    this.fechaCompra = new Date().toISOString().substr(0, 10)
 
                     //Detalles
                     this.compraDetalles = []
@@ -755,6 +861,8 @@
                             icon: 'error',
                             confirmButtonText: 'Aceptar'
                         });
+                    }).finally(() => {
+                        this.loading = false;
                     });
                 },
                 async getAllProductos() {
@@ -930,6 +1038,9 @@
                                     total: this.totalCompra,
                                     codigo: this.codigoCompra,
                                     fecha: this.fechaCompra,
+                                    tipoPago: this.tipoPago,
+                                    estado: this.estado,
+                                    observaciones: this.observaciones,
                                 };
 
                                 axios({
@@ -1016,6 +1127,9 @@
                             total: this.totalCompra,
                             codigo: this.codigoCompra,
                             fecha: this.fechaCompra,
+                            tipoPago: this.tipoPago,
+                            estado: this.estado,
+                            observaciones: this.observaciones,
                         };
 
                         axios({
@@ -1080,15 +1194,185 @@
 
                             this.cleanForm();
                             this.getAllCompras();
+                            this.getAllProductos();
                         });
                     }
 
+                },
+                async getAllUnidades() {
+                    axios({
+                        method: 'get',
+                        url: '/allUnidades',
+                    }).then(response => {
 
+                        this.unidades = response.data;
+
+                    }).catch(error => {
+                        swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al obtener las unidades',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    });
+                },
+
+                async sendPayForm(compra) {
+
+                    //Disable buttons
+                    document.getElementById('pagarButton').disabled = true;
+                    document.getElementById('anularButton').disabled = true;
+                    document.getElementById('cancelEditButton').disabled = true;
+
+                    //Animar pagarButton
+                    document.getElementById('pagarButton').innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i> Pagando...';
+
+
+                    axios({
+                        method: 'post',
+                        url: '/payCompra/' + compra.id,
+                    }).then(response => {
+
+                        if (response.data.success) {
+                            swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                title: 'Compra pagada',
+                                text: response.data.success,
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        } else {
+                            swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                title: 'Error',
+                                text: response.data.error,
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+
+
+                    }).catch(error => {
+                        swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al obtener las unidades',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }).finally(() => {
+
+                        document.getElementById('pagarButton').innerHTML =
+                            'Pagar';
+
+                        document.getElementById('pagarButton').disabled = false;
+                        document.getElementById('anularButton').disabled = false;
+                        document.getElementById('cancelEditButton').disabled = false;
+
+                        document.getElementById('cancelEditButton').click();
+
+                        this.cleanForm();
+                        this.getAllCompras();
+                        this.getAllProductos();
+                    });
+                },
+                async sendNullifyForm(compra) {
+
+                    //Disable buttons
+                    document.getElementById('pagarButton').disabled = true;
+                    document.getElementById('anularButton').disabled = true;
+                    document.getElementById('cancelEditButton').disabled = true;
+
+                    //Animar pagarButton
+                    document.getElementById('anularButton').innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i> Anulando...';
+
+                    axios({
+                        method: 'post',
+                        url: '/nullifyCompra/' + compra.id,
+                    }).then(response => {
+
+
+                        if (response.data.success) {
+                            swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                title: 'Compra anulada',
+                                text: response.data.success,
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        } else {
+                            swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                title: 'Error',
+                                text: response.data.error,
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+
+
+                    }).catch(error => {
+                        swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al obtener las unidades',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    }).finally(() => {
+
+                        //Animar pagarButton
+                        document.getElementById('anularButton').innerHTML =
+                            'Anular';
+
+                        document.getElementById('pagarButton').disabled = false;
+                        document.getElementById('anularButton').disabled = false;
+                        document.getElementById('cancelEditButton').disabled = false;
+
+                        document.getElementById('cancelEditButton').click();
+
+                        this.cleanForm();
+                        this.getAllCompras();
+                        this.getAllProductos();
+                    });
 
                 },
+
             },
             mounted() {
                 this.getAllProveedores();
+                this.getAllUnidades();
                 this.getAllCompras();
                 this.getAllProductos();
             }
