@@ -31,12 +31,20 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <style>
+        :root {
+            --login-bg: url('{{ asset('storage/' . \App\Models\empresa::first()->logo ?? 'default_bg.jpg') }}?t={{ time() }}');
+        }
+    </style>
+
     @vite('resources/css/app.css')
 
 
 </head>
 
-<body class="BgLogin">
+<body class="BgLogin"
+    style="background-image: url('{{ asset('storage/' . \App\Models\empresa::first()->logo ?? 'default_bg.jpg') }}?t={{ time() }}'); background-size: cover; background-position: center;">
+
     <div style="display: flex; justify-content: center; align-items: center; height: 100vh; width: auto;">
         <div class="row" id="ResetPassword">
             <div class="col-lg-12" style="display: flex; justify-content: center; align-items: center;">
