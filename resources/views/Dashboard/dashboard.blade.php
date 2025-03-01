@@ -33,7 +33,7 @@
             </div>
         @endif
 
-        @if ($empresa == null)
+        @if ($empresa->firstTime == true)
             <div class="row">
                 <div class="card mb-3 col-lg-12 customShadow hoverCardCenter">
                     <div class="card-body">

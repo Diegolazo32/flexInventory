@@ -124,6 +124,7 @@ class EmpresaController extends Controller
             $empresa->logo = $rutaPublica ?? $empresa->logo;
             $empresa->cuentaContable = $request->cuentaContable;
             $empresa->valorIVA = $request->valorIVA;
+            $empresa->firstTime = false;
             $empresa->save();
 
             $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de empresa', 'Empresa', $oldEmpresa, $empresa);

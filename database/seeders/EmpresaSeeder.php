@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\empresa;
 use Database\Factories\EmpresaFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,24 +16,27 @@ class EmpresaSeeder extends Seeder
     {
         $empresas = [
             [
-                'nombre' => 'Empresa General',
-                'direccion' => 'Empresa General',
-                'telefono ' => '123456789',
-                'email' => '-',
-                'logo' => '-',
-                'NIT' => '123123123123',
-                'NRC' => '123123123123',
+                'nombre' => 'Flex Inventory',
+                'direccion' => 'Direccion',
+                'telefono' => '0000-0000',
+                'email' => 'correo@correo.com',
+                'logo' => 'logo/empresa_logo.jpg',
+                'NIT' => '0000-000000-000-0',
+                'NRC' => '0000',
                 'giro' => 'General',
-                'representante' => 'Representante',
-                'dui' => '123456789',
-                'nit_representante' => '123-12121212-1212-1212-1',
-                'telefono_representante' => '123456789',
-                'email_representante' => '-',
+                'representante' => '-',
+                'dui' => '00000000-0',
+                'nit_representante' => '0000-000000-000-0',
+                'telefono_representante' => '0000-0000',
+                'email_representante' => 'correo@@correo.com',
+                'cuentaContable' => '0000-0000-0000-0000',
+                'valorIVA' => 13,
+                'firstTime' => true,
             ]
         ];
 
         foreach ($empresas as $empresa) {
-            EmpresaFactory::new()->create($empresa);
+            empresa::create($empresa);
         }
     }
 }
