@@ -68,17 +68,6 @@
                         style="width: 50px; height: 50px;object-fit: cover;">
                 </a>
 
-                <a class="navbar-brand nombreMarca" href="{{ route('dashboard') }}"
-                    style="margin-left:15px; font-weight: normal">
-                    <?php
-
-                    if ($empresa->nombre == null) {
-                        echo 'Flex Inventory';
-                    } else {
-                        echo $empresa->nombre;
-                    }
-                    ?>
-                </a>
             </div>
             <div class="col-2 d-flex justify-content-center">
 
@@ -111,10 +100,19 @@
                             <a href="{{ route('dashboard') }}" style="font-weight: normal">
                                 <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo"
                                     class="rounded-circle" style="width: 50px; height: 50px;object-fit: cover;">
-
                             </a>
                         </div>
                     </li>
+
+                    <!-- Nombre de la empresa -->
+                    <li class="nav-item" style="width: 100%;">
+                        <div class="d-flex justify-content-center align-items-center" style="text-align: center; padding-right: 10px; padding-left: 10px;">
+                            <h5 style="font-weight: normal" class="nombreMarca">
+                                {{ $empresa->nombre ?? 'Flex Inventory' }}
+                            </h5>
+                        </div>
+                    </li>
+
                 </div>
 
                 <div class="offcanvas-body" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
