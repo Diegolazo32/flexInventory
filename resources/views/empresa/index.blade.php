@@ -100,7 +100,7 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('productos.store') }}" method="POST"
+                        <form ref="form" action="{{ route('productos.store') }}" method="POST" @submit.prevent="sendForm"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="row">

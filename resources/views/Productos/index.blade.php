@@ -41,7 +41,7 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
+                                <input type="text" class="form-control" name="search" @keyup.enter="getAllProductos"
                                     placeholder="Buscar por codigo o nombre" v-model="search">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
@@ -200,7 +200,7 @@
                         </small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('productos.store') }}" method="POST">
+                        <form ref="form" action="{{ route('productos.store') }}" method="POST" @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <!-- Codigo -->
@@ -385,7 +385,7 @@
                                 <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="unidad" name="unidad" v-model="item.unidad"
-                                            @blur="validateForm" @change="validateForm">
+                                            @blur="validateForm" @change="validateForm" >
                                             <option v-for="unidad in unidades" :key="unidad.id"
                                                 :value="unidad.id">
                                                 @{{ unidad.descripcion }}
@@ -416,13 +416,8 @@
                                 <button type="button" class="btn btn-primary" id="SubmitForm"
                                     @click="sendForm">Guardar</button>
                             </div>
-
-
                         </div>
                         <!--Switch para crear multiples productos-->
-
-
-
                     </div>
                 </div>
             </div>
@@ -443,7 +438,7 @@
 
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit">
+                        <form ref="formEdit" @submit.prevent="sendEditForm">
                             @csrf
                             <div class="row">
                                 <!-- Codigo -->
@@ -700,8 +695,7 @@
                         <h1 class="modal-title fs-5" id="showProductoModalLabel">Producto</h1>
                     </div>
                     <div class="modal-body text-center" style="padding: 25px;">
-                        <form ref="formEdit">
-                            @csrf
+
                             <div class="row">
                                 <!-- Codigo -->
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -869,7 +863,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelShowButton"

@@ -37,7 +37,7 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <input type="text" class="form-control" name="search"
+                            <input type="text" class="form-control" name="search" @keyup.enter="getAllEstados"
                                 placeholder="Buscar por descripción" v-model="search">
                             <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                         </div>
@@ -146,12 +146,12 @@
                     <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                 </div>
                 <div class="modal-body" style="padding: 25px;">
-                    <form ref="form" action="{{ route('estados.store') }}" method="POST">
+                    <form ref="form" action="{{ route('estados.store') }}" method="POST" @submit.prevent="sendForm">
                         @csrf
                         <div class="row">
                             <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="descripcion" name="descripcion"
+                                    <input type="text" class="form-control" id="descripcion" name="descripcion" @keyup.enter="validateForm"
                                         placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
                                        >
                                     <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
@@ -182,7 +182,7 @@
                     <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                 </div>
                 <div class="modal-body" style="padding: 25px;">
-                    <form ref="formEdit">
+                    <form ref="formEdit" action="{{ route('estados.edit') }}" method="POST" @submit.prevent="sendFormEdit">
                         @csrf
                         <div class="row">
                             <div class="form-floating col-lg-12" style="margin-bottom: 10px;">

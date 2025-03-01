@@ -27,7 +27,7 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
+                                <input type="text" class="form-control" name="search" @keyup.enter="getAllCategorias"
                                     placeholder="Buscar por descripcion" v-model="search">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
@@ -152,14 +152,14 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('categorias.store') }}" method="POST">
+                        <form ref="form" action="{{ route('categorias.store') }}" method="POST" @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcion" name="descripcion"
                                             placeholder="Descripcion" @blur="validateForm" @keyup="validateForm"
-                                            v-model="item.descripcion">
+                                            v-model="item.descripcion" @keyup.enter="sendForm">
                                         <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descripcion">@{{ errors.descripcion }}
                                         </div>
@@ -189,14 +189,14 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit">
+                        <form ref="formEdit" @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
 
                                     <div class="form-floating mb-3">
                                         <!-- Descripcion -->
-                                        <input type="text" class="form-control" id="descripcionEdit"
+                                        <input type="text" class="form-control" id="descripcionEdit" @keyup.enter="sendFormEdit"
                                             name="descripcion" placeholder="Descripcion" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.descripcion">
                                         <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
@@ -298,6 +298,7 @@
             methods: {
                 //Crear
                 sendForm() {
+
                     this.validateForm();
 
                     if (Object.keys(this.errors).length === 0) {

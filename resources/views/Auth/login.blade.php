@@ -53,7 +53,7 @@
                     <div class="card-title">
                         <h2 class="text-center">@{{ mensaje }}</h2>
                     </div>
-                    <form action="{{ route('AuthLogin') }}" method="post" ref="loginForm">
+                    <form action="{{ route('AuthLogin') }}" method="post" ref="loginForm" @submit.prevent="LogIn">
                         @csrf
                         <div class="form-floating  mb-3">
                             <input type="text" name="usuario" class="form-control" id="floatingUsuario"

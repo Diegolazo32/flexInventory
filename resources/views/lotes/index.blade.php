@@ -26,7 +26,7 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
+                                <input type="text" class="form-control" name="search" @keyup.enter="getAllLotes"
                                     placeholder="Buscar por codigo o nombre" v-model="searchLotes">
                                 <!--<small class="text-danger" v-if="searchError">@{{ searchError }}</small>-->
                             </div>

@@ -36,7 +36,7 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
+                                <input type="text" class="form-control" name="search" @keyup.enter="getAllUnidades"
                                     placeholder="Buscar por descripcion o abreviatura" v-model="search">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
@@ -158,7 +158,7 @@
                         <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('unidades.store') }}" method="POST">
+                        <form ref="form" action="{{ route('unidades.store') }}" method="POST" @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -174,7 +174,7 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="abreviatura" name="abreviatura"
-                                            placeholder="Abreviatura"
+                                            placeholder="Abreviatura" @keyup.enter="sendForm"
                                             v-model="item.abreviatura" @blur="validateForm" @keyup="validateForm">
                                         <label for="floatingInput">Abreviatura<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.abreviatura">@{{ errors.abreviatura }}
@@ -204,7 +204,7 @@
                         <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit">
+                        <form ref="formEdit" @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
@@ -226,7 +226,7 @@
                                         <!-- Abreviatura -->
                                         <input type="text" class="form-control" id="abreviaturaEdit"
                                             name="abreviatura" placeholder="Abreviatura" v-model="editItem.abreviatura"
-                                            @blur="validateEditForm" @keyup="validateEditForm">
+                                            @blur="validateEditForm" @keyup="validateEditForm" @keyup.enter="sendFormEdit">
                                         <label for="floatingInput">Abreviatura<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.abreviatura">@{{ editErrors.abreviatura }}
                                         </div>
