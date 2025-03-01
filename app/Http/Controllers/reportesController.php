@@ -116,8 +116,6 @@ class reportesController extends Controller
             'stockTotal'
         ))->render();
 
-        //dd($html);
-
         // Configurar mPDF
         $mpdf = new Mpdf();
 
@@ -180,8 +178,6 @@ class reportesController extends Controller
             'empresa',
             'acciones',
         ))->render();
-
-        //dd($html);
 
         // Configurar mPDF
         $mpdf = new Mpdf();

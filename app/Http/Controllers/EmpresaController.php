@@ -82,42 +82,33 @@ class EmpresaController extends Controller
 
         try {
 
-            if ($request->firstTime) {
-                $oldEmpresa = '-';
-                $empresa = new empresa();
-            } else {
-                $oldEmpresa = empresa::find($request->id);
-                $empresa = empresa::find($request->id);
+            $empresa = $request->firstTime ? new empresa() : empresa::find($request->id);
+
+            if (!$empresa) {
+                return response()->json(['error' => 'Empresa no encontrada.'], 404);
             }
 
+            $oldEmpresa = $request->firstTime ? '-' : clone $empresa;
+
+            // Manejo del logo
             if ($request->hasFile('logo')) {
-                // Obtener el archivo subido
-                $documento = $request->file('logo');
+                $logoAnterior = $empresa->logo ?? '-';
+                $nombreArchivo = 'logo_empresa.' . $request->file('logo')->getClientOriginalExtension();
+                $rutaPublica = 'logo/' . $nombreArchivo;
 
-                $extension = $documento->getClientOriginalExtension(); // Obtener la extensión del archivo
-                $nombreArchivo = 'logo_empresa' . '.' . $extension; // Nombre del archivo
-                $rutaLocal = 'logo/' . $nombreArchivo;
-                $logoAnterior = $empresa->logo;
-
-                if ($logoAnterior != null) {
-                    // Eliminar el archivo anterior
-                    Storage::disk('local')->delete($logoAnterior);
-                    Storage::disk('public')->delete($logoAnterior);
+                // Eliminar logo anterior si existía
+                if ($empresa->logo) {
+                    Storage::disk('public')->delete($empresa->logo);
                 }
 
-                // Guardar el archivo en el almacenamiento local
-                $documento->storeAs('logo', $nombreArchivo, 'local');
-
-                // Copiar el archivo al almacenamiento público
-                $rutaPublica = 'logo/' . $nombreArchivo;
-                Storage::disk('public')->put($rutaPublica, file_get_contents(storage_path('app/' . $rutaLocal)));
+                // Guardar el nuevo logo en el disco público
+                $request->file('logo')->storeAs('logo', $nombreArchivo, 'public');
+                $empresa->logo = $rutaPublica;
 
                 $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de logo', 'Empresa', $logoAnterior, $rutaPublica);
-
-
             }
 
-            
+
             $empresa->nombre = $request->nombre;
             $empresa->direccion = $request->direccion;
             $empresa->telefono = $request->telefono;
@@ -135,8 +126,12 @@ class EmpresaController extends Controller
             $empresa->valorIVA = $request->valorIVA;
             $empresa->save();
 
-            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de empresa', 'Empresa', '-', $empresa);
-            return response()->json(['success' => 'Empresa guardada correctamente, aplicando cambios, espere...']);
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Modificación de empresa', 'Empresa', $oldEmpresa, $empresa);
+            return response()->json([
+                'success' => 'Empresa guardada correctamente, aplicando cambios, espere...',
+                'logo' => asset('storage/' . $empresa->logo)
+            ]);
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }

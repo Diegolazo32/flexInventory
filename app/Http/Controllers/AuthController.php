@@ -127,7 +127,6 @@ class AuthController extends Controller
     public function updatePassword($id, Request $request)
     {
 
-
         $usuario = User::find($id);
 
         if ($usuario == null) {
@@ -140,7 +139,7 @@ class AuthController extends Controller
             return back();
         }
 
-        if ($request->password == 'password') {
+        if ($request->password == 'password' || $request->password == '123456' || $request->password == '12345678' || $request->password == '123456789' || $request->password == 'contraseña' || $request->password == 'admin') {
             flash('Contraseña no permitida', 'error');
             return back();
         }
@@ -154,6 +153,7 @@ class AuthController extends Controller
         Auth::logout();
 
         flash('Contraseña actualizada', 'success');
+        flash('Puede inciar sesion', 'info');
         return redirect()->route('login');
     }
 }

@@ -220,8 +220,6 @@ class UserController extends Controller
             return response()->json(['error' => 'No tiene permisos para acceder a esta sección']);
         }
 
-        //dd($request->all());
-
         $oldUser = User::find($request->id);
         $user = User::find($request->id);
 

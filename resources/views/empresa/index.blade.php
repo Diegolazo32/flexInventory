@@ -35,10 +35,10 @@
                         <div class="row">
                             <div class="col-lg-4"
                                 style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <dvi>
-                                    <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo de la empresa"
+                                <div >
+                                    <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo de la empresa" class="hoverCard"
                                         style="height: 250px; width: 250px; border-radius: 15px; margin-bottom: 20px; object-fit: cover; border: #000000 thin solid;">
-                                </dvi>
+                                </div>
                                 <div>
 
                                     <p class="display-6 fw-bold" style="text-align: center; margin-bottom: 10px;">
@@ -96,7 +96,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProductoModalLabel">Editar informacion </h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="form" action="{{ route('productos.store') }}" method="POST"
@@ -571,17 +572,16 @@
                         formData.append('firstTime', this.firstTime);
                     }
 
-
-                    //Change icon to loading
-                    document.getElementById('SubmitForm').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-
-                    //Disable button
-                    document.getElementById('SubmitForm').disabled = true
-                    document.getElementById('cancelButton').disabled = true
-
                     if (Object.keys(this.errors).length === 0) {
+
                         try {
+                            //Change icon to loading
+                            document.getElementById('SubmitForm').innerHTML =
+                                '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+                            //Disable button
+                            document.getElementById('SubmitForm').disabled = true
+                            document.getElementById('cancelButton').disabled = true
                             // Realizar el request con Axios
                             axios.post('/empresa/edit/' + this.empresaInfo.id, formData, {
                                     headers: {
@@ -651,6 +651,10 @@
                                 icon: 'error',
                                 confirmButtonText: 'Aceptar',
                             });
+
+                            document.getElementById('SubmitForm').innerHTML = 'Guardar';
+                            document.getElementById('SubmitForm').disabled = false;
+                            document.getElementById('cancelButton').disabled = false;
                         }
                     } else {
                         swal.fire({

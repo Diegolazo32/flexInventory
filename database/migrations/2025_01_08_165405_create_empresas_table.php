@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('direccion');
             $table->string('telefono');
             $table->string('email');
-            $table->string('logo');
+            $table->string('logo')->default('logo/empresa_logo.jpg')->nullable();
             //$table->string('horario');
             $table->string('NIT');
             $table->string('NRC');

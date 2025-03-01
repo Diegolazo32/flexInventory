@@ -5,7 +5,6 @@
 @section('content')
     <div id="app">
 
-
         @if ($Activo == false)
             <div class="row">
                 <div class="card mb-3 col-lg-12 customShadow hoverCardCenter">
@@ -25,6 +24,35 @@
                                             onClick="window.location.href='{{ route('inventario') }}'">Abrir
                                             nuevo
                                             inventario</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if ($empresa == null)
+            <div class="row">
+                <div class="card mb-3 col-lg-12 customShadow hoverCardCenter">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="rounded-3">
+                                    <div class="container-fluid">
+                                        <h1 class="display-6 fw-bold">Actualice la información de su negocion</h1>
+                                        <p class="col-lg-12 fs-4">
+                                            Ingrese la informacion de su empresa para poder generar reportes y
+                                            facturas.
+                                        </p>
+                                        <p class="col-lg-12 fs-6">Sin la informacion de su empresa los documentos podrian
+                                            no
+                                            ser validos.
+                                        </p>
+                                        <button class="btn btn-warning btn-lg" id="openBtn" type="button"
+                                            onClick="window.location.href='{{ route('empresa') }}'">Actualizar
+                                            informacion</button>
                                     </div>
                                 </div>
                             </div>
@@ -121,13 +149,14 @@
 
         <br>
 
+        <!--Tablas de informacion de productos-->
         <div class="row">
             <div class="col-lg-4" style="margin-bottom: 15px;">
                 <!-- Productos proximos a vencer -->
                 <div class="card hoverCardCenter customShadow">
                     <div class="card-body" style="text-align: center">
 
-                        <h5>Productos proximos a vencer</h5>
+                        <h5>Lotes proximos a vencer</h5>
 
                         <div class="table-responsive">
 
@@ -136,29 +165,34 @@
 
                             </div>
 
-                            <div v-if="!loading && productosError" class="alert alert-danger" role="alert">
-                                @{{ productosError }}
+                            <div v-if="!loading && lotesError" class="alert alert-danger" role="alert">
+                                @{{ lotesError }}
                             </div>
 
-                            <div v-if="!productosError && !loading && productosVencimiento.length == 0"
+                            <div v-if="!lotesError && !loading && lotesVencimiento.length == 0"
                                 class="alert alert-warning" role="alert">
                                 No hay productos proximos a vencer
                             </div>
 
-                            <table v-if="!loading && productosVencimiento.length > 0" ref="table"
+                            <table v-if="!loading && lotesVencimiento.length > 0" ref="table"
                                 class="table table-striped table-hover" style="text-align: center;">
                                 <thead>
                                     <tr>
+                                        <!--<th scope="col">Codigo</th>-->
                                         <th scope="col">Producto</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">N°</th>
                                         <th scope="col">Fecha de vencimiento</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="producto in productosVencimiento">
-                                        <td>@{{ producto.nombre }}</td>
-                                        <td v-if="producto.fechaVencimiento < today"><span
-                                                class="badge bg-danger">Vencido</span></td>
-                                        <td v-else>@{{ formatDate(producto.fechaVencimiento) }}</td>
+                                    <tr v-for="lote in lotesVencimiento">
+                                        <!--<td>@{{ lote.codigo }}</td>-->
+                                        <td>@{{ lote.producto }}</td>
+                                        <td>@{{ lote.cantidad }}</td>
+                                        <td>@{{ lote.numero }}</td>
+                                        <td>@{{ formatDate(lote.fechaVencimiento) }}</td>
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -182,11 +216,11 @@
                                 <span class="sr-only"></span>
                             </div>
 
-                            <div v-if="!loading && productosError" class="alert alert-danger" role="alert">
-                                @{{ productosError }}
+                            <div v-if="!loading && agotadosError" class="alert alert-danger" role="alert">
+                                @{{ agotadosError }}
                             </div>
 
-                            <div v-if="!productosError && !loading && productosAgotados.length == 0"
+                            <div v-if="!agotadosError && !loading && productosAgotados.length == 0"
                                 class="alert alert-warning" role="alert">
                                 No hay productos proximos a agotarse
                             </div>
@@ -228,11 +262,11 @@
                                 <span class="sr-only"></span>
                             </div>
 
-                            <div v-if="!loading && productosError" class="alert alert-danger" role="alert">
-                                @{{ productosError }}
+                            <div v-if="!loading && excedidosError" class="alert alert-danger" role="alert">
+                                @{{ excedidosError }}
                             </div>
 
-                            <div v-if="!productosError && !loading && productosExcedidos.length == 0"
+                            <div v-if="!excedidosError && !loading && productosExcedidos.length == 0"
                                 class="alert alert-warning" role="alert">
                                 No hay productos excedido
                             </div>
@@ -272,14 +306,13 @@
         new Vue({
             el: '#app',
             data: {
-                productos: [],
-                productosVencimiento: [],
+                lotesVencimiento: [],
                 productosAgotados: [],
                 productosExcedidos: [],
                 loading: true,
-                productosError: '',
-                agotarseError: '',
-                today: new Date().toISOString().split('T')[0],
+                lotesError: null,
+                agotadosError: null,
+                excedidosError: null,
             },
             methods: {
                 //Parse
@@ -296,65 +329,65 @@
 
                     return day + "/" + month + "/" + year;
                 },
-                //Obtener recursos
-                async getAllProductos() {
-                    let response = await fetch('/allProductos');
-                    let data = await response.json();
-                    this.loading = false;
 
-                    if (data.error) {
-                        this.productosError = data.error;
-                        return;
-                    }
+                //Obtener lotes proximos a vencer
+                async getLotesVencimiento() {
+                    axios({
+                        method: 'get',
+                        url: '/getLotesVencimiento',
+                    }).then(response => {
 
-                    this.productos = data;
-
-                    this.productos.forEach(producto => {
-
-                        if (producto.fechaVencimiento != null) {
-
-                            if (this.productosVencimiento.length >= 5) {
-                                return;
-                            }
-
-                            let fechaVencimiento = new Date(producto.fechaVencimiento);
-                            let fechaActual = new Date();
-
-                            let diffTime = Math.abs(fechaVencimiento - fechaActual);
-                            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                            if (diffDays <= 7) {
-                                this.productosVencimiento.push(producto);
-                            } else if (fechaVencimiento < fechaActual) {
-                                this.productosVencimiento.push(producto);
-                            }
-
+                        if(response.data.error){
+                            this.lotesError = response.data.error;
+                            return;
                         }
 
-                        if (producto.stock <= producto.stockMinimo) {
-
-                            if (this.productosAgotados.length >= 5) {
-                                return;
-                            }
-
-                            this.productosAgotados.push(producto);
-                        }
-
-                        if (producto.stock >= producto.stckMaximo) {
-                            if (this.productosExcedidos.length >= 5) {
-                                return;
-                            }
-
-                            this.productosExcedidos.push(producto);
-                        }
-
+                        this.lotesVencimiento = response.data;
+                    }).catch(error => {
+                        this.lotesError = 'Error al obtener los lotes proximos a vencer';
                     });
+                },
+                async getProductosStockMinimo() {
+                    axios({
+                        method: 'get',
+                        url: '/getProductosStockMinimo',
+                    }).then(response => {
 
+                        if(response.data.error){
+                            this.agotadosError = response.data.error;
+                            return;
+                        }
+
+                        this.productosAgotados = response.data;
+                    }).catch(error => {
+                        this.agotadosError = 'Error al obtener los productos con stock minimo';
+                    });
+                },
+                async getProductosOverstock() {
+                    axios({
+                        method: 'get',
+                        url: '/getProductosOverStock',
+                    }).then(response => {
+
+                        if(response.data.error){
+                            this.excedidosError = response.data.error;
+                            this.loading = false;
+                            return;
+                        }
+
+                        this.productosExcedidos = response.data;
+                        this.loading = false;
+                    }).catch(error => {
+                        this.excedidosError = 'Error al obtener los productos con stock excedido';
+                        this.loading = false;
+                    });
                 },
 
             },
             mounted() {
-                this.getAllProductos();
+                this.getLotesVencimiento();
+                this.getProductosStockMinimo();
+                this.getProductosOverstock();
             }
         });
     </script>

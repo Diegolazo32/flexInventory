@@ -100,7 +100,8 @@
     <div class="container-fluid">
 
         <div data-bs-theme="dark" class=" offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
-            aria-labelledby="offcanvasExampleLabel" style="max-width: 250px;">
+            aria-labelledby="offcanvasExampleLabel"
+            style="max-width: 250px; display: flex; flex-direction: column; justify-content: space-between;">
             <ul class="navbar-nav navbar-nav-scroll" style="--bs-scroll-height: 100%">
                 <!-- Logo circular -->
                 <div class="offcanvas-title">
@@ -438,7 +439,6 @@
 
                     <!-- Collapse Registros -->
                     <div class="collapse" id="collapseRegistros" style="margin-left: 20px;">
-
                         @if ($permisos->contains(70))
                             <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                                 <button class="btn btn-outline-light" style="width: 100%;" type="button"
@@ -450,17 +450,24 @@
                         @endif
                     </div>
 
-
-                    <li class="nav-item" style="width: 100%; margin-bottom: 10px;">
-                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                            onclick="window.location.href='{{ route('ayuda') }}'">
-                            <i class="fa-solid fa-circle-question"></i>
-                            <span>Información</span>
-                        </button>
-                    </li>
-
                 </div>
             </ul>
+
+            <div style="margin-top: auto; margin-bottom: 25px; margin-left:20px ; margin-right: 20px;">
+                <hr style="background-color: white;">
+
+                <button class="btn btn-outline-light" style="width: 100%; margin-bottom: 10px;" type="button"
+                    onclick="window.location.href='{{ route('ayuda') }}'">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span>Información</span>
+                </button>
+
+                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                    onClick="window.location.href='{{ route('logout') }}'">
+                    <i class="fa-solid fa-door-open"></i>
+                    <span>Cerrar sesion</span>
+                </button>
+            </div>
 
         </div>
 
