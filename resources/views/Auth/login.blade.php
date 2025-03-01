@@ -33,7 +33,7 @@
 
     <style>
         :root {
-            --login-bg: url('{{ asset('storage/' . \App\Models\Empresa::first()->logo ?? 'default_bg.jpg') }}?t={{ time() }}');
+            --login-bg: url('{{ asset('storage/' . \App\Models\empresa::first()->logo ?? 'default_bg.jpg') }}?t={{ time() }}');
         }
     </style>
 
@@ -44,7 +44,7 @@
 </head>
 
 <body class="BgLogin"
-    style="background-image: url('{{ asset('storage/' . \App\Models\Empresa::first()->logo ?? 'default_bg.jpg') }}?t={{ time() }}'); background-size: cover; background-position: center;">
+    style="background-image: url('{{ asset('storage/' . \App\Models\empresa::first()->logo ?? 'default_bg.jpg') }}?t={{ time() }}'); background-size: cover; background-position: center;">
 
     <div style="display: flex; justify-content: center; align-items: center; height: 100vh; width: auto;">
         <div id="LoginApp">
