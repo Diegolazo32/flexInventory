@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             PermisosSeeder::class,
             //InventarioSeeder::class,
             RolPermisoSeeder::class,
+            EmpresaSeeder::class,
         ]);
 
     }
