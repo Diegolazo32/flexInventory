@@ -27,7 +27,7 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
+                                <input type="text" class="form-control" name="search" @keyup.enter="getAllClientes"
                                     placeholder="Buscar por nombre, apellido o DUI" v-model="search">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
@@ -166,7 +166,7 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('clientes.store') }}" method="POST">
+                        <form ref="form" action="{{ route('clientes.store') }}" method="POST" @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -217,7 +217,7 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="descuento" name="descuento"
-                                            placeholder="Descuento" @blur="validateForm" @keyup="validateForm"
+                                            placeholder="Descuento" @blur="validateForm" @keyup="validateForm" @keyup.enter="sendForm"
                                             v-model="item.descuento" maxlength="2" min="0" max="100">
                                         <label for="floatingInput">Descuento<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descuento">@{{ errors.descuento }}</div>
@@ -247,7 +247,8 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit">
+                        <form ref="formEdit" action="{{ route('clientes.edit') }}" method="POST"
+                            @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -300,7 +301,7 @@
                                 </div>
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
-                                        <input type="number" class="form-control" id="descuentoEdit" name="descuento"
+                                        <input type="number" class="form-control" id="descuentoEdit" name="descuento" @keyup.enter="sendFormEdit"
                                             placeholder="Descuento" @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.descuento" maxlength="2" min="0" max="100">
                                         <label for="floatingInput">Descuento<span class="text-danger">*</span></label>

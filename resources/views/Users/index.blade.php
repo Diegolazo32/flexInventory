@@ -42,9 +42,8 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
+                                <input type="text" class="form-control" name="search" @keyup.enter="getAllUsers"
                                     placeholder="Buscar por nombre, apellido, usuario o DUI" v-model="search">
-                                <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
                                 <button class="btn btn-primary" style="height: 40px; max-height: 40px;"
@@ -230,7 +229,7 @@
                         <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('users.store') }}" method="POST">
+                        <form ref="form" action="{{ route('users.store') }}" method="POST" @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -328,7 +327,7 @@
                         <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit">
+                        <form ref="formEdit" @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -401,7 +400,7 @@
                                         <!-- Usuario -->
                                         <input type="text" class="form-control" id="usuarioEdit" name="usuario"
                                             maxlength="50" placeholder="Usuario" v-model="editItem.usuario"
-                                            @blur="validateEditForm" @keyup="validateEditForm">
+                                            @blur="validateEditForm" @keyup="validateEditForm" @keyup.enter="sendFormEdit">
                                         <label for="floatingInput">Usuario<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.usuario">@{{ editErrors.usuario }}
                                         </div>

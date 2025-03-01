@@ -74,7 +74,7 @@
                                 <span> Debe de tener en cuenta que su imagen debe de ser de tipo .jpg, .jpeg o .png y no
                                     debe de
                                     pesar
-                                    más de 2MB.</span>
+                                    "mas" de 2MB.</span>
 
 
                         </div>
@@ -112,7 +112,7 @@
                             <span>Para registrar un nuevo usuario, se deberá hacer clic en el botón "Registrar Usuario" con
                                 un
                                 icono
-                                de un signo de más que se encuentra en la parte superior derecha de la pantalla.</span>
+                                de un signo de "mas" que se encuentra en la parte superior derecha de la pantalla.</span>
 
                             <span>Una vez hecho clic en el botón "Registrar Usuario", se mostrará un formulario con los
                                 campos
@@ -212,7 +212,7 @@
                             <h4>Registrar Rol</h4>
                             <span>Para registrar un nuevo rol, se deberá hacer clic en el botón "Registrar Rol" con un
                                 icono
-                                de un signo de más que se encuentra en la parte superior derecha de la pantalla.</span>
+                                de un signo de "mas" que se encuentra en la parte superior derecha de la pantalla.</span>
                             <span>Una vez hecho clic en el botón "Registrar Rol", se mostrará un formulario con los campos
                                 necesarios para registrar un nuevo rol.</span>
 
@@ -375,7 +375,7 @@
                             <br><br>
                             <h4>Registrar Unidad de Medida</h4>
                             <span>Para registrar una nueva unidad de medida, se deberá hacer clic en el botón "Registrar
-                                Unidad de Medida" con un icono de un signo de más que se encuentra en la parte superior
+                                Unidad de Medida" con un icono de un signo de "mas" que se encuentra en la parte superior
                                 derecha de la pantalla.</span>
                             <span>Una vez hecho clic en el botón "Registrar Unidad de Medida", se mostrará un formulario con
                                 los campos necesarios para registrar una nueva unidad de medida.</span>
@@ -457,7 +457,7 @@
                             <br><br>
                             <h4>Registrar Categoria</h4>
                             <span>Para registrar una nueva categoria, se deberá hacer clic en el botón "Registrar Categoria"
-                                con un icono de un signo de más que se encuentra en la parte superior derecha de la
+                                con un icono de un signo de "mas" que se encuentra en la parte superior derecha de la
                                 pantalla.</span>
                             <span>Una vez hecho clic en el botón "Registrar Categoria", se mostrará un formulario con los
                                 campos necesarios para registrar una nueva categoria.</span>
@@ -537,7 +537,7 @@
                             <br><br>
                             <h4>Registrar Caja</h4>
                             <span>Para registrar una nueva caja, se deberá hacer clic en el botón "Registrar Caja" con un
-                                icono de un signo de más que se encuentra en la parte superior derecha de la
+                                icono de un signo de "mas" que se encuentra en la parte superior derecha de la
                                 pantalla.</span>
                             <span>Una vez hecho clic en el botón "Registrar Caja", se mostrará un formulario con los campos
                                 necesarios para registrar una nueva caja.</span>
@@ -768,7 +768,7 @@
                             <br><br>
                             <h4>Registrar Cliente</h4>
                             <span>Para registrar un nuevo cliente, se deberá hacer clic en el botón "Registrar Cliente" con
-                                un icono de un signo de más que se encuentra en la parte superior derecha de la
+                                un icono de un signo de "mas" que se encuentra en la parte superior derecha de la
                                 pantalla.</span>
                             <span>Una vez hecho clic en el botón "Registrar Cliente", se mostrará un formulario con los
                                 campos necesarios para registrar un nuevo cliente.</span>
@@ -865,7 +865,7 @@
                             <br><br>
                             <h4>Registrar Proveedor</h4>
                             <span>Para registrar un nuevo proveedor, se deberá hacer clic en el botón "Registrar Proveedor"
-                                con un icono de un signo de más que se encuentra en la parte superior derecha de la
+                                con un icono de un signo de "mas" que se encuentra en la parte superior derecha de la
                                 pantalla.</span>
                             <span>Una vez hecho clic en el botón "Registrar Proveedor", se mostrará un formulario con los
                                 campos necesarios para registrar un nuevo proveedor.</span>
@@ -945,7 +945,7 @@
                             <h4>Registrar Producto</h4>
                             <span>Para registrar un nuevo producto, se deberá hacer clic en el botón "Registrar Producto"
                                 con
-                                un icono de un signo de más que se encuentra en la parte superior derecha de la
+                                un icono de un signo de "mas" que se encuentra en la parte superior derecha de la
                                 pantalla.</span>
                             <span>Una vez hecho clic en el botón "Registrar Producto", se mostrará un formulario con los
                                 campos
@@ -1107,7 +1107,7 @@
                             <br><br>
                             <h4>Registrar Compra</h4>
                             <span>Para registrar una nueva compra, se deberá hacer clic en el botón "Registrar Compra" con
-                                un icono de un signo de más que se encuentra en la parte superior derecha de la
+                                un icono de un signo de "mas" que se encuentra en la parte superior derecha de la
                                 pantalla.</span>
                             <span>Una vez hecho clic en el botón "Registrar Compra", se mostrará un formulario donde podrá
                                 seleccionar
@@ -1182,7 +1182,7 @@
                             <br><br>
                             <h4>Registrar Movimiento</h4>
                             <span>Para registrar un nuevo movimiento de stock, se deberá hacer clic en el botón "Registrar
-                                Movimiento" con un icono de un signo de más que se encuentra en la parte superior derecha de
+                                Movimiento" con un icono de un signo de "mas" que se encuentra en la parte superior derecha de
                                 la
                                 pantalla.</span>
 

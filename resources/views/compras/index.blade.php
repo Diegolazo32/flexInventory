@@ -31,7 +31,7 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar por codigo"
+                                <input type="text" class="form-control" name="search" placeholder="Buscar por codigo" 
                                     v-model="searchCompra" id="searchCompra" @keyup.enter="searchCompraFn">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>

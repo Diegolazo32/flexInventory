@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <input type="text" class="form-control" name="search" placeholder="Buscar por nombre"
-                                    v-model="search">
+                                    v-model="search" @keyup.enter="getAllCajas">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
                             <div class="col-6" style="display: flex; justify-content: start; gap: 5px;">
@@ -157,7 +157,7 @@
                         <small class="text-muted"> Los campos marcados con * son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('cajas.store') }}" method="POST">
+                        <form ref="form" action="{{ route('cajas.store') }}" method="POST" @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -173,7 +173,7 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="ubicacion" name="ubicacion"
                                             placeholder="Ubicacion" v-model="item.ubicacion" @blur="validateForm"
-                                            @keyup="validateForm">
+                                            @keyup="validateForm" @keyup.enter="sendForm">
                                         <label for="floatingInput">Ubicacion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.ubicacion">@{{ errors.ubicacion }}</div>
                                     </div>
@@ -202,7 +202,7 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit">
+                        <form ref="formEdit" action="{{ route('cajas.edit') }}" method="POST" @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-4" style="margin-bottom: 10px;">
@@ -224,7 +224,7 @@
                                         <!-- Ubicacion -->
                                         <input type="text" class="form-control" id="ubicacionEdit" name="ubicacion"
                                             placeholder="Ubicacion" v-model="editItem.ubicacion" @blur="validateEditForm"
-                                            @keyup="validateEditForm">
+                                            @keyup="validateEditForm" @keyup.enter="sendFormEdit">
                                         <label for="floatingInput">Ubicacion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.ubicacion">@{{ editErrors.ubicacion }}
                                         </div>

@@ -53,7 +53,7 @@
                         <div class="card-title">
                             <h2 class="text-center"> Reestablecer contraseña </h2>
                         </div>
-                        <form action="{{ route('updatePassword', ['id' => $usuario->id]) }}" method="post"
+                        <form action="{{ route('updatePassword', ['id' => $usuario->id]) }}" method="post" @submit.prevent="sendForm"
                             ref="loginForm">
                             @csrf
                             <div class="form-floating  mb-3" style=" display: flex; flex-direction: column;">

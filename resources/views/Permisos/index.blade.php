@@ -36,7 +36,7 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
+                                <input type="text" class="form-control" name="search" @keyup.enter="getAllPermisos"
                                     placeholder="Buscar por nombre, descripcion o grupo" v-model="search">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
@@ -149,7 +149,7 @@
                         <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('permisos.store') }}" method="POST">
+                        <form ref="form" action="{{ route('permisos.store') }}" method="POST" @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <!--Nombre-->
@@ -209,7 +209,8 @@
                         <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit">
+                        <form ref="formEdit" action="{{ route('permisos.edit') }}" method="POST"
+                            @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">
                                 <!--Nombre-->

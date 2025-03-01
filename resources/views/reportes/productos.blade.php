@@ -20,7 +20,7 @@
 
 
                 <div class="card-body">
-                    <form action="{{ route('reportes.productos.generar') }}" method="POST" id="formReporte">
+                    <form action="{{ route('reportes.productos.generar') }}" method="POST" id="formReporte" @submit.prevent="sendForm">
                         @csrf
                         <div class="row" style="display: flex; justify-content: space-between;">
                             <div class="col-lg-3">

@@ -36,7 +36,7 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search"
+                                <input type="text" class="form-control" name="search" @keyup.enter="getAllKardex"
                                     placeholder="Buscar por nombre, descripcion o grupo" v-model="search">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
