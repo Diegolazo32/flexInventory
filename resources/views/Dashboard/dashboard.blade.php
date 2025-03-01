@@ -62,6 +62,32 @@
             </div>
         @endif
 
+        @if ($productos->count() == 0)
+            <div class="row">
+                <div class="card mb-3 col-lg-12 customShadow hoverCardCenter">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="rounded-3">
+                                    <div class="container-fluid">
+                                        <h1 class="display-6 fw-bold">No hay productos registrados</h1>
+                                        <p class="col-lg-12 fs-4">Debe de registrar productos para poder realizar
+                                            operaciones con ellos.</p>
+                                        <p class="col-lg-12 fs-6">Si no tiene productos registrados, no podrá realizar
+                                            compras, hacer movimientos de kardex, o generar reportes.
+                                        </p>
+                                        <button class="btn btn-primary btn-lg" id="openBtn" type="button"
+                                            onClick="window.location.href='{{ route('productos') }}'">Registrar
+                                            productos</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <br>
 
         <div class="row">
