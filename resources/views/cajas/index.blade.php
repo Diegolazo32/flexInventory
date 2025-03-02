@@ -202,7 +202,7 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit" action="{{ route('cajas.edit') }}" method="POST" @submit.prevent="sendFormEdit">
+                        <form ref="formEdit" @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-4" style="margin-bottom: 10px;">

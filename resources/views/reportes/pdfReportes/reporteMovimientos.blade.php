@@ -48,9 +48,6 @@
         <div>
 
             <div style="justify-content: space-between; width: 100%; align-items:baseline;">
-                @if ($empresa)
-                    <img src="{{ storage_path('app/' . $empresa->logo) }}" alt="Logo" class="logo" style="object-fit: cover;">
-                @endif
                 <h1>{{ $empresa->nombre ?? '-' }} </h1>
             </div>
 
@@ -60,57 +57,58 @@
             {{ $empresa->direccion ?? '-' }} ||
             {{ $empresa->telefono ?? '-' }} ||
             {{ $fecha }} ||
-            Generado por: {{ Auth::user()->nombre . ' ' . Auth::user()->apellido }} </h3>
+            Generado por: {{ Auth::user()->nombre . ' ' . Auth::user()->apellido }}
+        </h3>
         <hr>
     </div>
 
     @if ($movimientos->isEmpty())
-        <div class="card-body">
-            <h3>No se encontraron resultados con los parametros seleccionados</h3>
-        </div>
+    <div class="card-body">
+        <h3>No se encontraron resultados con los parametros seleccionados</h3>
+    </div>
     @else
-        <div class="card-text">
-            <h3>Reporte de productos</h3>
+    <div class="card-text">
+        <h3>Reporte de productos</h3>
 
-            <table ref="table" class="table" style="border: solid 1px black; width: 100%; text-align: center;">
-                <thead>
-                    <tr>
-                        <th scope="col">Correlativo</th>
-                        <th scope="col">Producto</th>
-                        <th scope="col">Accion</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Observacion</th>
-                        <th scope="col">Inventario</th>
-                        <th scope="col">Fecha</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($movimientos as $movimiento)
-                        <tr>
-                            <td>{{ $movimiento->id }}</td>
-                            <td>{{ $movimiento->producto }}</td>
-                            <td>{{ $acciones[$movimiento->accion]}}</td>
-                            <td>{{ $movimiento->cantidad }}</td>
-                            <td>{{ $movimiento->observacion }}</td>
-                            <td>{{ $movimiento->inventario }}</td>
-                            <td>{{ $movimiento->created_at }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
+        <table ref="table" class="table" style="border: solid 1px black; width: 100%; text-align: center;">
+            <thead>
+                <tr>
+                    <th scope="col">Correlativo</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Accion</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Observacion</th>
+                    <th scope="col">Inventario</th>
+                    <th scope="col">Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($movimientos as $movimiento)
+                <tr>
+                    <td>{{ $movimiento->id }}</td>
+                    <td>{{ $movimiento->producto }}</td>
+                    <td>{{ $acciones[$movimiento->accion]}}</td>
+                    <td>{{ $movimiento->cantidad }}</td>
+                    <td>{{ $movimiento->observacion }}</td>
+                    <td>{{ $movimiento->inventario }}</td>
+                    <td>{{ $movimiento->created_at }}</td>
+                </tr>
+                @endforeach
+            </tbody>
 
-                <tfoot>
-                    <tr>
-                        <td colspan="1">Totales</td>
-                        <td colspan="1">-</td>
-                        <td colspan="1">-</td>
-                        <td colspan="1">-</td>
-                        <td colspan="1">-</td>
-                        <td colspan="1">-</td>
-                        <td colspan="1">-</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+            <tfoot>
+                <tr>
+                    <td colspan="1">Totales</td>
+                    <td colspan="1">-</td>
+                    <td colspan="1">-</td>
+                    <td colspan="1">-</td>
+                    <td colspan="1">-</td>
+                    <td colspan="1">-</td>
+                    <td colspan="1">-</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 
     @endif
 
