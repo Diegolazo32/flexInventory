@@ -247,7 +247,7 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit" action="{{ route('clientes.edit') }}" method="POST"
+                        <form ref="formEdit"
                             @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">

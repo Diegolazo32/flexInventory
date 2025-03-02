@@ -182,7 +182,7 @@
                     <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
                 </div>
                 <div class="modal-body" style="padding: 25px;">
-                    <form ref="formEdit" action="{{ route('estados.edit') }}" method="POST" @submit.prevent="sendFormEdit">
+                    <form ref="formEdit" @submit.prevent="sendFormEdit">
                         @csrf
                         <div class="row">
                             <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
