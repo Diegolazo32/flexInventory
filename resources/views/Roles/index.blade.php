@@ -167,17 +167,19 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearRolModalLabel">Crear rol </h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('roles.store') }}" method="POST" @submit.prevent="sendForm">
+                        <form ref="form" action="{{ route('roles.store') }}" method="POST"
+                            @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="descripcion" name="descripcion" @keyup.enter="sendForm"
-                                            placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
-                                            >
+                                        <input type="text" class="form-control" id="descripcion" name="descripcion"
+                                            @keyup.enter="sendForm" placeholder="Descripcion" @blur="validateForm"
+                                            v-model="item.descripcion">
                                         <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descripcion">@{{ errors.descripcion }}
                                         </div>
@@ -203,7 +205,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editRolModalLabel">Editar rol</h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit" @submit.prevent="sendFormEdit">
@@ -397,7 +400,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitForm').disabled = true;
                         document.getElementById('cancelButton').disabled = true;
@@ -417,11 +420,12 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Rol creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -429,11 +433,12 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -453,6 +458,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -481,11 +487,12 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -501,7 +508,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitFormEdit').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitFormEdit').disabled = true;
                         document.getElementById('cancelButtonEdit').disabled = true;
@@ -521,11 +528,12 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Rol actualizado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -533,11 +541,12 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -550,6 +559,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -578,11 +588,12 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -607,7 +618,7 @@
 
                     //Cambiar icono de boton
                     document.getElementById('deleteButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Eliminando...';
 
                     axios({
                         method: 'delete',
@@ -627,6 +638,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -652,6 +664,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -665,11 +678,12 @@
 
                     }).catch(error => {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar la rol',
                             icon: 'error',
@@ -713,7 +727,7 @@
 
                     //Cambiar icono de boton
                     document.getElementById('SubmitPermisos').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                     axios({
                         method: 'post',
@@ -734,6 +748,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -757,6 +772,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -773,11 +789,12 @@
                     }).catch(error => {
 
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al actualizar los permisos',
                             icon: 'error',
@@ -983,6 +1000,7 @@
                             this.loading = false;
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,

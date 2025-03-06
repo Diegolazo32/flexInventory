@@ -4,10 +4,9 @@
 
 @section('content')
     <div id="app">
-
-        @if ($Activo == false)
-            <div class="row">
-                <div class="card mb-3 col-lg-12 customShadow hoverCardCenter">
+        <div class="row" style="display: flex; justify-content: center; gap: 10px;">
+            @if ($Activo == false)
+                <div class="card mb-1 col-lg-5 hoverCard">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -30,12 +29,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        @if ($empresa->firstTime == true)
-            <div class="row">
-                <div class="card mb-3 col-lg-12 customShadow hoverCardCenter">
+            @if ($empresa->firstTime == true)
+                <div class="card mb-1 col-lg-5 hoverCard">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -59,12 +56,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        @if ($productos->count() == 0)
-            <div class="row">
-                <div class="card mb-3 col-lg-12 customShadow hoverCardCenter">
+            @if ($productos->count() == 0)
+                <div class="card mb-1 col-lg-5 hoverCard">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -85,11 +80,34 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
+            @if ($resolucionActiva == null)
+                <div class="card mb-1 col-lg-5 hoverCard">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="rounded-3">
+                                    <div class="container-fluid">
+                                        <h1 class="display-6 fw-bold">No hay resolucion de tickets activa</h1>
+                                        <p class="col-lg-12 fs-4">Debe de registrar una resolucion de tickets para poder
+                                            realizar ventas.</p>
+                                        <p class="col-lg-12 fs-6">Si no tiene una resolucion de tickets activa, no podrá
+                                            realizar ventas, ni generar facturas.
+                                        </p>
+                                        <button class="btn btn-lg" id="openBtn" type="button"
+                                            style="background-color: #fd7e14; color: white;"
+                                            onClick="window.location.href='{{ route('tickets') }}'">Registrar
+                                            resolucion</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
         <br>
-
         <div class="row">
             <!-- Productos -->
             <div class="col-md-3" style="margin-bottom: 15px;">
@@ -146,7 +164,6 @@
                             <div class="col-lg-12 " style="display: flex; align-items: center; justify-content: center;">
                                 <h1> {{ $clientes->count() }} </h1>
                             </div>
-
                         </div>
                     </button>
                 </div>
@@ -172,9 +189,7 @@
                 </div>
             </div>
         </div>
-
         <br>
-
         <!--Tablas de informacion de productos-->
         <div class="row">
             <div class="col-lg-4" style="margin-bottom: 15px;">
@@ -188,7 +203,6 @@
 
                             <div v-if="loading" class="spinner-border text-primary" role="status">
                                 <span class="sr-only"></span>
-
                             </div>
 
                             <div v-if="!loading && lotesError" class="alert alert-danger" role="alert">
@@ -218,7 +232,6 @@
                                         <td>@{{ lote.cantidad }}</td>
                                         <td>@{{ lote.numero }}</td>
                                         <td>@{{ formatDate(lote.fechaVencimiento) }}</td>
-
                                     </tr>
                                 </tbody>
                             </table>
@@ -321,11 +334,7 @@
 
             </div>
         </div>
-
         <br>
-
-
-
     </div>
 
     <script>
@@ -363,7 +372,7 @@
                         url: '/getLotesVencimiento',
                     }).then(response => {
 
-                        if(response.data.error){
+                        if (response.data.error) {
                             this.lotesError = response.data.error;
                             return;
                         }
@@ -379,7 +388,7 @@
                         url: '/getProductosStockMinimo',
                     }).then(response => {
 
-                        if(response.data.error){
+                        if (response.data.error) {
                             this.agotadosError = response.data.error;
                             return;
                         }
@@ -395,7 +404,7 @@
                         url: '/getProductosOverStock',
                     }).then(response => {
 
-                        if(response.data.error){
+                        if (response.data.error) {
                             this.excedidosError = response.data.error;
                             this.loading = false;
                             return;

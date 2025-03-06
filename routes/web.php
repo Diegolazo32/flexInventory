@@ -13,16 +13,20 @@ use App\Http\Controllers\GruposController;
 use App\Http\Controllers\InventarioController;
 use App\Http\Controllers\KardexController;
 use App\Http\Controllers\LotesController;
+use App\Http\Controllers\MovimientosCajaController;
 use App\Http\Controllers\PermisosController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
 use App\Http\Controllers\QueriesController;
 use App\Http\Controllers\reportesController;
+use App\Http\Controllers\ResolucionTicketsController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\RolPermisoController;
 use App\Http\Controllers\TipoVentaController;
+use App\Http\Controllers\TurnosController;
 use App\Http\Controllers\UnidadesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VentasController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -251,6 +255,35 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/getLotesVencimiento', [QueriesController::class, 'getLotesVencimiento'])->name('getLotesVencimiento');
         Route::get('/getProductosStockMinimo', [QueriesController::class, 'getProductosStockMinimo'])->name('getProductosStockMinimo');
         Route::get('/getProductosOverStock', [QueriesController::class, 'getProductosOverStock'])->name('getProductosOverStock');
+    });
+
+    //Ventas
+    Route::controller(VentasController::class)->group(function () {
+        Route::get('/allVentas', [VentasController::class, 'getAllVentas'])->name('allVentas');
+        Route::get('/menuCajeros', [VentasController::class, 'menuCajeros'])->name('menuCajeros');
+    });
+
+    //Turnos
+    Route::controller(TurnosController::class)->group(function () {
+        Route::get('/allActiveTurnos', [TurnosController::class, 'getAllActiveTurnos'])->name('allTurnos');
+        Route::post('/turnos/start', [TurnosController::class, 'startTurno'])->name('turnos.start');
+        Route::post('/turnos/end', [TurnosController::class, 'endTurno'])->name('turnos.end');
+    });
+
+    //Tickets
+    Route::controller(ResolucionTicketsController::class)->group(function () {
+        Route::get('/allResoluciones', [ResolucionTicketsController::class, 'getAllTickets'])->name('allTickets');
+        Route::get('/tickets', [ResolucionTicketsController::class, 'index'])->name('tickets');
+        Route::post('/tickets/store', [ResolucionTicketsController::class, 'store'])->name('tickets.store');
+        Route::post('/tickets/edit/{id}', [ResolucionTicketsController::class, 'update'])->name('tickets.edit');
+        Route::delete('/tickets/delete/{id}', [ResolucionTicketsController::class, 'delete'])->name('tickets.delete');
+    });
+
+    //Movimientos de caja
+    Route::controller(MovimientosCajaController::class)->group(function () {
+        Route::get('/allMovimientos', [MovimientosCajaController::class, 'getAllMovimientos'])->name('allMovimientos');
+        Route::get('/movimientos', [MovimientosCajaController::class, 'index'])->name('movimientos');
+        Route::post('/movimientos/store', [MovimientosCajaController::class, 'store'])->name('movimientos.store');
     });
 
 });

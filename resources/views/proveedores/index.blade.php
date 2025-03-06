@@ -214,10 +214,12 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearProveedorModalLabel">Crear proveedor </h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('proveedores.store') }}" method="POST" @submit.prevent="sendForm">
+                        <form ref="form" action="{{ route('proveedores.store') }}" method="POST"
+                            @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -252,7 +254,8 @@
                                         <input type="text" class="form-control" id="emailPrincipal"
                                             name="emailPrincipal" placeholder="EmailPrincipal" @blur="validateForm"
                                             @keyup="validateForm" v-model="item.emailPrincipal">
-                                        <label for="floatingInput">Email Principal<span class="text-danger">*</span></label>
+                                        <label for="floatingInput">Email Principal<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.emailPrincipal">@{{ errors.emailPrincipal }}
                                         </div>
                                     </div>
@@ -262,7 +265,8 @@
                                         <input type="text" class="form-control" id="telefonoPrincipal"
                                             name="telefonoPrincipal" placeholder="TelefonoPrincipal" @blur="validateForm"
                                             @keyup="validateForm" v-model="item.telefonoPrincipal">
-                                        <label for="floatingInput">Telefono Principal<span class="text-danger">*</span></label>
+                                        <label for="floatingInput">Telefono Principal<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.telefonoPrincipal">
                                             @{{ errors.telefonoPrincipal }}</div>
                                     </div>
@@ -282,7 +286,8 @@
                                         <input type="text" class="form-control" id="emailRepresentante"
                                             name="emailRepresentante" placeholder="Email Representante"
                                             @blur="validateForm" @keyup="validateForm" v-model="item.emailRepresentante">
-                                        <label for="floatingInput">Email Representante<span class="text-danger">*</span></label>
+                                        <label for="floatingInput">Email Representante<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.emailRepresentante">
                                             @{{ errors.emailRepresentante }}</div>
                                     </div>
@@ -293,7 +298,8 @@
                                             name="telefonoRepresentante" placeholder="Telefono Representante"
                                             @blur="validateForm" @keyup="validateForm" @keyup.enter="sendForm"
                                             v-model="item.telefonoRepresentante">
-                                        <label for="floatingInput">Telefono Representante<span class="text-danger">*</span></label>
+                                        <label for="floatingInput">Telefono Representante<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.telefonoRepresentante">
                                             @{{ errors.telefonoRepresentante }}</div>
                                     </div>
@@ -318,7 +324,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editProveedorModalLabel">Editar proveedor</h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit" @submit.prevent="sendFormEdit">
@@ -358,7 +365,8 @@
                                         <input type="text" class="form-control" id="emailPrincipalEdit"
                                             name="emailPrincipal" placeholder="EmailPrincipal" @blur="validateEditForm"
                                             @keyup="validateEditForm" v-model="editItem.emailPrincipal">
-                                        <label for="floatingInput">Email Principal<span class="text-danger">*</span></label>
+                                        <label for="floatingInput">Email Principal<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.emailPrincipal">
                                             @{{ editErrors.emailPrincipal }}</div>
                                     </div>
@@ -369,7 +377,8 @@
                                             name="telefonoPrincipal" placeholder="TelefonoPrincipal"
                                             @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.telefonoPrincipal">
-                                        <label for="floatingInput">Telefono Principal<span class="text-danger">*</span></label>
+                                        <label for="floatingInput">Telefono Principal<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.telefonoPrincipal">
                                             @{{ editErrors.telefonoPrincipal }}</div>
                                     </div>
@@ -390,7 +399,8 @@
                                             name="emailRepresentante" placeholder="Email Representante"
                                             @blur="validateEditForm" @keyup="validateEditForm"
                                             v-model="editItem.emailRepresentante">
-                                        <label for="floatingInput">Email Representante<span class="text-danger">*</span></label>
+                                        <label for="floatingInput">Email Representante<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.emailRepresentante">
                                             @{{ editErrors.emailRepresentante }}</div>
                                     </div>
@@ -399,9 +409,10 @@
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="telefonoRepresentanteEdit"
                                             name="telefonoRepresentante" placeholder="Telefono Representante"
-                                            @blur="validateEditForm" @keyup="validateEditForm" @keyup.enter="sendFormEdit"
-                                            v-model="editItem.telefonoRepresentante">
-                                        <label for="floatingInput">Telefono Representante<span class="text-danger">*</span></label>
+                                            @blur="validateEditForm" @keyup="validateEditForm"
+                                            @keyup.enter="sendFormEdit" v-model="editItem.telefonoRepresentante">
+                                        <label for="floatingInput">Telefono Representante<span
+                                                class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.telefonoRepresentante">
                                             @{{ editErrors.telefonoRepresentante }}</div>
                                     </div>
@@ -572,7 +583,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitForm').disabled = true;
                         document.getElementById('cancelButton').disabled = true;
@@ -592,11 +603,12 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Proveedor creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -604,11 +616,12 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -628,6 +641,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -656,11 +670,12 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -676,7 +691,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitFormEdit').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitFormEdit').disabled = true;
                         document.getElementById('cancelButtonEdit').disabled = true;
@@ -699,11 +714,12 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Proveedor creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -711,11 +727,12 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -728,6 +745,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -756,11 +774,12 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -811,7 +830,7 @@
 
                     //Cambiar icono de boton
                     document.getElementById('deleteButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Eliminando...';
 
                     axios({
                         method: 'delete',
@@ -831,6 +850,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -856,6 +876,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -869,11 +890,12 @@
 
                     }).catch(error => {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar el proveedor',
                             icon: 'error',
@@ -1226,11 +1248,12 @@
                     }).catch(error => {
                         this.loading = false;
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al obtener los proveedores',
                             icon: 'error',

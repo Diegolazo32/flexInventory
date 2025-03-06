@@ -14,19 +14,19 @@
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
                         <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#crearPermisoModal" style="height: 40px;">
-                                                    <i class="fas fa-plus"></i>
-                                                </button>
+                                                        data-bs-target="#crearPermisoModal" style="height: 40px;">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
 
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editPermisoModalBtn"
-                                                    data-bs-target="#editPermisoModal" style="height: 40px;" hidden>
-                                                    Editar permiso
-                                                </button>
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editPermisoModalBtn"
+                                                        data-bs-target="#editPermisoModal" style="height: 40px;" hidden>
+                                                        Editar permiso
+                                                    </button>
 
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deletePermisoModalBtn"
-                                                    data-bs-target="#deletePermisoModal" style="height: 40px;" hidden>
-                                                    Eliminar permiso
-                                                </button>-->
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deletePermisoModalBtn"
+                                                        data-bs-target="#deletePermisoModal" style="height: 40px;" hidden>
+                                                        Eliminar permiso
+                                                    </button>-->
                     </div>
                 </div>
             </div>
@@ -212,6 +212,7 @@
                             this.loading = false;
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,

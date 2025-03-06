@@ -8,6 +8,7 @@ use App\Models\empresa;
 use App\Models\inventario;
 use App\Models\productos;
 use App\Models\proveedores;
+use App\Models\resolucionTickets;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,7 @@ class DashboardController extends Controller
         $categorias = categoria::all();
         $proveedores = proveedores::all();
         $Activo = inventario::where('estado', 3)->orderBy('fechaApertura', 'desc')->first();
+        $resolucionActiva = resolucionTickets::where('estado', 1)->first();
 
         //Si la empresa no ha sido modificada, mandar un false
         $empresa = empresa::first();
@@ -44,7 +46,8 @@ class DashboardController extends Controller
             'categorias' => $categorias,
             'proveedores' => $proveedores,
             'Activo' => $Activo,
-            'empresa' => $empresa
+            'empresa' => $empresa,
+            'resolucionActiva' => $resolucionActiva
         ]);
     }
 }

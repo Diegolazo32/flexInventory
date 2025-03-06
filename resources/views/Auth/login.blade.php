@@ -90,7 +90,7 @@
 
                 //Cambiar icono de boton
                 document.getElementById('LoginButton').innerHTML =
-                    '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Iniciando sesión...';
 
                 document.getElementById('LoginButton').disabled = true;
 
@@ -99,6 +99,7 @@
             forgotPassword() {
                 swal.fire({
                     toast: true,
+                    showCloseButton: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 6000,

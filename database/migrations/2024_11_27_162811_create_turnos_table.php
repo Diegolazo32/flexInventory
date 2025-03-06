@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('totalSalidas')->nullable();
             $table->dateTime('cierre')->nullable();
             $table->decimal('montoCierre')->nullable();
+            $table->foreignId('estado')->references('id')->on('estados');
             $table->timestamps();
         });
     }

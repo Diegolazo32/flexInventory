@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('turno')->references('id')->on('turnos');
             $table->integer('tipo');
-            $table->integer('valor');
+            $table->decimal('valor');
             $table->integer('descripcion');
+            $table->foreignId('usuario')->references('id')->on('users');
+            $table->foreignId('caja')->references('id')->on('cajas');
+            $table->foreignId('inventario')->references('id')->on('inventarios');
             $table->timestamps();
         });
     }

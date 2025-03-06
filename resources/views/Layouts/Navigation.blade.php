@@ -246,6 +246,16 @@
                             </li>
                         @endif
 
+                        @if ($permisos->contains(27)) <!-- Cambiar permiso -->
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('tickets') }}'">
+                                    <i class="fa-solid fa-ticket"></i>
+                                    <span>Resolucion de tickets</span>
+                                </button>
+                            </li>
+                        @endif
+
                         @if ($permisos->contains(32))
                             <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                                 <button class="btn btn-outline-light" style="width: 100%;" type="button"
@@ -365,27 +375,27 @@
                     </div>
 
                     <!--  Ventas -->
-                    <!--<li class="nav-item" style="width: 100%">
+                    <li class="nav-item" style="width: 100%">
                         <button class="btn btn-outline-light" style="width: 100%;" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapseVenta" aria-expanded="false"
                             aria-controls="collapseVenta">
-                            <i class="fa-solid fa-boxes-packing"></i>
+                            <i class="fa-solid fa-cart-shopping"></i>
                             <span> Ventas </span>
                         </button>
-                    </li>-->
+                    </li>
 
                     <!-- Collapse venta -->
-                    <!-- <div class="collapse" id="collapseVenta" style="margin-left: 20px;">
+                    <div class="collapse" id="collapseVenta" style="margin-left: 20px;">
 
                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                             <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('empresa') }}'">
-                                <i class="fa-regular fa-file-lines"></i>
+                                onClick="window.location.href='{{ route('menuCajeros') }}'">
+                                <i class="fa-solid fa-cash-register"></i>
                                 <span>Menu caja</span>
                             </button>
                         </li>
 
-                    </div>-->
+                    </div>
 
                     <!-- Reportes -->
 

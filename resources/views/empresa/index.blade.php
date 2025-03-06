@@ -35,8 +35,9 @@
                         <div class="row">
                             <div class="col-lg-4"
                                 style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <div >
-                                    <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo de la empresa" class="hoverCard"
+                                <div>
+                                    <img src="{{ asset('storage/' . $empresa->logo) }}" alt="Logo de la empresa"
+                                        class="hoverCard"
                                         style="height: 250px; width: 250px; border-radius: 15px; margin-bottom: 20px; object-fit: cover; border: #000000 thin solid;">
                                 </div>
                                 <div>
@@ -100,8 +101,8 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('productos.store') }}" method="POST" @submit.prevent="sendForm"
-                            enctype="multipart/form-data">
+                        <form ref="form" action="{{ route('productos.store') }}" method="POST"
+                            @submit.prevent="sendForm" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <!--Nombre-->
@@ -337,6 +338,7 @@
                         .catch(error => {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -577,7 +579,7 @@
                         try {
                             //Change icon to loading
                             document.getElementById('SubmitForm').innerHTML =
-                                '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                             //Disable button
                             document.getElementById('SubmitForm').disabled = true
@@ -592,6 +594,7 @@
                                     if (response.data.success) {
                                         swal.fire({
                                             toast: true,
+                                            showCloseButton: true,
                                             position: 'top-end',
                                             showConfirmButton: false,
                                             timer: 3000,
@@ -605,6 +608,7 @@
                                     } else {
                                         swal.fire({
                                             toast: true,
+                                            showCloseButton: true,
                                             position: 'top-end',
                                             showConfirmButton: false,
                                             timer: 3000,
@@ -619,6 +623,7 @@
                                 .catch(error => {
                                     swal.fire({
                                         toast: true,
+                                        showCloseButton: true,
                                         position: 'top-end',
                                         showConfirmButton: false,
                                         timer: 3000,
@@ -642,6 +647,7 @@
                         } catch (error) {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -659,6 +665,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,

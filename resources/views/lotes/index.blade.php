@@ -68,7 +68,7 @@
                             </thead>
                             <tbody>
                                 <tr v-if="loading" role="alert" id="loading">
-                                    <td colspan="8"><i class="fas fa-spinner fa-spin"></i> Cargando lotes...</td>
+                                    <td colspan="8"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Cargando lotes...</td>
                                 </tr>
                                 <!-- vue foreach -->
                                 <tr v-else v-for="lote in lotes" :key="lote.id">
@@ -253,6 +253,7 @@
                         this.loading = false;
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,

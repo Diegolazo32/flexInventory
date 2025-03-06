@@ -229,7 +229,8 @@
                         <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('users.store') }}" method="POST" @submit.prevent="sendForm">
+                        <form ref="form" action="{{ route('users.store') }}" method="POST"
+                            @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -400,7 +401,8 @@
                                         <!-- Usuario -->
                                         <input type="text" class="form-control" id="usuarioEdit" name="usuario"
                                             maxlength="50" placeholder="Usuario" v-model="editItem.usuario"
-                                            @blur="validateEditForm" @keyup="validateEditForm" @keyup.enter="sendFormEdit">
+                                            @blur="validateEditForm" @keyup="validateEditForm"
+                                            @keyup.enter="sendFormEdit">
                                         <label for="floatingInput">Usuario<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.usuario">@{{ editErrors.usuario }}
                                         </div>
@@ -602,6 +604,7 @@
                             this.loading = false;
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -900,7 +903,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitForm').disabled = true;
                         document.getElementById('cancelButton').disabled = true;
@@ -925,6 +928,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -937,6 +941,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -952,6 +957,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -976,6 +982,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -994,7 +1001,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitFormEdit').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitFormEdit').disabled = true;
                         document.getElementById('cancelButtonEdit').disabled = true;
@@ -1018,6 +1025,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -1030,6 +1038,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -1045,6 +1054,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1071,6 +1081,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1089,7 +1100,7 @@
 
                     //Cambiar icono de boton
                     document.getElementById('deleteButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Eliminando...';
 
                     axios({
                         method: 'delete',
@@ -1110,6 +1121,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1135,6 +1147,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1150,6 +1163,7 @@
 
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1178,7 +1192,7 @@
 
                     //change icon to loading
                     document.getElementById('revertButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i>';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ';
                     //disable button
                     document.getElementById('revertButton').disabled = true;
                     document.getElementById('cancelRevertButton').disabled = true;
@@ -1202,6 +1216,7 @@
                         if (response.data.success) {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1214,6 +1229,7 @@
                         } else {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1235,6 +1251,7 @@
 
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,

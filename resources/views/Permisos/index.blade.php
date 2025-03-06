@@ -14,19 +14,19 @@
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
                         <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#crearPermisoModal" style="height: 40px;">
-                            <i class="fas fa-plus"></i>
-                        </button>
+                                data-bs-target="#crearPermisoModal" style="height: 40px;">
+                                <i class="fas fa-plus"></i>
+                            </button>
 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editPermisoModalBtn"
-                            data-bs-target="#editPermisoModal" style="height: 40px;" hidden>
-                            Editar permiso
-                        </button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editPermisoModalBtn"
+                                data-bs-target="#editPermisoModal" style="height: 40px;" hidden>
+                                Editar permiso
+                            </button>
 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deletePermisoModalBtn"
-                            data-bs-target="#deletePermisoModal" style="height: 40px;" hidden>
-                            Eliminar permiso
-                        </button>-->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deletePermisoModalBtn"
+                                data-bs-target="#deletePermisoModal" style="height: 40px;" hidden>
+                                Eliminar permiso
+                            </button>-->
                     </div>
                 </div>
             </div>
@@ -91,11 +91,11 @@
                                         @{{ grupos.find(grupo => grupo.id == permiso.grupo).descripcion }}
                                     </td>
                                     <!--<td>
-                                        <button id="editBTN" class="btn btn-primary" @click="editPermiso(permiso)">
-                                            <i class="fas fa-pencil"></i>
-                                        </button>
+                                            <button id="editBTN" class="btn btn-primary" @click="editPermiso(permiso)">
+                                                <i class="fas fa-pencil"></i>
+                                            </button>
 
-                                    </td>-->
+                                        </td>-->
                                 </tr>
                             </tbody>
                         </table>
@@ -146,18 +146,19 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="crearPermisoModalLabel">Crear permiso </h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('permisos.store') }}" method="POST" @submit.prevent="sendForm">
+                        <form ref="form" action="{{ route('permisos.store') }}" method="POST"
+                            @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <!--Nombre-->
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="nombre" name="nombre"
-                                            placeholder="Nombre" @blur="validateForm" v-model="item.nombre"
-                                            >
+                                            placeholder="Nombre" @blur="validateForm" v-model="item.nombre">
                                         <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.nombre">@{{ errors.nombre }}</div>
                                     </div>
@@ -166,8 +167,7 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="descripcion" name="descripcion"
-                                            placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion"
-                                            >
+                                            placeholder="Descripcion" @blur="validateForm" v-model="item.descripcion">
                                         <label for="floatingInput">Descripcion<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descripcion">@{{ errors.descripcion }}
                                         </div>
@@ -206,7 +206,8 @@
                 <div class="modal-content">
                     <div class="modal-header" style="display: block;">
                         <h1 class="modal-title fs-5" id="editPermisoModalLabel">Editar permiso</h1>
-                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son obligatorios</small>
+                        <small class="text-muted"> Los campos marcados con <span class="text-danger">*</span> son
+                            obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
                         <form ref="formEdit" action="{{ route('permisos.edit') }}" method="POST"
@@ -367,7 +368,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitForm').disabled = true;
                         document.getElementById('cancelButton').disabled = true;
@@ -389,11 +390,12 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Permiso creado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -401,11 +403,12 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -425,6 +428,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -445,11 +449,12 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -465,7 +470,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitFormEdit').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitFormEdit').disabled = true;
                         document.getElementById('cancelButtonEdit').disabled = true;
@@ -488,11 +493,12 @@
 
                             if (response.data.success) {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Permiso actualizado',
                                     text: response.data.success,
                                     icon: 'success',
@@ -500,11 +506,12 @@
                                 });
                             } else {
                                 swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                                    toast: true,
+                                    showCloseButton: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
                                     title: 'Error',
                                     text: response.data.error,
                                     icon: 'error',
@@ -517,6 +524,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -538,11 +546,12 @@
 
                     } else {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Por favor, corrija los errores en el formulario.',
                             icon: 'error',
@@ -571,7 +580,7 @@
 
                     //Cambiar icono de boton
                     document.getElementById('deleteButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Eliminando...';
 
                     axios({
                         method: 'delete',
@@ -591,6 +600,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -616,6 +626,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -629,11 +640,12 @@
 
                     }).catch(error => {
                         swal.fire({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
+                            toast: true,
+                            showCloseButton: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
                             title: 'Error',
                             text: 'Ha ocurrido un error al eliminar la permiso',
                             icon: 'error',
@@ -898,6 +910,7 @@
                             this.loading = false;
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,

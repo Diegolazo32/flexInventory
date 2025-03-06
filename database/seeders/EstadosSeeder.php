@@ -21,6 +21,8 @@ class EstadosSeeder extends Seeder
             ['descripcion' => 'Pagado'],
             ['descripcion' => 'Anulado'],
             ['descripcion' => 'Restaurado'],
+            ['descripcion' => 'Libre'],
+            ['descripcion' => 'En turno'],
         ];
 
         foreach ($estados as $estado) {

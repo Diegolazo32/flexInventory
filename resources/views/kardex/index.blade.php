@@ -155,7 +155,8 @@
                                         <ul v-if="results.length > 0" class="list-group">
                                             <li v-for="result in results" class="list-group-item"
                                                 @click="selectResult(result)" style="cursor: pointer;"
-                                                @keyup.enter="selectResult(result[0])" tabindex="0">@{{ result.codigo }}
+                                                @keyup.enter="selectResult(result[0])" tabindex="0">
+                                                @{{ result.codigo }}
                                                 -
                                                 @{{ result.nombre }}</li>
                                         </ul>
@@ -353,6 +354,7 @@
                     if (this.kardex.length == 0) {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -371,7 +373,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitForm').disabled = true;
                         document.getElementById('cancelButton').disabled = true;
@@ -394,6 +396,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -406,6 +409,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -429,6 +433,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -458,6 +463,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -591,6 +597,7 @@
                             } catch (error) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -624,6 +631,7 @@
                             } catch (error) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -739,6 +747,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -800,6 +809,7 @@
 
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -835,6 +845,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -870,7 +881,7 @@
                     let response = await fetch('/allKardex');
                     let data = await response.json();
 
-                    if(data.error){
+                    if (data.error) {
                         this.kardexError = data.error;
                         return;
                     }

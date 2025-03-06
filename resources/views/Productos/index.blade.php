@@ -200,7 +200,8 @@
                         </small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('productos.store') }}" method="POST" @submit.prevent="sendForm">
+                        <form ref="form" action="{{ route('productos.store') }}" method="POST"
+                            @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <!-- Codigo -->
@@ -385,7 +386,7 @@
                                 <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <select class="form-select" id="unidad" name="unidad" v-model="item.unidad"
-                                            @blur="validateForm" @change="validateForm" >
+                                            @blur="validateForm" @change="validateForm">
                                             <option v-for="unidad in unidades" :key="unidad.id"
                                                 :value="unidad.id">
                                                 @{{ unidad.descripcion }}
@@ -696,173 +697,170 @@
                     </div>
                     <div class="modal-body text-center" style="padding: 25px;">
 
-                            <div class="row">
-                                <!-- Codigo -->
-                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="text" class="form-control" id="codigoEdit"
-                                            name="codigo" placeholder="Codigo" v-model="showItem.codigo">
-                                        <label for="floatingInput">Codigo<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <!-- Nombre -->
-                                <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="text" class="form-control" id="nombreShow"
-                                            name="nombre" placeholder="Nombre" v-model="showItem.nombre">
-                                        <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
-
-                                    </div>
-                                </div>
-
-                                <!-- Descripcion -->
-                                <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <textarea disabled type="text-area" class="form-control" id="descripcionShow" style="height: 100px;"
-                                            name="descripcion" placeholder="Descripcion" v-model="showItem.descripcion"></textarea>
-                                        <label for="floatingInput">Descripcion</label>
-                                    </div>
-                                </div>
-                                <!-- Precio Compra -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="precioCompraShow"
-                                            name="precioCompra" placeholder="Precio Compra"
-                                            v-model="showItem.precioCompra" step="0.01" min="0" max="999999"
-                                            maxlength="6">
-                                        <label for="floatingInput">Precio Compra<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <!-- Precio Venta -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="precioVentaShow"
-                                            name="precioVenta" placeholder="Precio Venta" v-model="showItem.precioVenta"
-                                            step="0.01" min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Precio Venta<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <!-- Precio Descuento -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="precioDescuentoShow"
-                                            name="precioDescuento" placeholder="Precio Descuento"
-                                            v-model="showItem.precioDescuento" step="0.01" min="0"
-                                            max="999999" maxlength="6">
-                                        <label for="floatingInput">Precio Descuento</label>
-                                    </div>
-                                </div>
-                                <!-- Precio Especial -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="precioEspecialShow"
-                                            name="precioEspecial" placeholder="Precio Especial"
-                                            v-model="showItem.precioEspecial" step="0.01" min="0"
-                                            max="999999" maxlength="6">
-                                        <label for="floatingInput">Precio Especial</label>
-                                    </div>
-                                </div>
-                                <!-- Fecha Vencimiento -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="date" class="form-control" id="fechaVencimientoShow"
-                                            name="fechaVencimiento" placeholder="Fecha Vencimiento"
-                                            v-model="showItem.fechaVencimiento">
-                                        <label for="floatingInput">Fecha Vencimiento</label>
-                                    </div>
-                                </div>
-                                <!-- Stock -->
-                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="stockShow"
-                                            name="stock" placeholder="Stock" v-model="showItem.stock" step="1"
-                                            min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Stock<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <!-- Stock Inicial -->
-                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="stockInicialShow"
-                                            name="stockInicial" placeholder="Stock Inicial"
-                                            v-model="showItem.stockInicial" step="1" min="0" max="999999"
-                                            maxlength="6" disabled>
-                                        <label for="floatingInput">Stock Inicial<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <!-- Stock Minimo -->
-                                <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="stockMinimoShow"
-                                            name="stockMinimo" placeholder="Stock Minimo" v-model="showItem.stockMinimo"
-                                            step="1" min="0" max="999999" maxlength="6">
-                                        <label for="floatingInput">Stock Minimo</label>
-                                    </div>
-                                </div>
-                                <!-- Stock Maximo -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <input disabled type="number" class="form-control" id="stockMaximoShow"
-                                            name="stockMaximo" placeholder="Stock Maximo" v-model="showItem.stockMaximo"
-                                            step="1" min="0" max="999999" maxlength="6" disabled>
-                                        <label for="floatingInput">Stock Maximo</label>
-                                    </div>
-                                </div>
-                                <!-- Categoria -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <select disabled class="form-select" id="categoriaShow" name="categoria"
-                                            v-model="showItem.categoria">
-                                            <option v-for="categoria in categorias" :key="categoria.id"
-                                                :value="categoria.id">
-                                                @{{ categoria.descripcion }}
-                                            </option>
-                                        </select>
-                                        <label for="floatingInput">Categoria<span class="text-danger">*</span></label>
-                                    </div>
-                                </div>
-                                <!-- Tipo Venta -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <select disabled class="form-select" id="tipoVentaShow" name="tipoVenta"
-                                            v-model="showItem.tipoVenta">
-                                            <option v-for="tipoVenta in tipoVentas" :key="tipoVenta.id"
-                                                :value="tipoVenta.id">
-                                                @{{ tipoVenta.descripcion }}
-                                            </option>
-                                        </select>
-                                        <label for="floatingInput">Tipo Venta<span class="text-danger">*</span></label>
-
-                                    </div>
-                                </div>
-                                <!-- Proveedor -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <select disabled class="form-select" id="proveedorShow" name="proveedor"
-                                            v-model="showItem.proveedor">
-                                            <option v-for="proveedor in proveedores" :key="proveedor.id"
-                                                :value="proveedor.id">
-                                                @{{ proveedor.nombre }}
-                                            </option>
-                                        </select>
-                                        <label for="floatingInput">Proveedor<span class="text-danger">*</span></label>
-
-                                    </div>
-                                </div>
-                                <!-- Unidad -->
-                                <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
-                                    <div class="form-floating mb-3">
-                                        <select disabled class="form-select" id="unidadShow" name="unidad"
-                                            v-model="showItem.unidad">
-                                            <option v-for="unidad in unidades" :key="unidad.id"
-                                                :value="unidad.id">
-                                                @{{ unidad.descripcion }}
-                                            </option>
-                                        </select>
-                                        <label for="floatingInput">Unidad<span class="text-danger">*</span></label>
-                                    </div>
+                        <div class="row">
+                            <!-- Codigo -->
+                            <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="text" class="form-control" id="codigoEdit" name="codigo"
+                                        placeholder="Codigo" v-model="showItem.codigo">
+                                    <label for="floatingInput">Codigo<span class="text-danger">*</span></label>
                                 </div>
                             </div>
+                            <!-- Nombre -->
+                            <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="text" class="form-control" id="nombreShow" name="nombre"
+                                        placeholder="Nombre" v-model="showItem.nombre">
+                                    <label for="floatingInput">Nombre<span class="text-danger">*</span></label>
+
+                                </div>
+                            </div>
+
+                            <!-- Descripcion -->
+                            <div class="form-floating col-lg-12" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <textarea disabled type="text-area" class="form-control" id="descripcionShow" style="height: 100px;"
+                                        name="descripcion" placeholder="Descripcion" v-model="showItem.descripcion"></textarea>
+                                    <label for="floatingInput">Descripcion</label>
+                                </div>
+                            </div>
+                            <!-- Precio Compra -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="number" class="form-control" id="precioCompraShow"
+                                        name="precioCompra" placeholder="Precio Compra" v-model="showItem.precioCompra"
+                                        step="0.01" min="0" max="999999" maxlength="6">
+                                    <label for="floatingInput">Precio Compra<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <!-- Precio Venta -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="number" class="form-control" id="precioVentaShow"
+                                        name="precioVenta" placeholder="Precio Venta" v-model="showItem.precioVenta"
+                                        step="0.01" min="0" max="999999" maxlength="6">
+                                    <label for="floatingInput">Precio Venta<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <!-- Precio Descuento -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="number" class="form-control" id="precioDescuentoShow"
+                                        name="precioDescuento" placeholder="Precio Descuento"
+                                        v-model="showItem.precioDescuento" step="0.01" min="0" max="999999"
+                                        maxlength="6">
+                                    <label for="floatingInput">Precio Descuento</label>
+                                </div>
+                            </div>
+                            <!-- Precio Especial -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="number" class="form-control" id="precioEspecialShow"
+                                        name="precioEspecial" placeholder="Precio Especial"
+                                        v-model="showItem.precioEspecial" step="0.01" min="0" max="999999"
+                                        maxlength="6">
+                                    <label for="floatingInput">Precio Especial</label>
+                                </div>
+                            </div>
+                            <!-- Fecha Vencimiento -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="date" class="form-control" id="fechaVencimientoShow"
+                                        name="fechaVencimiento" placeholder="Fecha Vencimiento"
+                                        v-model="showItem.fechaVencimiento">
+                                    <label for="floatingInput">Fecha Vencimiento</label>
+                                </div>
+                            </div>
+                            <!-- Stock -->
+                            <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="number" class="form-control" id="stockShow" name="stock"
+                                        placeholder="Stock" v-model="showItem.stock" step="1" min="0"
+                                        max="999999" maxlength="6">
+                                    <label for="floatingInput">Stock<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <!-- Stock Inicial -->
+                            <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="number" class="form-control" id="stockInicialShow"
+                                        name="stockInicial" placeholder="Stock Inicial" v-model="showItem.stockInicial"
+                                        step="1" min="0" max="999999" maxlength="6" disabled>
+                                    <label for="floatingInput">Stock Inicial<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <!-- Stock Minimo -->
+                            <div class="form-floating col-lg-2" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="number" class="form-control" id="stockMinimoShow"
+                                        name="stockMinimo" placeholder="Stock Minimo" v-model="showItem.stockMinimo"
+                                        step="1" min="0" max="999999" maxlength="6">
+                                    <label for="floatingInput">Stock Minimo</label>
+                                </div>
+                            </div>
+                            <!-- Stock Maximo -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <input disabled type="number" class="form-control" id="stockMaximoShow"
+                                        name="stockMaximo" placeholder="Stock Maximo" v-model="showItem.stockMaximo"
+                                        step="1" min="0" max="999999" maxlength="6" disabled>
+                                    <label for="floatingInput">Stock Maximo</label>
+                                </div>
+                            </div>
+                            <!-- Categoria -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <select disabled class="form-select" id="categoriaShow" name="categoria"
+                                        v-model="showItem.categoria">
+                                        <option v-for="categoria in categorias" :key="categoria.id"
+                                            :value="categoria.id">
+                                            @{{ categoria.descripcion }}
+                                        </option>
+                                    </select>
+                                    <label for="floatingInput">Categoria<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <!-- Tipo Venta -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <select disabled class="form-select" id="tipoVentaShow" name="tipoVenta"
+                                        v-model="showItem.tipoVenta">
+                                        <option v-for="tipoVenta in tipoVentas" :key="tipoVenta.id"
+                                            :value="tipoVenta.id">
+                                            @{{ tipoVenta.descripcion }}
+                                        </option>
+                                    </select>
+                                    <label for="floatingInput">Tipo Venta<span class="text-danger">*</span></label>
+
+                                </div>
+                            </div>
+                            <!-- Proveedor -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <select disabled class="form-select" id="proveedorShow" name="proveedor"
+                                        v-model="showItem.proveedor">
+                                        <option v-for="proveedor in proveedores" :key="proveedor.id"
+                                            :value="proveedor.id">
+                                            @{{ proveedor.nombre }}
+                                        </option>
+                                    </select>
+                                    <label for="floatingInput">Proveedor<span class="text-danger">*</span></label>
+
+                                </div>
+                            </div>
+                            <!-- Unidad -->
+                            <div class="form-floating col-lg-3" style="margin-bottom: 10px;">
+                                <div class="form-floating mb-3">
+                                    <select disabled class="form-select" id="unidadShow" name="unidad"
+                                        v-model="showItem.unidad">
+                                        <option v-for="unidad in unidades" :key="unidad.id" :value="unidad.id">
+                                            @{{ unidad.descripcion }}
+                                        </option>
+                                    </select>
+                                    <label for="floatingInput">Unidad<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                     <div class="modal-footer">
@@ -898,7 +896,7 @@
 
 
                         <div v-if="loading" role="alert" id="loading">
-                            <i class="fas fa-spinner fa-spin"></i> Cargando...
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Cargando...
                         </div>
 
 
@@ -1058,7 +1056,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitForm').disabled = true;
                         document.getElementById('cancelButton').disabled = true;
@@ -1082,6 +1080,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -1094,6 +1093,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -1117,6 +1117,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1143,6 +1144,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1162,7 +1164,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitFormEdit').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitFormEdit').disabled = true;
                         document.getElementById('cancelButtonEdit').disabled = true;
@@ -1186,6 +1188,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -1198,6 +1201,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -1224,6 +1228,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1253,6 +1258,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1675,7 +1681,7 @@
 
                     //Animate button
                     document.getElementById('submitLotesButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                     document.getElementById('submitLotesButton').disabled = true;
                     document.getElementById('cancelLotesButton').disabled = true;
@@ -1683,6 +1689,7 @@
                     if (Object.keys(this.lotesError).length > 0) {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1713,6 +1720,7 @@
                         if (response.data.success) {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1725,6 +1733,7 @@
                         } else {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1740,6 +1749,7 @@
 
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1966,6 +1976,7 @@
                         this.loading = false;
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,

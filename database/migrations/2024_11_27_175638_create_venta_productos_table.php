@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('cantidad');
             $table->decimal('precio');
             $table->decimal('descuento');
-            $table->decimal('descuentoUsuario');
+            $table->decimal('descuentoUsuario')->nullable();
             $table->decimal('total');
             $table->timestamps();
         });

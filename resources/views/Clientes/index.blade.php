@@ -4,6 +4,7 @@
 
 @section('content')
     <div id="app">
+
         <div class="card hoverCard">
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
@@ -47,7 +48,6 @@
             <div class="row">
                 <div class="card-body">
 
-
                     <div v-if="loading" role="alert" style="display: flex; justify-content: center; align-items: center;">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
@@ -59,7 +59,6 @@
                     </div>
 
                     <div v-if="clientes.length > 0" class="table-responsive">
-
                         <table ref="table" class="table table-striped  table-hover" style="text-align: center;">
                             <thead>
                                 <tr>
@@ -103,7 +102,6 @@
                                             @click="viewCliente(cliente)" :disabled="loading">
                                             <i class="fas fa-eye"></i>
                                         </button>
-
                                         <button class="btn btn-danger" id="dltBTN" data-bs-toggle="modal"
                                             id="deleteClienteModalBtn" data-bs-target="#deleteClienteModal"
                                             @click="DeleteCliente(cliente)" :disabled="loading">
@@ -111,9 +109,7 @@
                                         </button>
                                     </td>
                                 </tr>
-
                             </tbody>
-
                         </table>
                     </div>
                 </div>
@@ -166,7 +162,8 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('clientes.store') }}" method="POST" @submit.prevent="sendForm">
+                        <form ref="form" action="{{ route('clientes.store') }}" method="POST"
+                            @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -217,8 +214,9 @@
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
                                         <input type="number" class="form-control" id="descuento" name="descuento"
-                                            placeholder="Descuento" @blur="validateForm" @keyup="validateForm" @keyup.enter="sendForm"
-                                            v-model="item.descuento" maxlength="2" min="0" max="100">
+                                            placeholder="Descuento" @blur="validateForm" @keyup="validateForm"
+                                            @keyup.enter="sendForm" v-model="item.descuento" maxlength="2"
+                                            min="0" max="100">
                                         <label for="floatingInput">Descuento<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="errors.descuento">@{{ errors.descuento }}</div>
                                     </div>
@@ -247,8 +245,7 @@
                             obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="formEdit"
-                            @submit.prevent="sendFormEdit">
+                        <form ref="formEdit" @submit.prevent="sendFormEdit">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -301,9 +298,10 @@
                                 </div>
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
                                     <div class="form-floating mb-3">
-                                        <input type="number" class="form-control" id="descuentoEdit" name="descuento" @keyup.enter="sendFormEdit"
-                                            placeholder="Descuento" @blur="validateEditForm" @keyup="validateEditForm"
-                                            v-model="editItem.descuento" maxlength="2" min="0" max="100">
+                                        <input type="number" class="form-control" id="descuentoEdit" name="descuento"
+                                            @keyup.enter="sendFormEdit" placeholder="Descuento" @blur="validateEditForm"
+                                            @keyup="validateEditForm" v-model="editItem.descuento" maxlength="2"
+                                            min="0" max="100">
                                         <label for="floatingInput">Descuento<span class="text-danger">*</span></label>
                                         <div class="invalid-tooltip" v-if="editErrors.descuento">@{{ editErrors.descuento }}
                                         </div>
@@ -393,7 +391,6 @@
             </div>
         </div>
 
-
     </div>
 
     <script>
@@ -464,7 +461,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitForm').disabled = true;
                         document.getElementById('cancelButton').disabled = true;
@@ -486,6 +483,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -498,6 +496,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -521,6 +520,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -550,6 +550,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -569,7 +570,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitFormEdit').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitFormEdit').disabled = true;
                         document.getElementById('cancelButtonEdit').disabled = true;
@@ -593,6 +594,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -605,6 +607,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -631,6 +634,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -660,6 +664,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -705,7 +710,7 @@
 
                     //Cambiar icono de boton
                     document.getElementById('deleteButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Eliminando...';
 
                     axios({
                         method: 'delete',
@@ -725,6 +730,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -750,6 +756,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -764,6 +771,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1092,6 +1100,7 @@
                         this.loading = false;
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
