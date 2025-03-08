@@ -130,6 +130,7 @@
                 totalPages: 0,
                 nextPageUrl: '',
                 prevPageUrl: '',
+                loading: true,
             },
             methods: {
                 //Paginacion
@@ -174,7 +175,7 @@
                     let minutes = dateObj.getMinutes();
                     let seconds = dateObj.getSeconds();
 
-                    return day + "/" + month + "/" + year + " - -  " + hours + ":" + minutes + ":" + seconds;
+                    return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
 
                 },
                 //Obtener recursos

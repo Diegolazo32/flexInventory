@@ -82,7 +82,7 @@
                 </div>
             @endif
 
-            @if ($resolucionActiva == null)
+            <!--@if ($resolucionActiva == null)
                 <div class="card mb-1 col-lg-5 hoverCard">
                     <div class="card-body">
                         <div class="row">
@@ -105,7 +105,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endif-->
         </div>
         <br>
         <div class="row">
