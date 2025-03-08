@@ -806,7 +806,8 @@
                                 personas con las que tiene mas afinidad y les ofrece un trato preferencial.</span>
                             <span>Registrar un cliente le permite llevar un control de las ventas realizadas a ese cliente y
                                 llevar un historial de las transacciones realizadas por ese cliente en especifico.</span>
-
+                            <span>Registrar los datos del cliente le ayudara en un futuro para la realizacion de la
+                                facturacion digital.</span>
                             <br><br>
                             <h4>¿Que pasa si no registro un cliente?</h4>
                             <span>No pasa nada, sin embargo se le incluye un "Cliente general", que es el cliente por
@@ -1182,7 +1183,8 @@
                             <br><br>
                             <h4>Registrar Movimiento</h4>
                             <span>Para registrar un nuevo movimiento de stock, se deberá hacer clic en el botón "Registrar
-                                Movimiento" con un icono de un signo de "mas" que se encuentra en la parte superior derecha de
+                                Movimiento" con un icono de un signo de "mas" que se encuentra en la parte superior derecha
+                                de
                                 la
                                 pantalla.</span>
 

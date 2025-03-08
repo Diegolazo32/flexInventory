@@ -84,6 +84,18 @@ class GruposSeeder extends Seeder
                     'id' => 17,
                     'descripcion' => 'Reportes',
                 ],
+                [
+                    'id' => 18,
+                    'descripcion' => 'Registros',
+                ],
+                [
+                    'id' => 19,
+                    'descripcion' => 'Ventas',
+                ],
+                [
+                    'id' => 20,
+                    'descripcion' => 'Turnos',
+                ],
 
 
 

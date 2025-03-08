@@ -20,7 +20,9 @@ return new class extends Migration
             $table->decimal('salidas');
             $table->decimal('entradas');
             $table->decimal('total');
-            $table->decimal('diferencia');
+            $table->dateTime('fecha');
+            $table->foreignId('usuario')->references('id')->on('users');
+            //$table->decimal('diferencia');
             $table->foreignId('estado')->references('id')->on('estados');
             //$table->foreignId('corteZ')->references('id')->on('cortes_z');
             $table->timestamps();

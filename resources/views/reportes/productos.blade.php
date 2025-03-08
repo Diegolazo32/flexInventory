@@ -20,7 +20,8 @@
 
 
                 <div class="card-body">
-                    <form action="{{ route('reportes.productos.generar') }}" method="POST" id="formReporte" @submit.prevent="sendForm">
+                    <form action="{{ route('reportes.productos.generar') }}" method="POST" id="formReporte"
+                        @submit.prevent="sendForm">
                         @csrf
                         <div class="row" style="display: flex; justify-content: space-between;">
                             <div class="col-lg-3">
@@ -160,6 +161,7 @@
                         document.getElementById('formReporte').submit();
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -171,6 +173,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -203,6 +206,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -217,6 +221,7 @@
                     } catch (error) {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -248,6 +253,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -262,6 +268,7 @@
                     } catch (error) {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -291,6 +298,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -305,6 +313,7 @@
                     } catch (error) {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -334,6 +343,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -350,6 +360,7 @@
                     } catch (error) {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,

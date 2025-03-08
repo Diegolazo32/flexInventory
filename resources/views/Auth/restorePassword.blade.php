@@ -53,8 +53,8 @@
                         <div class="card-title">
                             <h2 class="text-center"> Reestablecer contraseña </h2>
                         </div>
-                        <form action="{{ route('updatePassword', ['id' => $usuario->id]) }}" method="post" @submit.prevent="sendForm"
-                            ref="loginForm">
+                        <form action="{{ route('updatePassword', ['id' => $usuario->id]) }}" method="post"
+                            @submit.prevent="sendForm" ref="loginForm">
                             @csrf
                             <div class="form-floating  mb-3" style=" display: flex; flex-direction: column;">
 
@@ -91,13 +91,14 @@
 
                 //Cambiar icono de boton
                 document.getElementById('updateBoton').innerHTML =
-                    '<i class="fas fa-spinner fa-spin"></i> Actualizando contraseña...';
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Actualizando contraseña...';
 
                 this.validarPassword();
 
                 if (this.errors.password) {
                     swal.fire({
                         toast: true,
+                        showCloseButton: true,
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 3000,

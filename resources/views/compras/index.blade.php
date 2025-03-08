@@ -31,7 +31,7 @@
                     <div class="col-lg-10">
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" class="form-control" name="search" placeholder="Buscar por codigo" 
+                                <input type="text" class="form-control" name="search" placeholder="Buscar por codigo"
                                     v-model="searchCompra" id="searchCompra" @keyup.enter="searchCompraFn">
                                 <div class="invalid-tooltip" v-if="searchError">@{{ searchError }}</div>
                             </div>
@@ -569,6 +569,7 @@
                             } catch (error) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -602,6 +603,7 @@
                             } catch (error) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -693,6 +695,7 @@
                     if (this.productosCompra.length < 1) {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -711,6 +714,7 @@
                     if (this.totalCompra < 1) {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -729,6 +733,7 @@
                     if (this.codigoCompra == '') {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -852,6 +857,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -890,6 +896,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -928,6 +935,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -951,6 +959,7 @@
                         if (response.data.error) {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -971,6 +980,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -990,7 +1000,7 @@
 
                     document.getElementById('SubmitForm').disabled = true;
                     document.getElementById('SubmitForm').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Guardando';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando';
 
                     document.getElementById('cancelButton').disabled = true;
 
@@ -1051,6 +1061,7 @@
                                     if (response.data.error) {
                                         swal.fire({
                                             toast: true,
+                                            showCloseButton: true,
                                             position: 'top-end',
                                             showConfirmButton: false,
                                             timer: 3000,
@@ -1069,6 +1080,7 @@
 
                                     swal.fire({
                                         toast: true,
+                                        showCloseButton: true,
                                         position: 'top-end',
                                         showConfirmButton: false,
                                         timer: 3000,
@@ -1084,6 +1096,7 @@
                                 }).catch(error => {
                                     swal.fire({
                                         toast: true,
+                                        showCloseButton: true,
                                         position: 'top-end',
                                         showConfirmButton: false,
                                         timer: 3000,
@@ -1140,6 +1153,7 @@
                             if (response.data.error) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -1158,6 +1172,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1173,6 +1188,7 @@
                         }).catch(error => {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1210,6 +1226,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1231,7 +1248,7 @@
 
                     //Animar pagarButton
                     document.getElementById('pagarButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Pagando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Pagando...';
 
 
                     axios({
@@ -1242,6 +1259,7 @@
                         if (response.data.success) {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1254,6 +1272,7 @@
                         } else {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1269,6 +1288,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -1303,7 +1323,7 @@
 
                     //Animar pagarButton
                     document.getElementById('anularButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Anulando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Anulando...';
 
                     axios({
                         method: 'post',
@@ -1314,6 +1334,7 @@
                         if (response.data.success) {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1326,6 +1347,7 @@
                         } else {
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -1341,6 +1363,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,

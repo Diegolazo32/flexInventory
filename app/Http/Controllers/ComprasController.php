@@ -404,7 +404,7 @@ class ComprasController extends Controller
 
         if (!$permiso) {
 
-            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear sin permiso', 'compras', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de anular sin permiso', 'compras', '-', '-');
             return response()->json(['error' => 'No tienes permisos para realizar esta acción']);
         }
 
@@ -412,7 +412,7 @@ class ComprasController extends Controller
 
         if (!$activo) {
 
-            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de crear compra sin inventario activo', 'compras', '-', '-');
+            $auditoriaController->registrarEvento(Auth::user()->nombre, 'Intento de anular compra sin inventario activo', 'compras', '-', '-');
             return response()->json(['error' => 'No hay un inventario activo']);
         }
 

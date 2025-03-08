@@ -157,7 +157,8 @@
                         <small class="text-muted"> Los campos marcados con * son obligatorios</small>
                     </div>
                     <div class="modal-body" style="padding: 25px;">
-                        <form ref="form" action="{{ route('cajas.store') }}" method="POST" @submit.prevent="sendForm">
+                        <form ref="form" action="{{ route('cajas.store') }}" method="POST"
+                            @submit.prevent="sendForm">
                             @csrf
                             <div class="row">
                                 <div class="form-floating col-lg-6" style="margin-bottom: 10px;">
@@ -330,7 +331,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitForm').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitForm').disabled = true;
                         document.getElementById('cancelButton').disabled = true;
@@ -353,6 +354,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -365,6 +367,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -388,6 +391,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -417,6 +421,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -436,7 +441,7 @@
 
                         //Cambiar icono de boton
                         document.getElementById('SubmitFormEdit').innerHTML =
-                            '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Guardando...';
 
                         document.getElementById('SubmitFormEdit').disabled = true;
                         document.getElementById('cancelButtonEdit').disabled = true;
@@ -460,6 +465,7 @@
                             if (response.data.success) {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -472,6 +478,7 @@
                             } else {
                                 swal.fire({
                                     toast: true,
+                                    showCloseButton: true,
                                     position: 'top-end',
                                     showConfirmButton: false,
                                     timer: 3000,
@@ -488,6 +495,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -517,6 +525,7 @@
                     } else {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -543,7 +552,7 @@
 
                     //Cambiar icono de boton
                     document.getElementById('deleteButton').innerHTML =
-                        '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Eliminando...';
 
                     axios({
                         method: 'delete',
@@ -563,6 +572,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -588,6 +598,7 @@
 
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -602,6 +613,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -818,6 +830,7 @@
                             this.loading = false;
                             swal.fire({
                                 toast: true,
+                                showCloseButton: true,
                                 position: 'top-end',
                                 showConfirmButton: false,
                                 timer: 3000,
@@ -834,6 +847,7 @@
                         this.loading = false;
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -858,6 +872,7 @@
 
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,

@@ -4,7 +4,7 @@
 
 @section('content')
     <div id="app">
-        <div class="card hoverCard" >
+        <div class="card hoverCard">
             <div class="card-header">
                 <div class="row" style="display: flex; align-items: center;">
                     <div class="col-lg-10">
@@ -14,19 +14,19 @@
                     <!-- Botones de accion -->
                     <div class="col-lg-2 d-flex justify-content-end">
                         <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                                        data-bs-target="#crearMovimientoModal" style="height: 40px;">
-                                                                        <i class="fas fa-plus"></i>
-                                                                    </button>
+                                                                            data-bs-target="#crearMovimientoModal" style="height: 40px;">
+                                                                            <i class="fas fa-plus"></i>
+                                                                        </button>
 
-                                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editMovimientoModalBtn"
-                                                                        data-bs-target="#editMovimientoModal" style="height: 40px;" hidden>
-                                                                        Editar movimiento
-                                                                    </button>
+                                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="editMovimientoModalBtn"
+                                                                            data-bs-target="#editMovimientoModal" style="height: 40px;" hidden>
+                                                                            Editar movimiento
+                                                                        </button>
 
-                                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteMovimientoModalBtn"
-                                                                        data-bs-target="#deleteMovimientoModal" style="height: 40px;" hidden>
-                                                                        Eliminar movimiento
-                                                                    </button>-->
+                                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="deleteMovimientoModalBtn"
+                                                                            data-bs-target="#deleteMovimientoModal" style="height: 40px;" hidden>
+                                                                            Eliminar movimiento
+                                                                        </button>-->
                     </div>
                 </div>
             </div>
@@ -240,6 +240,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,
@@ -263,6 +264,7 @@
                     }).catch(error => {
                         swal.fire({
                             toast: true,
+                            showCloseButton: true,
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 3000,

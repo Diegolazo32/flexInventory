@@ -514,6 +514,84 @@ class PermisosSeeder extends Seeder
                 'grupo' => 17,
             ],
 
+            //Registros
+            [
+                // 'id' => 77,
+                'nombre' => 'ver-registros',
+                'descripcion' => 'Ver listado de registros',
+                'grupo' => 18,
+            ],
+            [
+                // 'id' => 78,
+                'nombre' => 'obtener-info-registros',
+                'descripcion' => 'Obtener informacion de registros',
+                'grupo' => 18,
+            ],
+
+            //Ventas
+            [
+                // 'id' => 79,
+                'nombre' => 'ver-ventas',
+                'descripcion' => 'Ver listado de ventas',
+                'grupo' => 19,
+            ],
+            [
+                // 'id' => 80,
+                'nombre' => 'crear-ventas',
+                'descripcion' => 'Crear ventas',
+                'grupo' => 19,
+            ],
+            [
+                // 'id' => 81,
+                'nombre' => 'aprobar-ventas',
+                'descripcion' => 'Aprobar ventas',
+                'grupo' => 19,
+            ],
+            [
+                // 'id' => 82,
+                'nombre' => 'anular-ventas',
+                'descripcion' => 'Anular ventas',
+                'grupo' => 19,
+            ],
+            [
+                // 'id' => 83,
+                'nombre' => 'obtener-info-ventas',
+                'descripcion' => 'Obtener informacion de ventas',
+                'grupo' => 19,
+            ],
+            [
+                // 'id' => 84,
+                'nombre' => 'obtener-detalles-ventas',
+                'descripcion' => 'Obtener detalles de ventas',
+                'grupo' => 19,
+            ],
+
+            //Turnos
+            [
+                // 'id' => 85,
+                'nombre' => 'ver-turnos',
+                'descripcion' => 'Ver listado de turnos',
+                'grupo' => 20,
+            ],
+            [
+                // 'id' => 86,
+                'nombre' => 'aperturar-turnos',
+                'descripcion' => 'Aperturar turnos',
+                'grupo' => 20,
+            ],
+            [
+                // 'id' => 87,
+                'nombre' => 'cerrar-turnos',
+                'descripcion' => 'Cerrar turnos',
+                'grupo' => 20,
+            ],
+            [
+                // 'id' => 88,
+                'nombre' => 'obtener-info-turnos',
+                'descripcion' => 'Obtener informacion de turnos',
+                'grupo' => 20,
+            ],
+
 
 
 
