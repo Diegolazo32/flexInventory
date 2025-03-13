@@ -107,7 +107,8 @@
 
                     <!-- Nombre de la empresa -->
                     <li class="nav-item" style="width: 100%;">
-                        <div class="d-flex justify-content-center align-items-center" style="text-align: center; padding-right: 10px; padding-left: 10px;">
+                        <div class="d-flex justify-content-center align-items-center"
+                            style="text-align: center; padding-right: 10px; padding-left: 10px;">
                             <h5 style="font-weight: normal" class="nombreMarca">
                                 {{ $empresa->nombre ?? 'Flex Inventory' }}
                             </h5>
@@ -127,41 +128,41 @@
                     </li>
 
                     @if ($permisos->contains(2))
-                    <!-- Admin. Empresa -->
-                    <li class="nav-item" style="width: 100%">
-                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#collapseNegocio" aria-expanded="false"
-                            aria-controls="collapseNegocio">
-                            <i class="fa-solid fa-briefcase"></i>
-                            <span> Mi negocio</span>
-                        </button>
-                    </li>
+                        <!-- Admin. Empresa -->
+                        <li class="nav-item" style="width: 100%">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseNegocio" aria-expanded="false"
+                                aria-controls="collapseNegocio">
+                                <i class="fa-solid fa-briefcase"></i>
+                                <span> Mi negocio</span>
+                            </button>
+                        </li>
                     @endif
 
                     <div class="collapse" id="collapseNegocio" style="margin-left: 20px;">
                         <!-- Mi negocio -->
                         @if ($permisos->contains(2))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('empresa') }}'">
-                                <i class="fa-regular fa-file-lines"></i>
-                                <span>Información</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('empresa') }}'">
+                                    <i class="fa-regular fa-file-lines"></i>
+                                    <span>Información</span>
+                                </button>
+                            </li>
                         @endif
 
                     </div>
 
                     <!-- Admin. Usuarios -->
                     @if ($permisos->contains(5) || $permisos->contains(11) || $permisos->contains(17))
-                    <li class="nav-item" style="width: 100%">
-                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#collapseUsuarios" aria-expanded="false"
-                            aria-controls="collapseUsuarios">
-                            <i class="fa-solid fa-user-gear"></i>
-                            <span> Admin. Usuarios</span>
-                        </button>
-                    </li>
+                        <li class="nav-item" style="width: 100%">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseUsuarios" aria-expanded="false"
+                                aria-controls="collapseUsuarios">
+                                <i class="fa-solid fa-user-gear"></i>
+                                <span> Admin. Usuarios</span>
+                            </button>
+                        </li>
                     @endif
 
 
@@ -169,24 +170,24 @@
                     <div class="collapse" id="collapseUsuarios" style="margin-left: 20px;">
                         <!-- Usuarios -->
                         @if ($permisos->contains(5))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('users') }}'">
-                                <i class="fa-solid fa-user"></i>
-                                <span>Usuarios</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('users') }}'">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span>Usuarios</span>
+                                </button>
+                            </li>
                         @endif
 
                         <!-- Roles -->
                         @if ($permisos->contains(11))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('roles') }}'">
-                                <i class="fa-solid fa-image-portrait"></i>
-                                <span>Roles</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('roles') }}'">
+                                    <i class="fa-solid fa-image-portrait"></i>
+                                    <span>Roles</span>
+                                </button>
+                            </li>
                         @endif
 
 
@@ -215,180 +216,180 @@
 
                     <!-- Parametros -->
                     @if ($permisos->contains(22) || $permisos->contains(27) || $permisos->contains(32) || $permisos->contains(37))
-                    <li class="nav-item" style="width: 100%">
-                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#collapseParametros" aria-expanded="false"
-                            aria-controls="collapseParametros">
-                            <i class="fa-solid fa-gear"></i>
-                            <span> Parametros</span>
-                        </button>
-                    </li>
+                        <li class="nav-item" style="width: 100%">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseParametros" aria-expanded="false"
+                                aria-controls="collapseParametros">
+                                <i class="fa-solid fa-gear"></i>
+                                <span> Parametros</span>
+                            </button>
+                        </li>
                     @endif
 
                     <!-- Collapse Parametros -->
                     <div class="collapse" id="collapseParametros" style="margin-left: 20px;">
                         @if ($permisos->contains(22))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('unidades') }}'">
-                                <i class="fa-solid fa-ruler-horizontal"></i>
-                                <span>Unidades</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('unidades') }}'">
+                                    <i class="fa-solid fa-ruler-horizontal"></i>
+                                    <span>Unidades</span>
+                                </button>
+                            </li>
                         @endif
 
                         @if ($permisos->contains(27))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('categorias') }}'">
-                                <i class="fa-solid fa-tags"></i>
-                                <span>Categorias</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('categorias') }}'">
+                                    <i class="fa-solid fa-tags"></i>
+                                    <span>Categorias</span>
+                                </button>
+                            </li>
                         @endif
 
-                        <!--@if ($permisos->contains(27)) 
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('tickets') }}'">
-                                <i class="fa-solid fa-ticket"></i>
-                                <span>Resolucion de tickets</span>
-                            </button>
-                        </li>
-                        @endif-->
+                        @if ($permisos->contains(27))
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('tickets') }}'">
+                                    <i class="fa-solid fa-ticket"></i>
+                                    <span>Resolucion de tickets</span>
+                                </button>
+                            </li>
+                        @endif
 
                         @if ($permisos->contains(32))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('cajas') }}'">
-                                <i class="fa-solid fa-cash-register"></i>
-                                <span>Cajas</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('cajas') }}'">
+                                    <i class="fa-solid fa-cash-register"></i>
+                                    <span>Cajas</span>
+                                </button>
+                            </li>
                         @endif
 
                         @if ($permisos->contains(37))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('estados') }}'">
-                                <i class="fa-solid fa-toggle-on"></i>
-                                <span>Estados</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('estados') }}'">
+                                    <i class="fa-solid fa-toggle-on"></i>
+                                    <span>Estados</span>
+                                </button>
+                            </li>
                         @endif
                     </div>
 
                     <!-- Inventario -->
                     @if (
-                    $permisos->contains(42) ||
-                    $permisos->contains(46) ||
-                    $permisos->contains(51) ||
-                    $permisos->contains(56) ||
-                    $permisos->contains(60) ||
-                    $permisos->contains(64) ||
-                    $permisos->contains(70))
-                    <li class="nav-item" style="width: 100%">
-                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false"
-                            aria-controls="collapseInventario">
-                            <i class="fa-solid fa-boxes-packing"></i>
-                            <span> Admin. Inventario</span>
-                        </button>
-                    </li>
+                        $permisos->contains(42) ||
+                            $permisos->contains(46) ||
+                            $permisos->contains(51) ||
+                            $permisos->contains(56) ||
+                            $permisos->contains(60) ||
+                            $permisos->contains(64) ||
+                            $permisos->contains(70))
+                        <li class="nav-item" style="width: 100%">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseInventario" aria-expanded="false"
+                                aria-controls="collapseInventario">
+                                <i class="fa-solid fa-boxes-packing"></i>
+                                <span> Admin. Inventario</span>
+                            </button>
+                        </li>
                     @endif
 
                     <!-- Collapse Inventario -->
                     <div class="collapse" id="collapseInventario" style="margin-left: 20px;">
                         @if ($permisos->contains(42))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('inventario') }}'">
-                                <i class="fa-solid fa-warehouse"></i>
-                                <span>Apertura/Cierre</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('inventario') }}'">
+                                    <i class="fa-solid fa-warehouse"></i>
+                                    <span>Apertura/Cierre</span>
+                                </button>
+                            </li>
                         @endif
 
                         @if ($permisos->contains(46))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('clientes') }}'">
-                                <i class="fa-solid fa-users"></i>
-                                <span>Clientes</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('clientes') }}'">
+                                    <i class="fa-solid fa-users"></i>
+                                    <span>Clientes</span>
+                                </button>
+                            </li>
                         @endif
 
 
                         @if ($permisos->contains(51))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('proveedores') }}'">
-                                <i class="fa-solid fa-truck"></i>
-                                <span>Proveedores</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('proveedores') }}'">
+                                    <i class="fa-solid fa-truck"></i>
+                                    <span>Proveedores</span>
+                                </button>
+                            </li>
                         @endif
 
 
                         @if ($permisos->contains(56))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('productos') }}'">
-                                <i class="fa-solid fa-boxes-stacked"></i>
-                                <span>Productos</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('productos') }}'">
+                                    <i class="fa-solid fa-boxes-stacked"></i>
+                                    <span>Productos</span>
+                                </button>
+                            </li>
                         @endif
 
 
                         @if ($permisos->contains(60))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('lotes') }}'">
-                                <i class="fa-solid fa-cart-flatbed"></i>
-                                <span>Lotes</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('lotes') }}'">
+                                    <i class="fa-solid fa-cart-flatbed"></i>
+                                    <span>Lotes</span>
+                                </button>
+                            </li>
                         @endif
 
 
                         @if ($permisos->contains(64))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('compras') }}'">
-                                <i class="fa-solid fa-basket-shopping"></i>
-                                <span>Compras</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('compras') }}'">
+                                    <i class="fa-solid fa-basket-shopping"></i>
+                                    <span>Compras</span>
+                                </button>
+                            </li>
                         @endif
 
 
                         @if ($permisos->contains(70))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('kardex') }}'">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                                <span>Kardex</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('kardex') }}'">
+                                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                    <span>Kardex</span>
+                                </button>
+                            </li>
                         @endif
                     </div>
 
                     <!--  Ventas -->
-                    <!--<li class="nav-item" style="width: 100%">
+                    <li class="nav-item" style="width: 100%">
                         <button class="btn btn-outline-light" style="width: 100%;" type="button"
                             data-bs-toggle="collapse" data-bs-target="#collapseVenta" aria-expanded="false"
                             aria-controls="collapseVenta">
                             <i class="fa-solid fa-cart-shopping"></i>
                             <span> Ventas </span>
                         </button>
-                    </li>-->
+                    </li>
 
                     <!-- Collapse venta -->
-                    <!--<div class="collapse" id="collapseVenta" style="margin-left: 20px;">
+                    <div class="collapse" id="collapseVenta" style="margin-left: 20px;">
 
-                       <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
                             <button class="btn btn-outline-light" style="width: 100%;" type="button"
                                 onClick="window.location.href='{{ route('menuCajeros') }}'">
                                 <i class="fa-solid fa-cash-register"></i>
@@ -396,42 +397,42 @@
                             </button>
                         </li>
 
-                    </div>-->
+                    </div>
 
                     <!-- Reportes -->
 
                     @if ($permisos->contains(73) || $permisos->contains(75))
-                    <li class="nav-item" style="width: 100%">
-                        <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#collapseReportes" aria-expanded="false"
-                            aria-controls="collapseReportes">
-                            <i class="fa-solid fa-file"></i>
-                            <span> Reportes </span>
-                        </button>
-                    </li>
+                        <li class="nav-item" style="width: 100%">
+                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseReportes" aria-expanded="false"
+                                aria-controls="collapseReportes">
+                                <i class="fa-solid fa-file"></i>
+                                <span> Reportes </span>
+                            </button>
+                        </li>
                     @endif
 
                     <!-- Collapse reportes -->
                     <div class="collapse" id="collapseReportes" style="margin-left: 20px;">
 
                         @if ($permisos->contains(73))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('reportes.productos') }}'">
-                                <i class="fa-regular fa-file-lines"></i>
-                                <span>Reporte de productos</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('reportes.productos') }}'">
+                                    <i class="fa-regular fa-file-lines"></i>
+                                    <span>Reporte de productos</span>
+                                </button>
+                            </li>
                         @endif
 
                         @if ($permisos->contains(75))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('reportes.movimientos') }}'">
-                                <i class="fa-regular fa-file-lines"></i>
-                                <span>Reporte de movimientos</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('reportes.movimientos') }}'">
+                                    <i class="fa-regular fa-file-lines"></i>
+                                    <span>Reporte de movimientos</span>
+                                </button>
+                            </li>
                         @endif
 
                     </div>
@@ -449,13 +450,13 @@
                     <!-- Collapse Registros -->
                     <div class="collapse" id="collapseRegistros" style="margin-left: 20px;">
                         @if ($permisos->contains(70))
-                        <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
-                            <button class="btn btn-outline-light" style="width: 100%;" type="button"
-                                onClick="window.location.href='{{ route('kardex.movimientos') }}'">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                                <span>Movimientos de kardex</span>
-                            </button>
-                        </li>
+                            <li class="nav-item" style="width: 90%; margin-bottom: 10px;">
+                                <button class="btn btn-outline-light" style="width: 100%;" type="button"
+                                    onClick="window.location.href='{{ route('kardex.movimientos') }}'">
+                                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                    <span>Movimientos de kardex</span>
+                                </button>
+                            </li>
                         @endif
                     </div>
 

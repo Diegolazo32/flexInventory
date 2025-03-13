@@ -16,7 +16,7 @@
         <div class="card hoverCard" v-if="!loading">
             <div class="card-header" style="display: flex; justify-content: space-between;">
                 <h3 class="card-title">Menu cajero</h3>
-                <button class="btn btn-danger float-right">Cerrar dia (Corte Z)</button>
+                <button class="btn btn-danger float-right" v-if="turnos.length > 0">Cerrar dia (Corte Z)</button>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -119,7 +119,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-floating mb-12">
-                                    <h5>@{{ now }}</h5>
+                                    <h5>@{{  new Date().toLocaleString() }}</h5>
                                 </div>
                             </div>
                             <!-- Tipo de movimiento -->
@@ -183,7 +183,7 @@
             </div>
         </div>
 
-        <!--Info modal-->
+        <!--Turno modal-->
         <div class="modal fade" id="turnoModal" tabindex="-1" aria-labelledby="turnoModalLabel" aria-hidden="inert"
             data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-fullscreen-lg-down"

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('turno')->references('id')->on('turnos');
             $table->integer('tipo');
             $table->decimal('valor');
-            $table->integer('descripcion');
+            $table->string('descripcion');
             $table->foreignId('usuario')->references('id')->on('users');
             $table->foreignId('caja')->references('id')->on('cajas');
             $table->foreignId('inventario')->references('id')->on('inventarios');
