@@ -69,7 +69,9 @@ class ProductosController extends Controller
 
         //Si trae un per_page, se paginan los resultados y se ordenan por $request->sortBy
         if ($request->per_page) {
-            $productos = productos::orderBy($request->sortBy, 'asc')->paginate($request->per_page);
+            $productos = productos::orderBy('estado', 'asc')
+            ->orderBy('codigo', 'asc')
+            ->paginate($request->per_page);
             return response()->json($productos);
         }
 
