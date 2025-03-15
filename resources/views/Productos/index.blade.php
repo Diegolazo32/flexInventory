@@ -896,7 +896,8 @@
 
 
                         <div v-if="loading" role="alert" id="loading">
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Cargando...
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Cargando...
                         </div>
 
 
@@ -1025,6 +1026,7 @@
                 errors: {},
                 editErrors: {},
                 productos: [],
+                allProductos: [],
                 productoError: '',
                 searchProductos: [],
                 filtered: [],
@@ -1562,8 +1564,8 @@
                             'El producto debe tener al menos 3 caracteres y no contener caracteres especiales';
                     }
 
-                    for (let i = 0; i < this.productos.length; i++) {
-                        if (this.productos[i].codigo == this.item.codigo) {
+                    for (let i = 0; i < this.allProductos.length; i++) {
+                        if (this.allProductos[i].codigo == this.item.codigo) {
                             this.errors.codigo = 'El producto ya existe';
                             document.getElementById('codigo').setAttribute('class', 'form-control is-invalid');
                         }
@@ -1582,11 +1584,11 @@
                     }
 
                     //Eliminar del array el producto que se esta editando
-                    this.productos = this.productos.filter(producto => producto.id != this.editItem.id);
+                    this.allProductos = this.allProductos.filter(producto => producto.id != this.editItem.id);
 
                     //recorrer this.productos
-                    for (let i = 0; i < this.productos.length; i++) {
-                        if (this.productos[i].codigo == this.editItem.codigo) {
+                    for (let i = 0; i < this.allProductos.length; i++) {
+                        if (this.allProductos[i].codigo == this.editItem.codigo) {
                             this.editErrors.codigo = 'El producto ya existe';
                             document.getElementById('codigoEdit').setAttribute('class', 'form-control is-invalid');
                         }
@@ -1928,8 +1930,8 @@
                 },
                 cleanSearch() {
                     this.search = null;
-                    this.getAllProductos();
                     this.searchError = '';
+                    this.getAllProductos();
                 },
                 //Obtener recursos
                 async getAllProductos() {
@@ -1941,7 +1943,6 @@
                             per_page: this.per_page,
                             //onlyActive: true,
                             search: this.search,
-                            sortBy: 'estado',
                         }
                     }).then(response => {
 
@@ -2028,6 +2029,11 @@
                     this.lotes = data;
                     this.loading = false;
                 },
+                async getEveryProducto() {
+                    let response = await fetch('/allProductos');
+                    let data = await response.json();
+                    this.allProductos = data;
+                },
 
             },
             mounted() {
@@ -2037,6 +2043,7 @@
                 this.getAllProveedores();
                 this.getAllUnidades();
                 this.getAllProductos();
+                this.getEveryProducto();
             }
         });
     </script>
