@@ -39,6 +39,7 @@ class QueriesController extends Controller
             ->select('lotes.*', 'productos.nombre as producto')
             ->where('lotes.fechaVencimiento', '<=', date('Y-m-d', strtotime('+7 days')))
             ->where('lotes.estado', '=', 1)
+            ->limit(5)
             ->get();
 
         return response()->json($lotes);
@@ -70,6 +71,7 @@ class QueriesController extends Controller
             ->select('id', 'nombre', 'stock', 'stockMinimo')
             ->where('estado', '=', 1)
             ->where('stockMinimo', '>=', DB::raw('stock'))
+            ->limit(5)
             ->get();
 
         return response()->json($productos);
@@ -102,6 +104,7 @@ class QueriesController extends Controller
             ->where('estado', '=', 1)
             ->where('stockMaximo', '<=', DB::raw('stock'))
             ->where('estado', '=', 1)
+            ->limit(5)
             ->get();
 
         return response()->json($productos);
