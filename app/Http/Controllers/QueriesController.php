@@ -69,8 +69,9 @@ class QueriesController extends Controller
 
         $productos = DB::table('productos')
             ->select('id', 'nombre', 'stock', 'stockMinimo')
-            ->where('estado', '=', 1)
+            //->where('estado', '=', 1)
             ->where('stockMinimo', '>=', DB::raw('stock'))
+            ->orderBy('estado', 'desc')
             ->limit(5)
             ->get();
 
